@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+  <link rel="stylesheet"
+	href="${request.static_url('wp_frontend:static/wp.css')}"
+	type="text/css" media="screen" charset="utf-8" />
+  <tal:block metal:define-slot="headers">
+  </tal:block>
+  <title> WP Frontend - 
+    <tal:block metal:define-slot="title">
+    </tal:block>
+  </title>
+</head>
+<body>
+  <div id="wrap">
+    <div id="header">
+      <div id="menu">
+	<span id="menuentry">
+	  <a href="${request.application_url}/home">Home</a>
+	</span>
+	<span id="menuentry">
+	  <a href="${request.application_url}/hzg_ww">Hzg/WW</a>
+	</span>
+	<span id="menuentry">
+	  <a href="${request.application_url}/set_val">Werte-Setzen</a>
+	</span>
+	<span id="menuentry">
+	  <a href="${request.application_url}/logout">Logout</a>
+	</span>
+      </div>
+    </div>
+    <div id="middle">
+      <tal:block metal:define-slot="content">
+      </tal:block>
+    </div>
+  </div>
+</body>
+</html>

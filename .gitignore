@@ -1,0 +1,11 @@
+# ignore byte-compiled and emacsens backup files
+*.pyc
+*~
+
+# using rope to refactor
+.ropeproject/
+
+# nosetest coverage
+.coverage
+
+wp_frontend/plots/tmp-*

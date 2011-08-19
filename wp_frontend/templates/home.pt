@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      metal:use-macro="base">
+<tal:block metal:fill-slot="title">
+  Home
+</tal:block>
+<tal:block metal:fill-slot="content">
+  <div tal:switch="data is None">
+    <span tal:case="True">Keine Daten verfügbar!</span>
+    <span tal:case="False">
+      <div id="ovdiag">
+	<img id="ovdiag" src="${request.static_url('wp_frontend:static/diagramm.jpg')}"/>
+	<!-- ================================ Umgebungstemperaturen ================================================= -->
+	<div id="ovvalue" style="right:84%; top:5.0%;">${data['temp_aussen']} °C</div>
+	<div id="ovvalue" style="right:84%; top:9.1%;">${data['temp_aussen1']} °C</div>
+	<div id="ovvalue" style="right:84%; top:13.0%;">${data['temp_aussen24']} °C</div>
+	<div id="ovvalue" style="right:68%; top:6.9%;">${data['temp_raum']} °C</div>
+	<div id="ovvalue" style="right:68%; top:10.8%;">${data['temp_raum1']} °C</div>
+	<!-- ======================================== WQ ein/aus ===================================================== -->
+	<div id="ovvalue" style="right:82.5%; top:75.5%; color:red;">${data['temp_WQein']} °C</div>
+	<div id="ovvalue" style="right:82.5%; top:80.5%; color:blue;">${data['temp_WQaus']} °C</div>
+	<div id="ovvalue" style="right:89.1%; top:78.1%;">${data['deltaWQea']} °C</div>
+	<!-- ======================================== Kondensator ==================================================== -->
+	<div id="ovvalue" style="right:41%; top:59.3%; color:blue;">${data['temp_Kondensator']} °C</div>
+	<div id="ovvalue" style="right:41%; top:63.0%; color:blue;">${data['druck_Kondensator']} bar</div>
+	<!-- ========================================= Verdampfer ==================================================== -->
+	<div id="ovvalue" style="right:67%; top:59.4%; color:red;">${data['temp_Verdampfer']} °C</div>
+	<div id="ovvalue" style="right:67%; top:63.2%; color:red;">${data['druck_Verdampfer']} bar</div>
+	<!-- ===================================== Vorlauf, Ruecklauf ================================================ -->
+	<div id="ovvalue" style="right:28%; top:50.0%; color:red;">${data['temp_Vl']} °C</div>
+	<div id="ovvalue" style="right:28%; top:54.7%;">${data['deltaVlRl']} °C</div>
+	<div id="ovvalue" style="right:28%; top:59.0%;">${data['temp_RlSoll']} °C</div>
+	<div id="ovvalue" style="right:28%; top:63.5%; color:blue;">${data['temp_Rl']} °C</div>
+	<!-- ========================================= Warmwasser ==================================================== -->
+	<div id="ovvalue" style="right:15.5%; top:65.4%;">${data['temp_WWSoll']} °C</div>
+	<div id="ovvalue" style="right:15.5%; top:69.3%;">${data['temp_WW']} °C</div>
+	<!-- ========================================== allgemein ==================================================== -->
+	<div id="ovvalue" style="right:13.5%; top:0.7%;">${data['datum']}</div>
+	<div id="ovvalue" style="right:13.5%; top:4.9%;">${data['uhrzeit']}</div>
+
+	<div id="ovvalue" style="right:5%; top:7.1%;">${data['version']}</div>
+	<div id="ovvalue" style="right:5%; top:10.5%;">${data['datum_version']}</div>
+	<div id="ovvalue" style="right:5%; top:13.6%;">${data['betriebsmodus']}</div>
+
+	<!-- <div id="ovvalue" style="right:49%; top:71.4%;">${data['temp_Saugleitung']} °C</div> -->
+	<div id="ovvalue" style="right:49%; top:76.1%;">${data['betriebsstunden']} h</div>
+	<div id="ovvalue" style="right:49%; top:80%;">${data['currKW']} kW</div>
+      </div>
+    </span>
+  </div>
+</tal:block>
+</html>
