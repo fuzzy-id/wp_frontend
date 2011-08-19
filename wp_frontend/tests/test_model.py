@@ -2,7 +2,8 @@ import datetime
 import unittest
 from wp_frontend.tests import getTransaction, createEngineAndInitDB
 from wp_frontend.models import set_data 
-from wp_frontend.models import get_data 
+from wp_frontend.models import get_data
+from wp_frontend.views import strip_min_ms
 
 class DataToSetTest(unittest.TestCase):
     
@@ -68,24 +69,20 @@ class PulledDataTest(unittest.TestCase):
         self.session.add(entry)
         self.transaction.commit()
 
-    def _get_last_entry(self):
-        query = self.session.query(get_data.PulledData)
-        query = query.order_by(get_data.PulledData.id.desc())
-        return query.first()
-
     def test_defaults_work(self):
         self._add_one({})
-        entry = self._get_last_entry()
+        entry = get_data.PulledData.get_latest(self.session)
         self.assertEqual(entry.version, 0)
         self.assertEqual(entry.datum_version, datetime.date.min)
         self.assertEqual(entry.betriebsmodus, '')
         self.assertEqual(entry.temp_aussen, 0.0)
 
-    def test_add_one_and_get_last_entry_work(self):
+    def test_add_one_and_get_latest_work(self):
         columns_and_values = {'temp_aussen': 24,
                               'temp_WW': 80.34 }
         self._add_one(columns_and_values)
-        entry = self._get_last_entry()
+        entry = get_data.PulledData.get_latest(self.session,
+                                               columns=columns_and_values.keys())
         self.assertEqual(entry.temp_aussen, 24)
         self.assertEqual(entry.temp_WW, 80.34)
 
@@ -93,10 +90,26 @@ class PulledDataTest(unittest.TestCase):
         dt_before = datetime.datetime.now()
         self._add_one({})
         dt_after = datetime.datetime.now()
-        entry = self._get_last_entry()
+        entry = get_data.PulledData.get_latest(self.session)
         one_sec = datetime.timedelta(seconds=1)
         entry_date = datetime.datetime.fromtimestamp(entry.tsp)
         self.assertTrue(one_sec >= entry_date - dt_before)
         self.assertTrue(one_sec >= dt_after - entry_date)
 
+    def test_avg_timespan_iterator(self):
+        end = datetime.datetime.now()
+        end = strip_min_ms(end)
+        start = end - datetime.timedelta(days=80)
+        quantity = 18
+        expected_step = (end - start) / quantity
+        current_start = start
 
+        for (tsp_avg_start,
+             tsp_avg_end) in get_data._avg_timespan_iter(start,
+                                                         end,
+                                                         quantity):
+            dt_avg_start = datetime.datetime.fromtimestamp(tsp_avg_start)
+            dt_avg_end = datetime.datetime.fromtimestamp(tsp_avg_end)
+            self.assertEquals(dt_avg_start, current_start)
+            current_start += expected_step
+            self.assertEquals(dt_avg_end, current_start)

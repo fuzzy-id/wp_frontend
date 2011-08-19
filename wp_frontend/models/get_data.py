@@ -162,42 +162,39 @@ class PulledData(Base):
     @classmethod
     def get_latest(cls, session, columns=None):
         if columns is None:
-            query = session.query()
+            query = session.query(cls)
         else:
-            query = session.query(*columns)
+            menu_entries = cls.map_names_to_attributes(columns)
+            query = session.query(*menu_entries)
         query = query.order_by(cls.id.desc())
         return query.first()
 
     @classmethod
-    def get_latest_specific_columns(cls, session, descriptions):
-        menu_entries = cls.descriptions_to_menu_entries(descriptions)
-        return cls.get_latest(session, columns=menu_entries)
+    def map_names_to_attributes(cls, names):
+        return map(lambda n: getattr(cls, n), names)
 
     @classmethod
-    def descriptions_to_menu_entries(cls, descriptions):
-        menu_entries = []
-        for d in descriptions:
-            menu_entries.append(getattr(cls, d))
-        return menu_entries
-
-    @classmethod
-    def get_values_in_timespan(cls, session, start, end, descriptions):
-        if 'tsp' not in descriptions:
-            descriptions = ['tsp'] + descriptions
-        columns = cls.descriptions_to_menu_entries(descriptions)
+    def get_values_in_timespan(cls, session, descriptions,
+                               start, end, quantity=30):
+        columns = cls.map_names_to_attributes(descriptions)
         avg_columns = map(func.avg, columns)
 
-        start_tsp = time.mktime(start.timetuple())
-        end_tsp = time.mktime(end.timetuple())
-        delta_start_end = end_tsp - start_tsp
-        step = delta_start_end/30
         ret = []
         
-        for avg_start in range(start_tsp, end_tsp, step):
+        for avg_start, avg_end in _avg_timespan_iter(start, end, quantity):
             query = session.query(*avg_columns)
             query = query.filter(cls.tsp_0501_0500.between(avg_start,
-                                                           avg_start + step))
+                                                           avg_end))
             result = query.all()
             if result[0][0] is not None:
                 ret += result
         return ret
+
+def _avg_timespan_iter(start, end, quantity):
+    start_tsp = int(time.mktime(start.timetuple()))
+    end_tsp = int(time.mktime(end.timetuple()))
+    delta_start_end = end_tsp - start_tsp
+    step = delta_start_end/quantity
+
+    for avg_start in range(start_tsp, end_tsp, step):
+        yield (avg_start, avg_start + step)

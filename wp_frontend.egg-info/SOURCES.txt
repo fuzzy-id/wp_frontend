@@ -20,7 +20,6 @@ wp_frontend.egg-info/requires.txt
 wp_frontend.egg-info/top_level.txt
 wp_frontend/models/__init__.py
 wp_frontend/models/get_data.py
-wp_frontend/models/relations.py
 wp_frontend/models/set_data.py
 wp_frontend/static/diagramm.jpg
 wp_frontend/static/wp.css

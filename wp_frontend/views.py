@@ -26,8 +26,7 @@ def view_home(request):
                       'druck_Kondensator', 'uhrzeit', 'datum',
                       'betriebsstunden', 'DO_buffer', 'DI_buffer' ]
     logged_in = authenticated_userid(request)
-    data = get_data.PulledData.get_latest_specific_columns(DBSession, 
-                                                           needed_columns)
+    data = get_data.PulledData.get_latest(DBSession, needed_columns)
     if data is not None:
         data = dict(zip(needed_columns, data))
         data['currKW'] = calc_currKW(data['temp_Vl'])
@@ -74,9 +73,9 @@ def view_hzg_ww(request):
                'temp_Rl', 'temp_WW']
 
     values = get_data.PulledData.get_values_in_timespan(DBSession,
-                                         ret_dict['start'],
-                                         ret_dict['end'],
-                                         columns)
+                                                        columns,
+                                                        ret_dict['start'],
+                                                        ret_dict['end'])
 
     x_axis = [ datetime.datetime.fromtimestamp(d[0]) for d in values ]
     for i in range(1, len(columns)):
