@@ -46,7 +46,7 @@ class ViewHomeTests(BaseViewTest):
     def _class_to_add(self):
         return get_data.PulledData
 
-    def test_view_home_exists(self):
+    def test_view_home_without_data(self):
         request = testing.DummyRequest()
         response = views.view_home(request)
         self.assertTrue(response['data'] is None)
@@ -74,13 +74,7 @@ class ViewHomeTests(BaseViewTest):
         response = views.view_home(request)
         result = response['data']
 
-        def calc_currKW(temp_Vl):
-            if temp_Vl < 40:
-                return (0.06 * temp_Vl) + 0.5
-            elif (temp_Vl > 40) and (temp_Vl < 50):
-                return (0.08 * temp_Vl) - 0.3
-            return (0.1 * temp_Vl) - 1.3
-
+        from wp_frontend.models.calculations import calc_currKW
         data['currKW'] = calc_currKW(data['temp_Vl'])
         data['deltaVlRl'] = data['temp_Vl'] - data['temp_Rl']
         data['deltaWQea'] = data['temp_WQein'] - data['temp_WQaus']
@@ -93,8 +87,50 @@ class ViewHzgWWTests(BaseViewTest):
     def _class_to_add(self):
         return get_data.PulledData
 
-    def test_view_hzg_ww_exists(self):
+    def test_without_data_present(self):
         request = testing.DummyRequest()
         response = views.view_hzg_ww(request)
-        self.assertTrue('Keine Daten im Zeitraum verfügbar!'
-                        in response.body)
+        now = datetime.datetime.now()
+        thirty_days_ago = now - datetime.timedelta(days=30)
+        two_minutes = datetime.timedelta(minutes=2)
+        self.assertTrue(response['vals_available'] == False)
+        self.assertTrue(two_minutes >= now - response['end'])
+        self.assertTrue(two_minutes >= thirty_days_ago - response['start'])
+
+    def test_without_data_with_submitted_date(self):
+        end = "2011-08-20 23:18:00"
+        start = "2011-08-10 20:18:00"
+        request = testing.DummyRequest(get={'start': start,
+                                            'end': end,
+                                            'submit': 'submit', })
+        request.params = request.get
+        response = views.view_hzg_ww(request)
+
+        self.assertTrue(response['vals_available'] == False)
+        result = response['start'].strftime("%Y-%m-%d %H:%M:%S")
+        self.assertEquals(result, start)
+        result = response['end'].strftime("%Y-%m-%d %H:%M:%S")
+        self.assertEquals(result, end)
+        
+    def test_invalid_date_format_gives_error_in_form(self):
+        end = "2011-08-10 20"
+        start = "2011-08-20 23:18:00"
+        request = testing.DummyRequest(get={'start': start,
+                                            'end': end,
+                                            'submit': 'submit', })
+        request.params = request.get
+        response = views.view_hzg_ww(request)
+
+        self.assertTrue(response['vals_available'] == False)
+        self.assertTrue('Invalid date' in response['form'])
+
+    def test_end_before_start_gives_error_in_form(self):
+        end = "2011-08-10 20:18:00"
+        start = "2011-08-20 23:18:00"
+        request = testing.DummyRequest(get={'start': start,
+                                            'end': end, })
+        response = views.view_hzg_ww(request)
+
+        self.assertTrue(response['vals_available'] == False)
+        
+        

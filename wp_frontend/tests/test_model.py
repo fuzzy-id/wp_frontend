@@ -125,35 +125,46 @@ class PulledDataTest(unittest2.TestCase):
 
         expected = {}
 
+        from wp_frontend.models.calculations import calc_currKW
+
         for avg_start, avg_end in get_data._avg_timespan_iter(start,
                                                               end,
                                                               quantity):
-            temp_sum = 0
+            temp_aussen_sum = 0
+            temp_Vl_sum = 0
             tsp_sum = 0
             count = 0
             
             for i in range(10):
                 temp_aussen = random.randint(-10, 50)
+                temp_Vl = random.randint(-10, 50)
                 tsp = random.randint(avg_start, avg_end)
-                temp_sum += temp_aussen
+                
+                temp_aussen_sum += temp_aussen
+                temp_Vl_sum += temp_Vl
                 tsp_sum += tsp
+                
                 count += 1
                 entry = {'tsp': tsp,
-                         'temp_aussen': temp_aussen}
+                         'temp_aussen': temp_aussen,
+                         'temp_Vl': temp_Vl}
                 self._add_one(entry)
                 
             avg_tsp = int(1.0*tsp_sum/count)
-            expected[avg_tsp] = 1.0*temp_sum/count
+            expected[avg_tsp] = (1.0*temp_aussen_sum/count,
+                                 calc_currKW(1.0*temp_Vl_sum/count), )
 
         entries = get_data.PulledData.get_values_in_timespan(self.session,
                                                              ['tsp',
-                                                              'temp_aussen'],
+                                                              'temp_aussen',
+                                                              'currKW'],
                                                              start, end,
                                                              quantity)
         for entry in entries:
             res_tsp = int(entry[0])
             self.assertTrue(res_tsp in expected)
-            self.assertEquals(entry[1], expected[res_tsp])
+            self.assertEquals(entry[1], expected[res_tsp][0])
+            self.assertEquals(entry[2], expected[res_tsp][1])
         
     def _test_calculated_entries(self, entry, test_column, expected):
         self._add_one(entry)

@@ -177,10 +177,13 @@ class PulledData(Base):
         return map(lambda n: getattr(cls, n, None), names)
 
     @classmethod
-    def get_values_in_timespan(cls, session, descriptions,
+    def get_values_in_timespan(cls, session, columns,
                                start, end, quantity=30):
-        columns = cls.map_names_to_attributes(descriptions)
-        avg_columns = map(func.avg, columns)
+        cc = ColumnCalculator(columns)
+        menu_entries = cls.map_names_to_attributes(columns)
+        menu_entries = cc.add_entries(menu_entries)
+
+        avg_columns = map(func.avg, menu_entries)
 
         ret = []
         
@@ -188,9 +191,10 @@ class PulledData(Base):
             query = session.query(*avg_columns)
             query = query.filter(cls.tsp.between(avg_start,
                                                  avg_end))
-            result = query.all()
-            if result[0][0] is not None:
-                ret += result
+            result = query.all()[0]
+            
+            if result[0] is not None:
+                ret.append(cc.calculate_entries(result))
         return ret
 
 def _avg_timespan_iter(start, end, quantity):
