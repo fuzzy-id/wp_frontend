@@ -2,6 +2,7 @@ import time
 import datetime
 from sqlalchemy import Column, Float, Integer, Enum, Sequence, Date, Time, String, func
 from wp_frontend.models import Base
+from wp_frontend.models.column_calculator import ColumnCalculator
 
 class PulledData(Base):
     __tablename__ = 'wp_data'
@@ -160,18 +161,20 @@ class PulledData(Base):
             setattr(self, columns, columns_and_values[columns])
 
     @classmethod
-    def get_latest(cls, session, columns=None):
-        if columns is None:
-            query = session.query(cls)
-        else:
-            menu_entries = cls.map_names_to_attributes(columns)
-            query = session.query(*menu_entries)
+    def get_latest(cls, session, columns):
+        cc = ColumnCalculator(columns)
+        menu_entries = cls.map_names_to_attributes(columns)
+        menu_entries = cc.add_entries(menu_entries)
+
+        query = session.query(*menu_entries)
         query = query.order_by(cls.id.desc())
-        return query.first()
+        entry = query.first()
+
+        return cc.calculate_entries(entry)
 
     @classmethod
     def map_names_to_attributes(cls, names):
-        return map(lambda n: getattr(cls, n), names)
+        return map(lambda n: getattr(cls, n, None), names)
 
     @classmethod
     def get_values_in_timespan(cls, session, descriptions,
@@ -183,8 +186,8 @@ class PulledData(Base):
         
         for avg_start, avg_end in _avg_timespan_iter(start, end, quantity):
             query = session.query(*avg_columns)
-            query = query.filter(cls.tsp_0501_0500.between(avg_start,
-                                                           avg_end))
+            query = query.filter(cls.tsp.between(avg_start,
+                                                 avg_end))
             result = query.all()
             if result[0][0] is not None:
                 ret += result
@@ -198,3 +201,4 @@ def _avg_timespan_iter(start, end, quantity):
 
     for avg_start in range(start_tsp, end_tsp, step):
         yield (avg_start, avg_start + step)
+

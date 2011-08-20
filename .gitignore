@@ -8,4 +8,4 @@
 # nosetest coverage
 .coverage
 
-wp_frontend/plots/tmp-*
+wp_frontend/plots/plot-*

@@ -19,3 +19,6 @@ def initialize_sql(engine):
     DBSession.configure(bind=engine)
     Base.metadata.bind = engine
     Base.metadata.create_all(engine)
+
+from wp_frontend.models.calculations import register_all_calculations
+register_all_calculations()

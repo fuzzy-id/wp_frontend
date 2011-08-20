@@ -19,6 +19,8 @@ wp_frontend.egg-info/paster_plugins.txt
 wp_frontend.egg-info/requires.txt
 wp_frontend.egg-info/top_level.txt
 wp_frontend/models/__init__.py
+wp_frontend/models/calculations.py
+wp_frontend/models/column_calculator.py
 wp_frontend/models/get_data.py
 wp_frontend/models/set_data.py
 wp_frontend/static/diagramm.jpg
