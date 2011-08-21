@@ -6,10 +6,8 @@ production.ini
 setup.cfg
 setup.py
 wp_frontend/__init__.py
-wp_frontend/login.py
 wp_frontend/security.py
 wp_frontend/subscribers.py
-wp_frontend/views.py
 wp_frontend.egg-info/PKG-INFO
 wp_frontend.egg-info/SOURCES.txt
 wp_frontend.egg-info/dependency_links.txt
@@ -35,3 +33,5 @@ wp_frontend/tests/test_3rd_party.py
 wp_frontend/tests/test_functionals.py
 wp_frontend/tests/test_model.py
 wp_frontend/tests/test_views.py
+wp_frontend/views/__init__.py
+wp_frontend/views/forms.py

@@ -34,7 +34,7 @@ class BaseTests(unittest.TestCase):
     def test_failed_log_in(self):
         res = self.testapp.get(user_wrong_login,
                                status=200)
-        self.assertTrue('deformLogin' in res.body)
+        self.assertTrue('input type="password"' in res.body)
 
 class AuthenticationTests(unittest.TestCase):
 
@@ -48,8 +48,8 @@ class AuthenticationTests(unittest.TestCase):
 
     def test_anonymous_cannot_view(self):
         res = self.testapp.get('/home', status=200)
-        self.assertTrue('deformLogin' in res.body)
+        self.assertTrue('input type="password"' in res.body)
         res = self.testapp.get('/hzg_ww', status=200)
-        self.assertTrue('deformLogin' in res.body)
+        self.assertTrue('input type="password"' in res.body)
         res = self.testapp.get('/set_val', status=200)
-        self.assertTrue('deformLogin' in res.body)
+        self.assertTrue('input type="password"' in res.body)

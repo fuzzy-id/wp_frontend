@@ -53,16 +53,16 @@ def main(global_config, sql_init_function=initialize_sql, **settings):
                     renderer='templates/set_val.pt',
                     permission='user')
 
-    config.add_route('login', '/login')
-    config.add_view('wp_frontend.login.login',
-                    route_name='login',
+    config.add_route('view_login', '/login')
+    config.add_view('wp_frontend.views.view_login',
+                    route_name='view_login',
                     renderer='templates/login.pt')
-    config.add_view('wp_frontend.login.login',
+    config.add_view('wp_frontend.views.view_login',
                     context='pyramid.httpexceptions.HTTPForbidden',
                     renderer='templates/login.pt')
 
-    config.add_route('logout', '/logout')
-    config.add_view('wp_frontend.login.logout',
-                    route_name='logout')
+    config.add_route('view_logout', '/logout')
+    config.add_view('wp_frontend.views.view_logout',
+                    route_name='view_logout')
 
     return config.make_wsgi_app()

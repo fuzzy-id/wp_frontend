@@ -113,8 +113,8 @@ class ViewHzgWWTests(BaseViewTest):
         self.assertEquals(result, end)
         
     def test_invalid_date_format_gives_error_in_form(self):
-        end = "2011-08-10 20"
-        start = "2011-08-20 23:18:00"
+        start = "2011-08-10 20"
+        end = "2011-08-20 23:18:00"
         request = testing.DummyRequest(get={'start': start,
                                             'end': end,
                                             'submit': 'submit', })
@@ -136,4 +136,13 @@ class ViewHzgWWTests(BaseViewTest):
         self.assertTrue(response['vals_available'] == False)
         self.assertTrue('Start has to be before End' in response['form'])
         
-        
+class ViewSetValTests(BaseViewTest):
+
+    def _test_view_without_data_present(self):
+
+        request = testing.DummyRequest()
+        response = views.view_set_val(request)
+
+        self.assertTrue(response['log'] is None)
+        self.assertTrue(response['current_data'] is None)
+        self.assertTrue('setValForm' in response['form'])
