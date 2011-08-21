@@ -128,9 +128,12 @@ class ViewHzgWWTests(BaseViewTest):
         end = "2011-08-10 20:18:00"
         start = "2011-08-20 23:18:00"
         request = testing.DummyRequest(get={'start': start,
-                                            'end': end, })
+                                            'end': end,
+                                            'submit': 'submit', })
+        request.params = request.get
         response = views.view_hzg_ww(request)
 
         self.assertTrue(response['vals_available'] == False)
+        self.assertTrue('Start has to be before End' in response['form'])
         
         
