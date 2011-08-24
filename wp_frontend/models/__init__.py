@@ -24,6 +24,11 @@ from wp_frontend.models.calculations import register_all_calculations
 register_all_calculations()
 
 map_to_beautifull_names = {
+    'temp_aussen': 'Temp-Aussen',
+    'temp_Vl': 'Temp-Vorlauf',
+    'temp_RlSoll': 'Temp-Ruecklauf-Soll',
+    'temp_Rl': 'Temp-Ruecklauf',
+    'temp_WW': 'Temp-WW',
     'temp_einsatz': 'Hzg:TempEinsatz',
     'temp_BasisSoll': 'Hzg:TempBasisSoll',
     'hzg_KlSteilheit': 'Hzg:KlSteilheit',
@@ -34,5 +39,6 @@ map_to_beautifull_names = {
     'ww_Hysterese': 'Ww:Hysterese',
     'uhrzeit': 'Uhrzeit',
     'datum': 'Datum',
-    'handabschaltung': 'Handabschaltung'
+    'handabschaltung': 'Handabschaltung',
+    'deltaVlRl': 'Delta-Vorlauf-Ruecklauf',
     }

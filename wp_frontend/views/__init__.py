@@ -84,7 +84,7 @@ def view_hzg_ww(request):
                                                        'end': ret_dict['end']})
 
     columns = ['tsp', 'temp_aussen', 'temp_einsatz', 'temp_Vl',
-               'temp_RlSoll', 'temp_Rl', 'temp_WW']
+               'temp_RlSoll', 'temp_Rl', 'temp_WW', ]
 
     values = get_data.PulledData.get_values_in_timespan(DBSession,
                                                         columns,

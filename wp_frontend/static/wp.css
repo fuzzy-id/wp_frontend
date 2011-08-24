@@ -28,6 +28,11 @@
     width:100%;
     position:relative;
 }
+
+#diag{
+    width:100%;
+}
+
 #ovvalue{
     position:absolute;
     font-size:12px;
