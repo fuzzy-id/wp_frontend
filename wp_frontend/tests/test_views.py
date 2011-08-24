@@ -179,23 +179,20 @@ class ViewSetValTests(BaseViewTest):
 
         attribute = 'Hzg:TempEinsatz'
         newval = '22.7'
-        expected = []
+        request = testing.DummyRequest(params={'attr': attribute,
+                                               'newval':newval,
+                                               'submit': 'submit', })
 
-        for i in range(10):
-            oldval = random.randint(-30, 70)
-            entry = (user, attribute, newval, oldval, )
-            self._add_one(entry)
-            expected.append((strip_ms(datetime.datetime.now()),
-                             user, attribute, str(oldval), str(newval),
-                             'pending', '', ))
+        oldval = None
+        user = None
+                                       
+        expected = (strip_ms(datetime.datetime.now()), user, attribute,
+                    oldval, str(newval), 'pending', '', )
 
-        expected.reverse()
-        request = testing.DummyRequest()
         response = views.view_set_val(request)
 
         self.assertTrue(response['current_values'] is None)
-        self.assertEqual(response['log'], expected)
-
+        self.assertEqual(response['log'][0], expected)
         
 
 def strip_ms(dt):

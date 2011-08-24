@@ -1,3 +1,4 @@
+import transaction
 import datetime
 import os.path
 import tempfile
@@ -123,12 +124,7 @@ def view_set_val(request):
         beauty_setable = [ map_to_beautifull_names[s] for s in setable ]
         current_values = dict(zip(beauty_setable, current_values))
 
-    log = DataToSet.get_latest(DBSession, 10)
-    if len(log) == 0:
-        log = None
-
-    ret_dict = {'current_values': current_values,
-                'log': log}
+    ret_dict = {'current_values': current_values, }
 
     if submit_msg in request.params:
         controls = request.params.items()
@@ -136,8 +132,27 @@ def view_set_val(request):
             appstruct = set_val_form.validate(controls)
         except deform.ValidationFailure, e:
             ret_dict['form'] = e.render()
+            ret_dict['log'] = get_log()
             return ret_dict
-
+        attr = map_to_beautifull_names[appstruct['attr']]
+        newval = appstruct['newval']
+        if current_values is None:
+            oldval = None
+        else:
+            oldval = current_values[attr]
+        user = authenticated_userid(request)
+        transaction.begin()
+        entry = DataToSet(user, attr, newval, oldval)
+        DBSession.add(entry)
+        transaction.commit()
+        
     ret_dict['form'] = set_val_form.render()
+    ret_dict['log'] = get_log()
 
     return ret_dict
+
+def get_log():
+    log = DataToSet.get_latest(DBSession, 10)
+    if len(log) == 0:
+        return None
+    return log
