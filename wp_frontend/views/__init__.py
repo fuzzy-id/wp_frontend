@@ -4,7 +4,6 @@ import os.path
 import tempfile
 
 import deform
-import matplotlib.pyplot as plt
 from pyramid.httpexceptions import HTTPFound
 from pyramid.response import Response
 from pyramid.security import authenticated_userid, remember, forget
@@ -98,15 +97,33 @@ def view_hzg_ww(request):
                                              img_name=os.path.basename(img))
     return ret_dict
 
+
+from matplotlib.font_manager import FontProperties
+import matplotlib
+matplotlib.use('cairo.svg')
+import matplotlib.backends.backend_tkagg as plt
+
 def make_plot(columns, values):
+
+    fig = plt.Figure()
+    canvas = plt.FigureCanvasAgg(fig)
+    ax = fig.add_subplot(111)
+    
     x_axis = [ datetime.datetime.fromtimestamp(d[0]) for d in values ]
     for i in range(1, len(columns)):
-        plt.plot(x_axis, [ d[i] for d in values ])
+        label = map_to_beautifull_names[columns[i]]
+        ax.plot(x_axis, [ d[i] for d in values ], label=label)
 
     img = tempfile.mkstemp(prefix='plot-', suffix='.svgz',
                            dir='wp_frontend/plots')
     img = img[1]
-    plt.savefig(img)
+
+    fontP = FontProperties()
+    fontP.set_size('small')
+    fig.autofmt_xdate()
+
+    ax.legend(loc="best", prop=fontP)
+    canvas.print_figure(img)
     return img
 
 def get_plot(request):
