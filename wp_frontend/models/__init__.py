@@ -22,3 +22,17 @@ def initialize_sql(engine):
 
 from wp_frontend.models.calculations import register_all_calculations
 register_all_calculations()
+
+map_to_beautifull_names = {
+    'temp_einsatz': 'Hzg:TempEinsatz',
+    'temp_BasisSoll': 'Hzg:TempBasisSoll',
+    'hzg_KlSteilheit': 'Hzg:KlSteilheit',
+    'hzg_Hysterese': 'Hzg:Hysterese',
+    'hzg_PumpenNachl': 'Hzg:PumpenNachl',
+    'ww_Abschaltung': 'Ww:Abschaltung',
+    'ww_TempSoll': 'Ww:TempSoll',
+    'ww_Hysterese': 'Ww:Hysterese',
+    'uhrzeit': 'Uhrzeit',
+    'datum': 'Datum',
+    'handabschaltung': 'Handabschaltung'
+    }

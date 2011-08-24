@@ -8,6 +8,7 @@ from pyramid import testing
 from wp_frontend import views
 from wp_frontend.tests import getTransaction, createEngineAndInitDB
 from wp_frontend.models import get_data
+from wp_frontend.models.set_data import DataToSet
 
 
 class RootViewTest(unittest.TestCase):
@@ -37,14 +38,14 @@ class BaseViewTest(unittest.TestCase):
 
     def _add_one(self, *args):
         self.transaction.begin()
-        entry = self._class_to_add()(*args)
+        entry = self._make_the_class(*args)            
         self.session.add(entry)
         self.transaction.commit()
 
 class ViewHomeTests(BaseViewTest):
 
-    def _class_to_add(self):
-        return get_data.PulledData
+    def _make_the_class(self, *args):
+        return get_data.PulledData(*args)
 
     def test_view_home_without_data(self):
         request = testing.DummyRequest()
@@ -84,8 +85,8 @@ class ViewHomeTests(BaseViewTest):
 
 class ViewHzgWWTests(BaseViewTest):
 
-    def _class_to_add(self):
-        return get_data.PulledData
+    def _make_the_class(self, *args):
+        return get_data.PulledData(*args)
 
     def test_without_data_present(self):
         request = testing.DummyRequest()
@@ -136,13 +137,67 @@ class ViewHzgWWTests(BaseViewTest):
         self.assertTrue(response['vals_available'] == False)
         self.assertTrue('Start has to be before End' in response['form'])
         
+from wp_frontend.models.set_data import DataToSet
+
 class ViewSetValTests(BaseViewTest):
 
-    def _test_view_without_data_present(self):
+    def _make_the_class(self, args):
+        return DataToSet(*args)
+
+    def test_view_without_data_present(self):
 
         request = testing.DummyRequest()
         response = views.view_set_val(request)
 
+        self.assertTrue(response['current_values'] is None)
         self.assertTrue(response['log'] is None)
-        self.assertTrue(response['current_data'] is None)
-        self.assertTrue('setValForm' in response['form'])
+        self.assertTrue(response['form'] is not None)
+
+    def test_view_with_log(self):
+        
+        user = 'test_user'
+        attribute = 'Hzg:TempEinsatz'
+        expected = []
+
+        for i in range(10):
+            newval = random.randint(-30, 70)
+            oldval = random.randint(-30, 70)
+            entry = (user, attribute, newval, oldval, )
+            self._add_one(entry)
+            expected.append((strip_ms(datetime.datetime.now()),
+                             user, attribute, str(oldval), str(newval),
+                             'pending', '', ))
+
+        expected.reverse()
+        request = testing.DummyRequest()
+        response = views.view_set_val(request)
+
+        self.assertTrue(response['current_values'] is None)
+        self.assertEqual(response['log'], expected)
+
+    def test_submit_works(self):
+
+        attribute = 'Hzg:TempEinsatz'
+        newval = '22.7'
+        expected = []
+
+        for i in range(10):
+            oldval = random.randint(-30, 70)
+            entry = (user, attribute, newval, oldval, )
+            self._add_one(entry)
+            expected.append((strip_ms(datetime.datetime.now()),
+                             user, attribute, str(oldval), str(newval),
+                             'pending', '', ))
+
+        expected.reverse()
+        request = testing.DummyRequest()
+        response = views.view_set_val(request)
+
+        self.assertTrue(response['current_values'] is None)
+        self.assertEqual(response['log'], expected)
+
+        
+
+def strip_ms(dt):
+    return datetime.datetime(dt.year, dt.month, dt.day, dt.hour, dt.minute,
+                             dt.second)

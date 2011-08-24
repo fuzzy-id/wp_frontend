@@ -9,10 +9,9 @@ from pyramid.response import Response
 from pyramid.security import authenticated_userid, remember, forget
 from pyramid.url import route_url
 
-from wp_frontend.models import DBSession, get_data
-from wp_frontend.views.forms import timespan_form
-from wp_frontend.views.forms import login_form
-from wp_frontend.views.forms import submit_msg
+from wp_frontend.models import DBSession, get_data, map_to_beautifull_names
+from wp_frontend.models.set_data import DataToSet, setable
+from wp_frontend.views.forms import timespan_form, login_form, submit_msg, set_val_form
 
 
 def view_logout(request):
@@ -118,7 +117,27 @@ def get_plot(request):
     return response
 
 def view_set_val(request):
-    logged_in = authenticated_userid(request)
-    ret_dict = {}
-    ret_dict['logged_in'] = logged_in
+
+    current_values = get_data.PulledData.get_latest(DBSession, setable)
+    if current_values is not None:
+        beauty_setable = [ map_to_beautifull_names[s] for s in setable ]
+        current_values = dict(zip(beauty_setable, current_values))
+
+    log = DataToSet.get_latest(DBSession, 10)
+    if len(log) == 0:
+        log = None
+
+    ret_dict = {'current_values': current_values,
+                'log': log}
+
+    if submit_msg in request.params:
+        controls = request.params.items()
+        try:
+            appstruct = set_val_form.validate(controls)
+        except deform.ValidationFailure, e:
+            ret_dict['form'] = e.render()
+            return ret_dict
+
+    ret_dict['form'] = set_val_form.render()
+
     return ret_dict

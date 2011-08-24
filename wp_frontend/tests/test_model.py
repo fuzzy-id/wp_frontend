@@ -16,9 +16,9 @@ class DataToSetTest(unittest2.TestCase):
     def tearDown(self):
         self.session.remove()
 
-    def _add_one(self, user, attribute, newval):
+    def _add_one(self, user, attribute, newval, oldval):
         self.transaction.begin()
-        entry = set_data.DataToSet(user, attribute, newval)
+        entry = set_data.DataToSet(user, attribute, newval, oldval)
         self.session.add(entry)
         self.transaction.commit()
         return entry
@@ -34,22 +34,25 @@ class DataToSetTest(unittest2.TestCase):
         self.assertRaises(IndexError, entries.pop)
 
     def test_get_last_entry_works(self):
-        self._add_one('test_user', 'Hzg:TempEinsatz', '23')
+        self._add_one('test_user', 'Hzg:TempEinsatz', '23', '80')
         entry = self._get_last_entry()
         self.assertEquals(entry.newval, '23')
-        self._add_one('test_user', 'Hzg:TempEinsatz', '24')
-        self._add_one('test_user', 'Hzg:TempEinsatz', '25')
-        self._add_one('test_user', 'Hzg:TempEinsatz', '26')
+        self.assertEquals(entry.oldval, '80')
+        self._add_one('test_user', 'Hzg:TempEinsatz', '24', '13.2')
+        self._add_one('test_user', 'Hzg:TempEinsatz', '25', '9.0')
+        self._add_one('test_user', 'Hzg:TempEinsatz', '26', '12.3')
         entry = self._get_last_entry()
         self.assertEquals(entry.newval, '26')
-        self._add_one('test_user', 'Hzg:TempEinsatz', '27')
-        self._add_one('test_user', 'Hzg:TempEinsatz', '28')
+        self.assertEquals(entry.oldval, '12.3')
+        self._add_one('test_user', 'Hzg:TempEinsatz', '27', '2')
+        self._add_one('test_user', 'Hzg:TempEinsatz', '28', '-90')
         entry = self._get_last_entry()
         self.assertEquals(entry.newval, '28')
+        self.assertEquals(entry.oldval, '-90')
 
     def test_datetime_of_entry(self):
         dt_before = datetime.datetime.now()
-        self._add_one('test_user', 'Hzg:TempEinsatz', '23')
+        self._add_one('test_user', 'Hzg:TempEinsatz', '23', '32')
         dt_after = datetime.datetime.now()
         entry = self._get_last_entry()
         one_sec = datetime.timedelta(seconds=1)

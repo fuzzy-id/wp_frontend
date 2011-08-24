@@ -1,8 +1,11 @@
-import time
 import datetime
+import time
+
 from sqlalchemy import Column, Float, Integer, Enum, Sequence, Date, Time, String, func
+
 from wp_frontend.models import Base
 from wp_frontend.models.column_calculator import ColumnCalculator
+
 
 class PulledData(Base):
     __tablename__ = 'wp_data'
@@ -30,10 +33,11 @@ class PulledData(Base):
     m_0115 = Column(Float, default=0.0)
     druck_Verdampfer = Column('m_0116', Float, default=0.0)
     druck_Kondensator = Column('m_0117', Float, default=0.0)
-    m_0200 = Column(Enum('true','false','undef'), default='undef')
+    handabschaltung = Column('m_0200', Enum('true','false','undef'),
+                             default='undef')
     temp_einsatz = Column('m_0201', Float, default=0.0)
-    m_0202 = Column(Float, default=0.0)
-    m_0203 = Column(Float, default=0.0)
+    temp_BasisSoll = Column('m_0202', Float, default=0.0)
+    hzg_KlSteilheit = Column('m_0203', Float, default=0.0)
     m_0204 = Column(Float, default=0.0)
     m_0205 = Column(Float, default=0.0)
     m_0206 = Column(Float, default=0.0)
@@ -46,8 +50,8 @@ class PulledData(Base):
     m_0213 = Column(Time, default=datetime.time())
     m_0214 = Column(Time, default=datetime.time())
     m_0215 = Column(Float, default=0.0)
-    m_0216 = Column(Float, default=0.0)
-    m_0217 = Column(Integer, default=0)
+    hzg_Hysterese = Column('m_0216', Float, default=0.0)
+    hzg_PumpenNachl = Column('m_0217', Integer, default=0)
     m_0300 = Column(Enum('true','false','undef'), default='undef')
     m_0301 = Column(Float, default=0.0)
     m_0302 = Column(Float, default=0.0)
@@ -55,13 +59,14 @@ class PulledData(Base):
     m_0304 = Column(Float, default=0.0)
     m_0305 = Column(Float, default=0.0)
     m_0306 = Column(Float, default=0.0)
-    m_0400 = Column(Enum('true','false','undef'), default='undef')
+    ww_Abschaltung = Column('m_0400', Enum('true','false','undef'),
+                            default='undef')
     m_0401 = Column(Time, default=datetime.time())
     m_0402 = Column(Time, default=datetime.time())
     m_0403 = Column(Float, default=0.0)
-    m_0404 = Column(Float, default=0.0)
+    ww_TempSoll = Column('m_0404', Float, default=0.0)
     m_0405 = Column(Float, default=0.0)
-    m_0406 = Column(Float, default=0.0)
+    ww_Hysterese = Column('m_0406', Float, default=0.0)
     m_0407 = Column(Float, default=0.0)
     uhrzeit = Column('m_0500', Time, default=datetime.time())
     datum = Column('m_0501', Date, default=datetime.date.min)
