@@ -26,7 +26,9 @@ def main(global_config, sql_init_function=initialize_sql, **settings):
 
     global plots_dir
     plots_dir = settings.get('plots_dir', 'wp_frontend/plots')
-    plots_dir = os.path.abspath(plots_dir)
+    root_dir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+    plots_dir = os.path.join(root_dir, plots_dir)
+    print plots_dir
 
     config.add_subscriber('wp_frontend.subscribers.add_base_template',
                           'pyramid.events.BeforeRender')
