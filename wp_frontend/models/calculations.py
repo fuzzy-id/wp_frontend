@@ -19,6 +19,13 @@ class DeltaVlRl(object):
     def calc(temp_Vl, temp_Rl):
         return temp_Vl - temp_Rl
 
+class DeltaKondensVl(object):
+    name = 'deltaKondensVl'
+    needed_columns = [PulledData.temp_Kondensator, PulledData.temp_Vl]
+    @staticmethod
+    def calc(temp_Kondensator, temp_Vl):
+        return temp_Kondensator - temp_Vl
+
 class DeltaWQea(object):
     name = 'deltaWQea'
     needed_columns = [PulledData.temp_WQein, PulledData.temp_WQaus]
@@ -26,7 +33,15 @@ class DeltaWQea(object):
     def calc(temp_WQein, temp_WQaus):
         return temp_WQein - temp_WQaus
 
-available_calculations = [CurrKW, DeltaVlRl, DeltaWQea]
+class DeltaWQaVerdamp(object):
+    name = 'deltaWQaVerdamp'
+    needed_columns = [PulledData.temp_WQaus, PulledData.temp_Verdampfer]
+    @staticmethod
+    def calc(temp_WQaus, temp_Verdamp):
+        return temp_WQaus - temp_Verdamp
+
+available_calculations = [CurrKW, DeltaVlRl, DeltaWQea, DeltaKondensVl,
+                          ]
 
 def register_all_calculations():
     from wp_frontend.models.column_calculator import ColumnCalculator

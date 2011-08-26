@@ -25,7 +25,16 @@
 	  <a href="${request.application_url}/home">Home</a>
 	</span>
 	<span id="menuentry">
-	  <a href="${request.application_url}/hzg_ww">Hzg/WW</a>
+	  <a href="${request.application_url}/graph/hzg_ww">Hzg/WW</a>
+	</span>
+	<span id="menuentry">
+	  <a href="${request.application_url}/graph/erdsonde">Erdsonde</a>
+	</span>
+	<span id="menuentry">
+	  <a href="${request.application_url}/graph/vorl_kondens">Vorl/Kondens</a>
+	</span>
+	<span id="menuentry">
+	  <a href="${request.application_url}/graph/wqaus_verdamp">WQaus/Verdampfer</a>
 	</span>
 	<span id="menuentry">
 	  <a href="${request.application_url}/set_val">Werte-Setzen</a>

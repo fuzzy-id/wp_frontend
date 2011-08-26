@@ -1,18 +1,14 @@
-import transaction
 import datetime
-import os.path
-import tempfile
 
 import deform
+import transaction
 from pyramid.httpexceptions import HTTPFound
-from pyramid.response import Response
 from pyramid.security import authenticated_userid, remember, forget
 from pyramid.url import route_url
 
-from wp_frontend import plots_dir
 from wp_frontend.models import DBSession, get_data, map_to_beautifull_names
 from wp_frontend.models.set_data import DataToSet, setable
-from wp_frontend.views.forms import timespan_form, login_form, submit_msg, set_val_form
+from wp_frontend.views.forms import login_form, submit_msg, set_val_form
 
 
 def view_logout(request):
@@ -60,86 +56,6 @@ def view_home(request):
         data = dict(zip(needed_columns, data))
     ret_dict = {'data': data, }
     return ret_dict
-
-def strip_min_ms(dt):
-    return datetime.datetime(dt.year, dt.month, dt.day, dt.hour, dt.minute)
-
-def view_hzg_ww(request):
-    ret_dict = {}
-
-    ret_dict['end'] = strip_min_ms(datetime.datetime.now())
-    ret_dict['start'] = ret_dict['end'] - datetime.timedelta(days=30)
-    ret_dict['vals_available'] = False
-    ret_dict['resolution'] = 500
-
-    if submit_msg in request.params:
-        controls = request.params.items()
-        try:
-            appstruct = timespan_form.validate(controls)
-        except deform.ValidationFailure, e:
-            ret_dict['form'] = e.render()
-            return ret_dict
-        ret_dict['end'] = appstruct['end']
-        ret_dict['start'] = appstruct['start']
-        ret_dict['resolution'] = appstruct['resolution']
-
-    ret_dict['form'] = timespan_form.render(
-        appstruct={'start': ret_dict['start'],
-                   'end': ret_dict['end'],
-                   'resolution': ret_dict['resolution'], })
-
-    columns = ['tsp', 'temp_aussen', 'temp_einsatz', 'temp_Vl',
-               'temp_RlSoll', 'temp_Rl', 'temp_WW', ]
-
-    number, values = get_data.PulledData.get_values_in_timespan(
-        DBSession, columns, ret_dict['start'], ret_dict['end'],
-        ret_dict['resolution'])
-
-    ret_dict['resolution'] = number
-
-    if len(values) != 0:
-        ret_dict['vals_available'] = True
-        img = make_plot(columns, values)
-        ret_dict['img'] = request.route_path('plots',
-                                             img_name=os.path.basename(img))
-    return ret_dict
-
-
-from matplotlib.font_manager import FontProperties
-import matplotlib
-matplotlib.use('cairo.svg')
-import matplotlib.backends.backend_tkagg as plt
-
-def make_plot(columns, values):
-
-    fig = plt.Figure()
-    canvas = plt.FigureCanvasAgg(fig)
-    ax = fig.add_subplot(111)
-    
-    x_axis = tuple(datetime.datetime.fromtimestamp(d[0]) for d in values)
-    for i in range(1, len(columns)):
-        label = map_to_beautifull_names[columns[i]]
-        ax.plot(x_axis, tuple( d[i] for d in values ), label=label)
-
-    img = tempfile.mkstemp(prefix='plot-', suffix='.svgz',
-                           dir=plots_dir)
-    img = img[1]
-
-    fontP = FontProperties()
-    fontP.set_size('small')
-    fig.autofmt_xdate()
-
-    ax.legend(loc="best", prop=fontP)
-    canvas.print_figure(img)
-    return img
-
-def get_plot(request):
-    img_name = request.matchdict['img_name']
-    f = open(os.path.join(plots_dir, img_name))
-    response = Response(content_type='image/svg+xml',
-                        content_encoding='gzip',
-                        app_iter=f)
-    return response
 
 def view_set_val(request):
 

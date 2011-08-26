@@ -9,6 +9,7 @@ from wp_frontend import views, tests
 from wp_frontend.models import get_data, map_to_beautifull_names
 from wp_frontend.models.set_data import DataToSet
 from wp_frontend.tests import BaseTestWithDB
+import wp_frontend.views.graphs
 
 
 class RootViewTest(unittest.TestCase):
@@ -73,7 +74,8 @@ class ViewHzgWWTests(BaseTestWithDB):
 
     def test_without_data_present(self):
         request = testing.DummyRequest()
-        response = views.view_hzg_ww(request)
+        request.matchdict['graph_name'] = 'hzg_ww'
+        response = wp_frontend.views.graphs.view_graph(request)
         now = datetime.datetime.now()
         thirty_days_ago = now - datetime.timedelta(days=30)
         two_minutes = datetime.timedelta(minutes=2)
@@ -88,8 +90,9 @@ class ViewHzgWWTests(BaseTestWithDB):
                                             'end': end,
                                             'resolution': '30',
                                             'submit': 'submit', })
+        request.matchdict['graph_name'] = 'hzg_ww'
         request.params = request.get
-        response = views.view_hzg_ww(request)
+        response = wp_frontend.views.graphs.view_graph(request)
 
         self.assertTrue(response['vals_available'] == False)
         result = response['start'].strftime("%Y-%m-%d %H:%M:%S")
@@ -103,8 +106,9 @@ class ViewHzgWWTests(BaseTestWithDB):
         request = testing.DummyRequest(get={'start': start,
                                             'end': end,
                                             'submit': 'submit', })
+        request.matchdict['graph_name'] = 'hzg_ww'
         request.params = request.get
-        response = views.view_hzg_ww(request)
+        response = wp_frontend.views.graphs.view_graph(request)
 
         self.assertTrue(response['vals_available'] == False)
         self.assertTrue('Invalid date' in response['form'])
@@ -116,8 +120,9 @@ class ViewHzgWWTests(BaseTestWithDB):
                                             'end': end,
                                             'resolution': '30',
                                             'submit': 'submit', })
+        request.matchdict['graph_name'] = 'hzg_ww'
         request.params = request.get
-        response = views.view_hzg_ww(request)
+        response = wp_frontend.views.graphs.view_graph(request)
 
         self.assertTrue(response['vals_available'] == False)
         self.assertTrue('Start has to be before End' in response['form'])

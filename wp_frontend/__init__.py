@@ -1,13 +1,14 @@
-from pyramid.config import Configurator
-from sqlalchemy import engine_from_config
-
-from wp_frontend.models import initialize_sql
+import os.path
 
 from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
+from pyramid.config import Configurator
+from pyramid.renderers import get_renderer
+from sqlalchemy import engine_from_config
+
+from wp_frontend.models import initialize_sql
 from wp_frontend.security import groupfinder
 
-import os.path
 
 plots_dir = ''
 
@@ -28,7 +29,6 @@ def main(global_config, sql_init_function=initialize_sql, **settings):
     plots_dir = settings.get('plots_dir', 'wp_frontend/plots')
     root_dir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
     plots_dir = os.path.join(root_dir, plots_dir)
-    print plots_dir
 
     config.add_subscriber('wp_frontend.add_base_template',
                           'pyramid.events.BeforeRender')
@@ -46,14 +46,14 @@ def main(global_config, sql_init_function=initialize_sql, **settings):
                     renderer='templates/home.pt',
                     permission='user')
 
-    config.add_route('view_hzg_ww', '/hzg_ww')
-    config.add_view('wp_frontend.views.view_hzg_ww',
-                    route_name='view_hzg_ww',
-                    renderer='templates/hzg_ww.pt',
+    config.add_route('view_graph', '/graph/{graph_name}')
+    config.add_view('wp_frontend.views.graphs.view_graph',
+                    route_name='view_graph',
+                    renderer='templates/graph.pt',
                     permission='user')
 
     config.add_route('plots', '/plots/{img_name}')
-    config.add_view('wp_frontend.views.get_plot',
+    config.add_view('wp_frontend.views.plots.get_plot',
                     route_name='plots',
                     permission='user')
     
@@ -77,7 +77,6 @@ def main(global_config, sql_init_function=initialize_sql, **settings):
 
     return config.make_wsgi_app()
 
-from pyramid.renderers import get_renderer
 
 def add_base_template(event):
     base = get_renderer('templates/base.pt').implementation()

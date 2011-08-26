@@ -7,7 +7,7 @@ from wp_frontend.models import set_data, get_data
 from wp_frontend.models.calculations import register_all_calculations, calc_currKW
 from wp_frontend.models.column_calculator import _flatten_list, ColumnCalculator
 from wp_frontend.tests import BaseTestWithDB, strip_ms
-from wp_frontend.views import strip_min_ms
+from wp_frontend.views.graphs import strip_min_ms
 
 class DataToSetTest(BaseTestWithDB):
 

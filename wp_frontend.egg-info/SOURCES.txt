@@ -7,7 +7,6 @@ setup.cfg
 setup.py
 wp_frontend/__init__.py
 wp_frontend/security.py
-wp_frontend/subscribers.py
 wp_frontend.egg-info/PKG-INFO
 wp_frontend.egg-info/SOURCES.txt
 wp_frontend.egg-info/dependency_links.txt
@@ -24,8 +23,8 @@ wp_frontend/models/set_data.py
 wp_frontend/static/diagramm.jpg
 wp_frontend/static/wp.css
 wp_frontend/templates/base.pt
+wp_frontend/templates/graph.pt
 wp_frontend/templates/home.pt
-wp_frontend/templates/hzg_ww.pt
 wp_frontend/templates/login.pt
 wp_frontend/templates/set_val.pt
 wp_frontend/tests/__init__.py
@@ -34,3 +33,5 @@ wp_frontend/tests/test_model.py
 wp_frontend/tests/test_views.py
 wp_frontend/views/__init__.py
 wp_frontend/views/forms.py
+wp_frontend/views/graphs.py
+wp_frontend/views/plots.py
