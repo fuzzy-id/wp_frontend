@@ -7,6 +7,10 @@ from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
 from wp_frontend.security import groupfinder
 
+import os.path
+
+plots_dir = ''
+
 def main(global_config, sql_init_function=initialize_sql, **settings):
     """ This function returns a Pyramid WSGI application.
     """
@@ -19,6 +23,10 @@ def main(global_config, sql_init_function=initialize_sql, **settings):
                           root_factory='wp_frontend.models.RootFactory',
                           authentication_policy=authn_policy,
                           authorization_policy=authz_policy)
+
+    global plots_dir
+    plots_dir = settings.get('plots_dir', 'wp_frontend/plots')
+    plots_dir = os.path.abspath(plots_dir)
 
     config.add_subscriber('wp_frontend.subscribers.add_base_template',
                           'pyramid.events.BeforeRender')

@@ -9,6 +9,7 @@ from pyramid.response import Response
 from pyramid.security import authenticated_userid, remember, forget
 from pyramid.url import route_url
 
+from wp_frontend import plots_dir
 from wp_frontend.models import DBSession, get_data, map_to_beautifull_names
 from wp_frontend.models.set_data import DataToSet, setable
 from wp_frontend.views.forms import timespan_form, login_form, submit_msg, set_val_form
@@ -121,7 +122,7 @@ def make_plot(columns, values):
         ax.plot(x_axis, tuple( d[i] for d in values ), label=label)
 
     img = tempfile.mkstemp(prefix='plot-', suffix='.svgz',
-                           dir='wp_frontend/plots')
+                           dir=plots_dir)
     img = img[1]
 
     fontP = FontProperties()
@@ -134,7 +135,7 @@ def make_plot(columns, values):
 
 def get_plot(request):
     img_name = request.matchdict['img_name']
-    f = open(os.path.join('wp_frontend/plots', img_name))
+    f = open(os.path.join(plots_dir, img_name))
     response = Response(content_type='image/svg+xml',
                         content_encoding='gzip',
                         app_iter=f)
