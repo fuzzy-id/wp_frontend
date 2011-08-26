@@ -32,7 +32,7 @@ class TimespanSchema(colander.Schema):
     start = colander.SchemaNode(colander.DateTime())
     end = colander.SchemaNode(colander.DateTime())
     resolution = colander.SchemaNode(colander.Integer(),
-                                     validator=colander.Range(10, 10000))
+                                     validator=colander.Range(1, 10000))
 
 def timespan_validator(form, value):
     if value['start'] >= value['end']:
