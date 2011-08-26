@@ -30,7 +30,7 @@ def main(global_config, sql_init_function=initialize_sql, **settings):
     plots_dir = os.path.join(root_dir, plots_dir)
     print plots_dir
 
-    config.add_subscriber('wp_frontend.subscribers.add_base_template',
+    config.add_subscriber('wp_frontend.add_base_template',
                           'pyramid.events.BeforeRender')
 
     config.add_static_view('static', 'wp_frontend:static')
@@ -76,3 +76,9 @@ def main(global_config, sql_init_function=initialize_sql, **settings):
                     route_name='view_logout')
 
     return config.make_wsgi_app()
+
+from pyramid.renderers import get_renderer
+
+def add_base_template(event):
+    base = get_renderer('templates/base.pt').implementation()
+    event.update({'base': base})
