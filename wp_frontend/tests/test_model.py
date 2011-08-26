@@ -1,28 +1,19 @@
 import datetime
+import time
 import random
-import unittest2
-from pprint import pprint
+import unittest
+
 from wp_frontend.models import set_data, get_data
-from wp_frontend.tests import getTransaction, createEngineAndInitDB
+from wp_frontend.models.calculations import register_all_calculations, calc_currKW
+from wp_frontend.models.column_calculator import _flatten_list, ColumnCalculator
+from wp_frontend.tests import BaseTestWithDB, strip_ms
 from wp_frontend.views import strip_min_ms
 
+class DataToSetTest(BaseTestWithDB):
 
-class DataToSetTest(unittest2.TestCase):
+    def _make_the_class(self, *args):
+        return set_data.DataToSet(*args)
     
-    def setUp(self):
-        self.transaction = getTransaction()
-        self.session = createEngineAndInitDB()
-
-    def tearDown(self):
-        self.session.remove()
-
-    def _add_one(self, user, attribute, newval, oldval):
-        self.transaction.begin()
-        entry = set_data.DataToSet(user, attribute, newval, oldval)
-        self.session.add(entry)
-        self.transaction.commit()
-        return entry
-
     def _get_last_entry(self):
         query = self.session.query(set_data.DataToSet)
         query = query.order_by(set_data.DataToSet.id.desc())
@@ -39,40 +30,21 @@ class DataToSetTest(unittest2.TestCase):
         self.assertEquals(entry.newval, '23')
         self.assertEquals(entry.oldval, '80')
         self._add_one('test_user', 'Hzg:TempEinsatz', '24', '13.2')
-        self._add_one('test_user', 'Hzg:TempEinsatz', '25', '9.0')
         self._add_one('test_user', 'Hzg:TempEinsatz', '26', '12.3')
         entry = self._get_last_entry()
         self.assertEquals(entry.newval, '26')
         self.assertEquals(entry.oldval, '12.3')
-        self._add_one('test_user', 'Hzg:TempEinsatz', '27', '2')
-        self._add_one('test_user', 'Hzg:TempEinsatz', '28', '-90')
-        entry = self._get_last_entry()
-        self.assertEquals(entry.newval, '28')
-        self.assertEquals(entry.oldval, '-90')
 
     def test_datetime_of_entry(self):
-        dt_before = datetime.datetime.now()
         self._add_one('test_user', 'Hzg:TempEinsatz', '23', '32')
-        dt_after = datetime.datetime.now()
+        dt_after = strip_ms(datetime.datetime.now())
         entry = self._get_last_entry()
-        one_sec = datetime.timedelta(seconds=1)
-        self.assertTrue(one_sec >= entry.datetime-dt_before)
-        self.assertTrue(one_sec >= dt_after-entry.datetime)
+        self.assertEquals(dt_after, entry.datetime)
 
-class PulledDataTest(unittest2.TestCase):
+class PulledDataTest(BaseTestWithDB):
 
-    def setUp(self):
-        self.transaction = getTransaction()
-        self.session = createEngineAndInitDB()
-
-    def tearDown(self):
-        self.session.remove()
-
-    def _add_one(self, columns_and_values):
-        self.transaction.begin()
-        entry = get_data.PulledData(columns_and_values)
-        self.session.add(entry)
-        self.transaction.commit()
+    def _make_the_class(self, *args):
+        return get_data.PulledData(*args)
 
     def test_defaults_work(self):
         self._add_one({})
@@ -94,14 +66,11 @@ class PulledDataTest(unittest2.TestCase):
         self.assertEqual(entry[1], 80.34)
 
     def test_datetime_of_entry(self):
-        dt_before = datetime.datetime.now()
         self._add_one({})
-        dt_after = datetime.datetime.now()
+        dt_after = strip_ms(datetime.datetime.now())
         entry = get_data.PulledData.get_latest(self.session, ['tsp'])
-        one_sec = datetime.timedelta(seconds=1)
         entry_date = datetime.datetime.fromtimestamp(entry[0])
-        self.assertTrue(one_sec >= entry_date - dt_before)
-        self.assertTrue(one_sec >= dt_after - entry_date)
+        self.assertEquals(dt_after, entry_date)
 
     def test_avg_timespan_iterator(self):
         end = datetime.datetime.now()
@@ -121,14 +90,13 @@ class PulledDataTest(unittest2.TestCase):
             current_start += expected_step
             self.assertEquals(dt_avg_end, current_start)
 
-    def test_get_values_in_timespan(self):
+    def test_get_values_in_timespan_with_avg(self):
         start = datetime.datetime.min
         end = start + datetime.timedelta(days=30)
         quantity = 10
 
         expected = {}
 
-        from wp_frontend.models.calculations import calc_currKW
 
         for avg_start, avg_end in get_data._avg_timespan_iter(start,
                                                               end,
@@ -157,12 +125,48 @@ class PulledDataTest(unittest2.TestCase):
             expected[avg_tsp] = (1.0*temp_aussen_sum/count,
                                  calc_currKW(1.0*temp_Vl_sum/count), )
 
-        entries = get_data.PulledData.get_values_in_timespan(self.session,
-                                                             ['tsp',
-                                                              'temp_aussen',
-                                                              'currKW'],
-                                                             start, end,
-                                                             quantity)
+        number, entries = get_data.PulledData.get_values_in_timespan(
+            self.session, ['tsp', 'temp_aussen', 'currKW'], start, end,
+            quantity)
+
+        self.assertEquals(number, quantity)
+        
+        for entry in entries:
+            res_tsp = int(entry[0])
+            self.assertTrue(res_tsp in expected)
+            self.assertEquals(entry[1], expected[res_tsp][0])
+            self.assertEquals(entry[2], expected[res_tsp][1])
+        
+    def test_get_values_in_timespan_wo_avg(self):
+        start = datetime.datetime.min
+        end = start + datetime.timedelta(days=10)
+        tsp_start = int(time.mktime(start.timetuple()))
+        tsp_end = int(time.mktime(end.timetuple()))
+        quantity = 100
+
+        step = (tsp_end - tsp_start) / quantity
+        
+        expected = {}
+
+        for tsp in range(tsp_start, tsp_end, step):
+            temp_aussen = random.randint(-10, 50)
+            temp_Vl = random.randint(-10, 50)
+                
+            entry = {'tsp': tsp,
+                     'temp_aussen': temp_aussen,
+                     'temp_Vl': temp_Vl}
+
+            self._add_one(entry)
+                
+            expected[tsp] = (temp_aussen,
+                             calc_currKW(temp_Vl), )
+
+        number, entries = get_data.PulledData.get_values_in_timespan(
+            self.session, ['tsp', 'temp_aussen', 'currKW'], start, end,
+            quantity*3)
+
+        self.assertEquals(number, quantity)
+        
         for entry in entries:
             res_tsp = int(entry[0])
             self.assertTrue(res_tsp in expected)
@@ -192,17 +196,13 @@ class PulledDataTest(unittest2.TestCase):
         expected = 12.5 - 10.0
         self._test_calculated_entries(entry, 'deltaWQea', expected)
 
-from wp_frontend.models.column_calculator import _flatten_list, ColumnCalculator
-
-class ColumnCalculatorTests(unittest2.TestCase):
+class ColumnCalculatorTests(unittest.TestCase):
 
     def setUp(self):
         ColumnCalculator.available_calculations = {}
 
     def tearDown(self):
-        from wp_frontend.models.calculations import register_all_calculations
         register_all_calculations()
-
 
     def test_flatten_list(self):
         test_list = [8, [98, [0, 'raen']], ['gf'], 8]

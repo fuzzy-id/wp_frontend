@@ -5,10 +5,10 @@ import unittest
 
 from pyramid import testing
 
-from wp_frontend import views
-from wp_frontend.tests import getTransaction, createEngineAndInitDB
-from wp_frontend.models import get_data
+from wp_frontend import views, tests
+from wp_frontend.models import get_data, map_to_beautifull_names
 from wp_frontend.models.set_data import DataToSet
+from wp_frontend.tests import BaseTestWithDB
 
 
 class RootViewTest(unittest.TestCase):
@@ -25,24 +25,7 @@ class RootViewTest(unittest.TestCase):
         response = views.view_wp(request)
         self.assertEqual(response.location, 'http://example.com/home')
 
-class BaseViewTest(unittest.TestCase):
-
-    def setUp(self):
-        self.transaction = getTransaction()
-        self.session = createEngineAndInitDB()
-        self.config = testing.setUp()
-
-    def tearDown(self):
-        self.session.remove()
-        testing.tearDown()
-
-    def _add_one(self, *args):
-        self.transaction.begin()
-        entry = self._make_the_class(*args)            
-        self.session.add(entry)
-        self.transaction.commit()
-
-class ViewHomeTests(BaseViewTest):
+class ViewHomeTests(BaseTestWithDB):
 
     def _make_the_class(self, *args):
         return get_data.PulledData(*args)
@@ -83,7 +66,7 @@ class ViewHomeTests(BaseViewTest):
         expected = data
         self.assertEqual(result, expected)
 
-class ViewHzgWWTests(BaseViewTest):
+class ViewHzgWWTests(BaseTestWithDB):
 
     def _make_the_class(self, *args):
         return get_data.PulledData(*args)
@@ -103,6 +86,7 @@ class ViewHzgWWTests(BaseViewTest):
         start = "2011-08-10 20:18:00"
         request = testing.DummyRequest(get={'start': start,
                                             'end': end,
+                                            'resolution': '30',
                                             'submit': 'submit', })
         request.params = request.get
         response = views.view_hzg_ww(request)
@@ -130,6 +114,7 @@ class ViewHzgWWTests(BaseViewTest):
         start = "2011-08-20 23:18:00"
         request = testing.DummyRequest(get={'start': start,
                                             'end': end,
+                                            'resolution': '30',
                                             'submit': 'submit', })
         request.params = request.get
         response = views.view_hzg_ww(request)
@@ -137,9 +122,8 @@ class ViewHzgWWTests(BaseViewTest):
         self.assertTrue(response['vals_available'] == False)
         self.assertTrue('Start has to be before End' in response['form'])
         
-from wp_frontend.models.set_data import DataToSet
 
-class ViewSetValTests(BaseViewTest):
+class ViewSetValTests(BaseTestWithDB):
 
     def _make_the_class(self, args):
         return DataToSet(*args)
@@ -164,7 +148,7 @@ class ViewSetValTests(BaseViewTest):
             oldval = random.randint(-30, 70)
             entry = (user, attribute, newval, oldval, )
             self._add_one(entry)
-            expected.append((strip_ms(datetime.datetime.now()),
+            expected.append((tests.strip_ms(datetime.datetime.now()),
                              user, attribute, str(oldval), str(newval),
                              'pending', '', ))
 
@@ -177,7 +161,7 @@ class ViewSetValTests(BaseViewTest):
 
     def test_submit_works(self):
 
-        attribute = 'Hzg:TempEinsatz'
+        attribute = 'temp_einsatz'
         newval = '22.7'
         request = testing.DummyRequest(params={'attr': attribute,
                                                'newval':newval,
@@ -185,8 +169,9 @@ class ViewSetValTests(BaseViewTest):
 
         oldval = None
         user = None
+        attribute = map_to_beautifull_names[attribute]
                                        
-        expected = (strip_ms(datetime.datetime.now()), user, attribute,
+        expected = (tests.strip_ms(datetime.datetime.now()), user, attribute,
                     oldval, str(newval), 'pending', '', )
 
         response = views.view_set_val(request)
@@ -195,6 +180,3 @@ class ViewSetValTests(BaseViewTest):
         self.assertEqual(response['log'][0], expected)
         
 
-def strip_ms(dt):
-    return datetime.datetime(dt.year, dt.month, dt.day, dt.hour, dt.minute,
-                             dt.second)

@@ -29,7 +29,6 @@ wp_frontend/templates/hzg_ww.pt
 wp_frontend/templates/login.pt
 wp_frontend/templates/set_val.pt
 wp_frontend/tests/__init__.py
-wp_frontend/tests/test_3rd_party.py
 wp_frontend/tests/test_functionals.py
 wp_frontend/tests/test_model.py
 wp_frontend/tests/test_views.py

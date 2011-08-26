@@ -31,6 +31,8 @@ login_form = deform.Form(_login_schema, buttons=(submit_msg,))
 class TimespanSchema(colander.Schema):
     start = colander.SchemaNode(colander.DateTime())
     end = colander.SchemaNode(colander.DateTime())
+    resolution = colander.SchemaNode(colander.Integer(),
+                                     validator=colander.Range(10, 10000))
 
 def timespan_validator(form, value):
     if value['start'] >= value['end']:
@@ -40,7 +42,7 @@ def timespan_validator(form, value):
 
 _timespan_schema = TimespanSchema(validator=timespan_validator)
 timespan_form = deform.Form(_timespan_schema,
-                            method="GET",
+                            method="POST",
                             buttons=(submit_msg, ))
 
 _set_val_choices = [ (attr, map_to_beautifull_names[attr], )

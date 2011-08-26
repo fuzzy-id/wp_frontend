@@ -183,7 +183,47 @@ class PulledData(Base):
 
     @classmethod
     def get_values_in_timespan(cls, session, columns,
-                               start, end, quantity=30):
+                               start, end, quantity):
+        tsp_start = time.mktime(start.timetuple())
+        tsp_end = time.mktime(end.timetuple())
+
+        query = session.query(cls.tsp).filter(cls.tsp.between(tsp_start,
+                                                              tsp_end))
+        number = query.count()
+
+        if number > 2*quantity:
+            return (quantity,
+                    cls.get_values_in_timespan_with_avg(session, start, end,
+                                                        quantity, columns),
+                    )
+        else:
+            return (number,
+                    cls.get_values_in_timespan_wo_avg(session, start, end,
+                                                      columns),
+                    )
+
+    @classmethod
+    def get_values_in_timespan_wo_avg(cls, session, start, end, columns):
+                                      
+        cc = ColumnCalculator(columns)
+        menu_entries = cls.map_names_to_attributes(columns)
+        menu_entries = cc.add_entries(menu_entries)
+
+        tsp_start = time.mktime(start.timetuple())
+        tsp_end = time.mktime(end.timetuple())
+
+        query = session.query(*menu_entries)
+        query = query.filter(cls.tsp.between(tsp_start, tsp_end))
+
+        result = query.all()
+
+        if len(result) != 0:
+            result = tuple(cc.calculate_entries(r) for r in result)
+        return result
+
+    @classmethod
+    def get_values_in_timespan_with_avg(cls, session, start, end,
+                                        quantity, columns):
         cc = ColumnCalculator(columns)
         menu_entries = cls.map_names_to_attributes(columns)
         menu_entries = cc.add_entries(menu_entries)
@@ -191,16 +231,16 @@ class PulledData(Base):
         avg_columns = map(func.avg, menu_entries)
 
         ret = []
-        
+
         for avg_start, avg_end in _avg_timespan_iter(start, end, quantity):
             query = session.query(*avg_columns)
             query = query.filter(cls.tsp.between(avg_start,
                                                  avg_end))
             result = query.all()[0]
-            
+
             if result[0] is not None:
                 ret.append(cc.calculate_entries(result))
-        return ret
+        return tuple(ret)
 
 def _avg_timespan_iter(start, end, quantity):
     start_tsp = int(time.mktime(start.timetuple()))

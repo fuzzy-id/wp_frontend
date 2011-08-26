@@ -69,6 +69,7 @@ def view_hzg_ww(request):
     ret_dict['end'] = strip_min_ms(datetime.datetime.now())
     ret_dict['start'] = ret_dict['end'] - datetime.timedelta(days=30)
     ret_dict['vals_available'] = False
+    ret_dict['resolution'] = 500
 
     if submit_msg in request.params:
         controls = request.params.items()
@@ -79,17 +80,22 @@ def view_hzg_ww(request):
             return ret_dict
         ret_dict['end'] = appstruct['end']
         ret_dict['start'] = appstruct['start']
+        ret_dict['resolution'] = appstruct['resolution']
 
-    ret_dict['form'] = timespan_form.render(appstruct={'start': ret_dict['start'],
-                                                       'end': ret_dict['end']})
+    ret_dict['form'] = timespan_form.render(
+        appstruct={'start': ret_dict['start'],
+                   'end': ret_dict['end'],
+                   'resolution': ret_dict['resolution'], })
 
     columns = ['tsp', 'temp_aussen', 'temp_einsatz', 'temp_Vl',
                'temp_RlSoll', 'temp_Rl', 'temp_WW', ]
 
-    values = get_data.PulledData.get_values_in_timespan(DBSession,
-                                                        columns,
-                                                        ret_dict['start'],
-                                                        ret_dict['end'])
+    number, values = get_data.PulledData.get_values_in_timespan(
+        DBSession, columns, ret_dict['start'], ret_dict['end'],
+        ret_dict['resolution'])
+
+    ret_dict['resolution'] = number
+
     if len(values) != 0:
         ret_dict['vals_available'] = True
         img = make_plot(columns, values)
@@ -109,10 +115,10 @@ def make_plot(columns, values):
     canvas = plt.FigureCanvasAgg(fig)
     ax = fig.add_subplot(111)
     
-    x_axis = [ datetime.datetime.fromtimestamp(d[0]) for d in values ]
+    x_axis = tuple(datetime.datetime.fromtimestamp(d[0]) for d in values)
     for i in range(1, len(columns)):
         label = map_to_beautifull_names[columns[i]]
-        ax.plot(x_axis, [ d[i] for d in values ], label=label)
+        ax.plot(x_axis, tuple( d[i] for d in values ), label=label)
 
     img = tempfile.mkstemp(prefix='plot-', suffix='.svgz',
                            dir='wp_frontend/plots')
