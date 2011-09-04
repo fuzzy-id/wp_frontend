@@ -30,7 +30,7 @@ class BaseTestWithDB(unittest.TestCase):
         self.transaction.commit()
 
 
-sql_url = 'mysql://devel:D3v3L0p3R@localhost/wp_devel'
+sql_url = 'mysql://test_user:D3v3L0p3R@localhost/testing'
 
 def createEngineAndInitDB(sql_url=sql_url,
                           sql_echo=False):
