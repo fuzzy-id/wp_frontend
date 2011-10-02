@@ -46,11 +46,11 @@ class PulledDataTest(BaseTestWithDB):
     def _make_the_class(self, *args):
         return get_data.PulledData(*args)
 
-    def test_defaults_work(self):
+    def test_default_values_are_setted(self):
         self._add_one({})
-        columns = ['version', 'datum_version', 'betriebsmodus',
-                   'temp_aussen']
-        entry = get_data.PulledData.get_latest(self.session, columns)
+        cols = ['version', 'datum_version', 'betriebsmodus',
+                'temp_aussen']
+        entry = get_data.PulledData.get_latest(self.session, cols)
         self.assertEqual(entry[0], 0)
         self.assertEqual(entry[1], datetime.date.min)
         self.assertEqual(entry[2], '')
@@ -250,4 +250,3 @@ class ColumnCalculatorTests(unittest.TestCase):
         result = cc.calculate_entries(entries)
         expected = ('braz', 'uiae', -4, 'nrtd', )
         self.assertEqual(result, expected)
-        
