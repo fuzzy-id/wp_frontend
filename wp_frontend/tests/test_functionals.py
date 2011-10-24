@@ -1,20 +1,20 @@
 import unittest
 
-from webtest import TestApp
-
 import wp_frontend
+from webtest import TestApp
 from wp_frontend.models import DBSession
 from wp_frontend.tests import init_testing_db, sql_url
 
+
 settings = {'sqlalchemy.url': sql_url}
 
-user_wrong_login = ('/login?login=inexistent_user'
-                    + '&password=incorrect'
-                    + '&came_from=home'
-                    + '&form.submitted=Login')
-    
-class BaseTests(unittest.TestCase):
+valid_credentials = { 'user': 'test_user',
+                      'password': 'password',
+                      'came_from': '/',
+                      'submit': '', }
 
+class BasicFunctionalTestCase(unittest.TestCase):
+    
     def setUp(self):
         app = wp_frontend.main({}, sql_init_function=init_testing_db, **settings)
         self.testapp = TestApp(app)
@@ -22,6 +22,21 @@ class BaseTests(unittest.TestCase):
     def tearDown(self):
         del self.testapp
         DBSession.remove()
+
+    def login(self):
+        return self.testapp.put('/login', valid_credentials,
+                                status=302)
+    def logout(self):
+        return self.testapp.get('/logout')
+
+    def assertLoggedIn(self, res):
+        self.assertTrue('input type="password"' not in res.body)
+
+    def assertNotLoggedIn(self, res):
+        self.assertTrue('input type="password"' in res.body)
+        
+
+class BehaviourForAnonymousTests(BasicFunctionalTestCase):
 
     def test_root_forwards_to_home(self):
         res = self.testapp.get('/', status=302)
@@ -31,25 +46,62 @@ class BaseTests(unittest.TestCase):
     def test_unexisting_page_gives_404(self):
         res = self.testapp.get('/InexistentPage', status=404)
         
-    def test_failed_log_in(self):
-        res = self.testapp.get(user_wrong_login,
-                               status=200)
-        self.assertTrue('input type="password"' in res.body)
-
-class AuthenticationTests(unittest.TestCase):
-
-    def setUp(self):
-        app = wp_frontend.main({}, sql_init_function=init_testing_db, **settings)
-        self.testapp = TestApp(app)
-
-    def tearDown(self):
-        del self.testapp
-        DBSession.remove()
-
     def test_anonymous_cannot_view(self):
         res = self.testapp.get('/home', status=200)
-        self.assertTrue('input type="password"' in res.body)
+        self.assertNotLoggedIn(res)
         res = self.testapp.get('/graph/hzg_ww', status=200)
-        self.assertTrue('input type="password"' in res.body)
+        self.assertNotLoggedIn(res)
         res = self.testapp.get('/set_val', status=200)
-        self.assertTrue('input type="password"' in res.body)
+        self.assertNotLoggedIn(res)
+
+class AuthenticationTests(BasicFunctionalTestCase):
+
+    def test_succesfull_login(self):
+        self.login()
+        res = self.testapp.get('/home')
+        self.assertLoggedIn(res)
+        
+    def test_login(self):
+        self.login()
+        res = self.testapp.get('/home')
+        self.assertLoggedIn(res)
+        self.logout()
+        res = self.testapp.get('/home')
+        self.assertNotLoggedIn(res)
+        
+    def test_failed_log_in(self):
+        invalid_credentials = { 'user': 'invalid_user',
+                                'password': 'invalid_password',
+                                'came_from': '/',
+                                'submit': '', }
+        res = self.testapp.put('/login', invalid_credentials,
+                               status=200)
+        res = self.testapp.get('/home')
+        self.assertNotLoggedIn(res)
+
+    def test_garbage_log_in(self):
+        garbage_credentials = {'foo': 'baz', 'submit': ''}
+        res = self.testapp.put('/login', garbage_credentials,
+                               status=200)
+        self.assertNotLoggedIn(res)
+        self.assertTrue('There was a problem with your submission' in res.body)
+
+class BehaviourForUser(BasicFunctionalTestCase):
+
+    def setUp(self):
+        BehaviourForUser.__base__.setUp(self)
+        self.login()
+
+    def test_view_home(self):
+        res = self.testapp.get('/home')
+        self.assertTrue("Couldn't get any data!" in res.body)
+
+    def test_view_set_val(self):
+        res = self.testapp.get('/set_val')
+        self.assertTrue("Couldn't fetch logs." in res.body)
+        self.assertTrue("Couldn't fetch current values." in res.body)
+
+    def test_view_graph_hzg_ww(self):
+        res = self.testapp.get('graph/hzg_ww')
+        print res.body
+        self.assertTrue("Couldn't fetch any data to plot." in res.body)

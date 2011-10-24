@@ -1,4 +1,6 @@
+# -*- coding: utf-8 -*-
 from wp_frontend.models.get_data import PulledData
+
 
 def calc_currKW(temp_Vl):
     if temp_Vl <= 40:

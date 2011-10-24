@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 import datetime
+import os.path
 import random
 import unittest
 
+import wp_frontend.views.graphs
 from pyramid import testing
-
 from wp_frontend import views, tests
 from wp_frontend.models import get_data, map_to_beautifull_names
 from wp_frontend.models.set_data import DataToSet
 from wp_frontend.tests import BaseTestWithDB
-import wp_frontend.views.graphs
 
 
 class RootViewTest(unittest.TestCase):
@@ -69,9 +69,6 @@ class ViewHomeTests(BaseTestWithDB):
 
 class ViewHzgWWTests(BaseTestWithDB):
 
-    def _make_the_class(self, *args):
-        return get_data.PulledData(*args)
-
     def test_without_data_present(self):
         request = testing.DummyRequest()
         request.matchdict['graph_name'] = 'hzg_ww'
@@ -80,8 +77,8 @@ class ViewHzgWWTests(BaseTestWithDB):
         thirty_days_ago = now - datetime.timedelta(days=30)
         two_minutes = datetime.timedelta(minutes=2)
         self.assertTrue(response['vals_available'] == False)
-        self.assertTrue(two_minutes >= now - response['end'])
-        self.assertTrue(two_minutes >= thirty_days_ago - response['start'])
+        self.assertTrue(two_minutes >= now - response['timespan'].end)
+        self.assertTrue(two_minutes >= thirty_days_ago - response['timespan'].start)
 
     def test_without_data_with_submitted_date(self):
         end = "2011-08-20 23:18:00"
@@ -95,9 +92,9 @@ class ViewHzgWWTests(BaseTestWithDB):
         response = wp_frontend.views.graphs.view_graph(request)
 
         self.assertTrue(response['vals_available'] == False)
-        result = response['start'].strftime("%Y-%m-%d %H:%M:%S")
+        result = response['timespan'].start.strftime("%Y-%m-%d %H:%M:%S")
         self.assertEquals(result, start)
-        result = response['end'].strftime("%Y-%m-%d %H:%M:%S")
+        result = response['timespan'].end.strftime("%Y-%m-%d %H:%M:%S")
         self.assertEquals(result, end)
         
     def test_invalid_date_format_gives_error_in_form(self):
@@ -184,4 +181,30 @@ class ViewSetValTests(BaseTestWithDB):
         self.assertTrue(response['current_values'] is None)
         self.assertEqual(response['log'][0], expected)
         
+    def test_submit_garbage_gives_error(self):
+        request = testing.DummyRequest(params={'invalid_attr': 'invalid_value',
+                                               'submit': ''})
 
+        response = views.view_set_val(request)
+        self.assertTrue('There was a problem with your submission' 
+                        in response['form'])
+        
+
+class PlotsTests(unittest.TestCase):
+
+    def test_create_empty_plot(self):
+        plot = views.plots.make_plot([], [])
+        self.assertTrue(os.path.isfile(plot))
+
+    def test_get_plot_works(self):
+        plot = views.plots.make_plot([], [])
+        fname = os.path.basename(plot)
+        request = testing.DummyRequest()
+        request.matchdict['img_name'] = fname
+        response = views.plots.get_plot(request)
+        orig_img = open(plot)
+        expected = ''.join(orig_img.readlines())
+        self.assertEqual(expected, response.body)
+
+        
+        

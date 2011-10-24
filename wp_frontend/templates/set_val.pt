@@ -23,7 +23,7 @@
       Couldn't fetch current values.
     </span>
     <span tal:case="False">
-      Derzeit gesetzte Werte:
+      Current values:
       <table>
 	<tr tal:repeat="cv current_values">
 	  <td> <span tal:replace="cv">name</span></td>
@@ -37,7 +37,7 @@
       Couldn't fetch logs.
     </span>
     <span tal:case="False">
-      Log der letzten Änderungen:
+      Log of last changes:
       <table id="log">
 	<tr>
 	  <th>datetime</th>

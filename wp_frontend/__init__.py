@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os.path
 
 from pyramid.authentication import AuthTktAuthenticationPolicy
@@ -5,7 +6,6 @@ from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.config import Configurator
 from pyramid.renderers import get_renderer
 from sqlalchemy import engine_from_config
-
 from wp_frontend.models import initialize_sql
 from wp_frontend.security import groupfinder
 

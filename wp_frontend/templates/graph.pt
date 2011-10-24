@@ -7,7 +7,7 @@
       metal:use-macro="base">
 <tal:block metal:fill-slot="headers">
   <link rel="stylesheet"
-	href="${request.static_url('deform:static/css/form.css')}"
+n	href="${request.static_url('deform:static/css/form.css')}"
 	type="text/css" />
   <script type="text/javascript" 
 	  src="${request.static_url('deform:static/scripts/jquery-1.4.2.min.js')}">
@@ -23,11 +23,11 @@
   <span tal:replace="structure form"/>
   <div tal:switch="vals_available">
     <span tal:case="True">
-      Plotted from ${start} to ${end} with ${resolution} dots.
+      Plotted from ${timespan.start} to ${timespan.end} with ${timespan.resolution} dots.
       <img id="diag" src="${img}" />
     </span>
     <span tal:case="False">
-      Keine plottbare Daten verfügbar!
+      Couldn't fetch any data to plot.
     </span>
   </div>
 </tal:block>

@@ -182,35 +182,34 @@ class PulledData(Base):
         return map(lambda n: getattr(cls, n, None), names)
 
     @classmethod
-    def get_values_in_timespan(cls, session, columns,
-                               start, end, quantity):
-        tsp_start = time.mktime(start.timetuple())
-        tsp_end = time.mktime(end.timetuple())
+    def get_values_in_timespan(cls, session, columns, span_with_resolution):
+        tsp_start = span_with_resolution.start_as_timestamp()
+        tsp_end = span_with_resolution.end_as_timestamp()
 
         query = session.query(cls.tsp).filter(cls.tsp.between(tsp_start,
                                                               tsp_end))
         number = query.count()
 
-        if number > 2*quantity:
-            return (quantity,
-                    cls.get_values_in_timespan_with_avg(session, start, end,
-                                                        quantity, columns),
+        if number > 2*span_with_resolution.resolution:
+            return (span_with_resolution.resolution,
+                    cls.get_values_in_timespan_with_avg(session, columns,
+                                                        span_with_resolution),
                     )
         else:
             return (number,
-                    cls.get_values_in_timespan_wo_avg(session, start, end,
-                                                      columns),
+                    cls.get_values_in_timespan_wo_avg(session, columns,
+                                                        span_with_resolution),
                     )
 
     @classmethod
-    def get_values_in_timespan_wo_avg(cls, session, start, end, columns):
+    def get_values_in_timespan_wo_avg(cls, session, columns, span_with_resolution):
                                       
         cc = ColumnCalculator(columns)
         menu_entries = cls.map_names_to_attributes(columns)
         menu_entries = cc.add_entries(menu_entries)
 
-        tsp_start = time.mktime(start.timetuple())
-        tsp_end = time.mktime(end.timetuple())
+        tsp_start = span_with_resolution.start_as_timestamp()
+        tsp_end = span_with_resolution.end_as_timestamp()
 
         query = session.query(*menu_entries)
         query = query.filter(cls.tsp.between(tsp_start, tsp_end))
@@ -222,8 +221,7 @@ class PulledData(Base):
         return result
 
     @classmethod
-    def get_values_in_timespan_with_avg(cls, session, start, end,
-                                        quantity, columns):
+    def get_values_in_timespan_with_avg(cls, session, columns, span_with_resolution):
         cc = ColumnCalculator(columns)
         menu_entries = cls.map_names_to_attributes(columns)
         menu_entries = cc.add_entries(menu_entries)
@@ -232,7 +230,7 @@ class PulledData(Base):
 
         ret = []
 
-        for avg_start, avg_end in _avg_timespan_iter(start, end, quantity):
+        for avg_start, avg_end in span_with_resolution:
             query = session.query(*avg_columns)
             query = query.filter(cls.tsp.between(avg_start,
                                                  avg_end))
@@ -241,13 +239,3 @@ class PulledData(Base):
             if result[0] is not None:
                 ret.append(cc.calculate_entries(result))
         return tuple(ret)
-
-def _avg_timespan_iter(start, end, quantity):
-    start_tsp = int(time.mktime(start.timetuple()))
-    end_tsp = int(time.mktime(end.timetuple()))
-    delta_start_end = end_tsp - start_tsp
-    step = delta_start_end/quantity
-
-    for avg_start in range(start_tsp, end_tsp, step):
-        yield (avg_start, avg_start + step)
-

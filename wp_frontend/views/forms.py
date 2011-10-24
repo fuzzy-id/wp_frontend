@@ -1,8 +1,10 @@
+# -*- coding: utf-8 -*-
 import colander
 import deform
-from wp_frontend.security import PASSWD
-from wp_frontend.models.set_data import setable
 from wp_frontend.models import map_to_beautifull_names
+from wp_frontend.models.set_data import setable
+from wp_frontend.security import PASSWD
+
 
 submit_msg = 'submit'
 

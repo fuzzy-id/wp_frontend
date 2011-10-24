@@ -10,7 +10,7 @@
 </tal:block>
 <tal:block metal:fill-slot="content">
   <div tal:switch="data is None">
-    <span tal:case="True">Keine Daten verfügbar!</span>
+    <span tal:case="True">Couldn't get any data!</span>
     <span tal:case="False">
       <div id="ovdiag">
 	<img id="ovdiag" src="${request.static_url('wp_frontend:static/diagramm.jpg')}"/>
