@@ -33,14 +33,16 @@ class PulledDataTest(BaseTestWithDB):
         self.assertEqual(entry[1], 80.34)
 
     def test_datetime_of_entry(self):
+        dt_before = wp_datetime.strip_ms(datetime.datetime.now())
         self._add_one({})
         dt_after = wp_datetime.strip_ms(datetime.datetime.now())
         entry = get_data.PulledData.get_latest(self.session, ['tsp'])
         entry_date = datetime.datetime.fromtimestamp(entry[0])
-        self.assertEquals(dt_after, entry_date)
+        self.assertTrue(entry_date >= dt_before)
+        self.assertTrue(dt_after >= entry_date)
 
     def test_get_values_in_timespan_with_avg(self):
-        create_entries.add_entries_to_db(self.transaction, self.session)
+        create_entries.add_get_data_entries_to_db(self.transaction, self.session)
 
         span_with_resolution = wp_datetime.TimespanWithResolution(
             start=create_entries.entries_start,
@@ -50,7 +52,7 @@ class PulledDataTest(BaseTestWithDB):
         expected = {}
 
         for expected_entry in range( 2, 50, 5):
-            row = create_entries.entries[expected_entry]
+            row = create_entries.get_data_entries[expected_entry]
             expected[row['tsp']] = ( row['temp_aussen'], calc_currKW(row['temp_Vl']), )
 
         number, entries = get_data.PulledData.get_values_in_timespan(
@@ -65,21 +67,21 @@ class PulledDataTest(BaseTestWithDB):
             self.assertEquals(entry[2], expected[res_tsp][1])
         
     def test_get_values_in_timespan_wo_avg(self):
-        create_entries.add_entries_to_db(self.transaction, self.session)
+        create_entries.add_get_data_entries_to_db(self.transaction, self.session)
 
         span_with_resolution = wp_datetime.TimespanWithResolution(
             start=create_entries.entries_start,
             end=create_entries.entries_end,
-            resolution=len(create_entries.entries))
+            resolution=len(create_entries.get_data_entries))
 
         expected = {}
-        for row in create_entries.entries:
+        for row in create_entries.get_data_entries:
             expected[row['tsp']] = ( row['temp_aussen'], calc_currKW(row['temp_Vl']), )
 
         number, entries = get_data.PulledData.get_values_in_timespan(
             self.session, ['tsp', 'temp_aussen', 'currKW'], span_with_resolution)
 
-        self.assertEquals(number, len(create_entries.entries))
+        self.assertEquals(number, len(create_entries.get_data_entries))
         
         for entry in entries:
             res_tsp = int(entry[0])

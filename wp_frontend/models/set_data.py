@@ -29,13 +29,16 @@ class DataToSet(Base):
     WPsetVal_output = Column(String(255), default='')
     attribute = Column(Enum(*attribute_enum))
 
-    def __init__(self, user, attribute, newval, oldval ):
+    def __init__(self, user, attribute, newval, oldval, dt=None ):
         self.user = user
         self.oldval = oldval
         self.newval = newval
         self.attribute = attribute
         self.status = 'pending'
-        self.datetime = datetime.datetime.now()
+        if dt is None:
+            self.datetime = datetime.datetime.now()
+        else:
+            self.datetime = dt
 
     @classmethod
     def get_latest(cls, session, number):

@@ -2,14 +2,15 @@
 
 import datetime
 from wp_frontend.models.get_data import PulledData
+from wp_frontend.models.set_data import DataToSet
 
-# These entries start on 14/10/2011 18:00:00 and end on 24/10/2011 18:00:00 with
-# five entries per day. That makes 50 entries...
+# These get_data_entries start on 14/10/2011 18:00:00 and end on 24/10/2011 18:00:00 with
+# five get_data_entries per day. That makes 50 get_data_entries...
 
 entries_start = datetime.datetime(2011, 10, 14, 18)
 entries_end = datetime.datetime(2011, 10, 24, 18)
 
-entries = [
+get_data_entries = [
     {'tsp': 1318616640, 'temp_aussen': 10, 'temp_Vl': -10,},
     {'tsp': 1318633920, 'temp_aussen': 11, 'temp_Vl': -9, },
     {'tsp': 1318651200, 'temp_aussen': 12, 'temp_Vl': -8, },
@@ -60,9 +61,23 @@ entries = [
     {'tsp': 1319428800, 'temp_aussen': 57, 'temp_Vl': 37, },
     {'tsp': 1319446080, 'temp_aussen': 58, 'temp_Vl': 38, },
     {'tsp': 1319463360, 'temp_aussen': 59, 'temp_Vl': 39, 'uhrzeit': datetime.time(18), 'datum': datetime.date(2011, 10, 24) }]
+
+set_data_entries = [ ('test_user', 
+                      'Hzg:TempEinsatz', 
+                      str(val-5),
+                      str(val),
+                      datetime.datetime(2011, 10, 24, 13, val), )
+                     for val in range(0, 50, 5) ]
                       
-def add_entries_to_db(transaction, session):
+def add_get_data_entries_to_db(transaction, session):
     transaction.begin()
-    for entry in entries:
+    for entry in get_data_entries:
         session.add(PulledData(entry))
     transaction.commit()
+
+def add_set_data_entries_to_db(transaction, session):
+    transaction.begin()
+    for entry in set_data_entries:
+        session.add(DataToSet(*entry))
+    transaction.commit()
+

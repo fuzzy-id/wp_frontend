@@ -2,7 +2,7 @@
 import re
 from wp_frontend import tests
 from wp_frontend.tests import create_entries
-from tests.test_functionals import BasicFunctionalTestCase
+from wp_frontend.tests.test_functionals import BasicFunctionalTestCase
 
 
 class BehaviourForUserWithoutDBTests(BasicFunctionalTestCase):
@@ -46,7 +46,8 @@ class BehaviourForUserWithDBTests(BasicFunctionalTestCase):
 
     def setUp(self):
         BehaviourForUserWithDBTests.__base__.setUp(self)
-        create_entries.add_entries_to_db(tests.getTransaction(), tests.getSession())
+        create_entries.add_get_data_entries_to_db(tests.getTransaction(), 
+                                                  tests.getSession())
         self.login()
 
     def test_view_home(self):

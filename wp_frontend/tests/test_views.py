@@ -125,6 +125,7 @@ class ViewHzgWWTests(BaseTestWithDB):
         self.assertTrue(response['vals_available'] == False)
         self.assertTrue('Start has to be before End' in response['form'])
         
+from wp_frontend.tests import create_entries
 
 class ViewSetValTests(BaseTestWithDB):
 
@@ -142,25 +143,18 @@ class ViewSetValTests(BaseTestWithDB):
 
     def test_view_with_log(self):
         
-        user = 'test_user'
-        attribute = 'Hzg:TempEinsatz'
-        expected = []
+        create_entries.add_set_data_entries_to_db(self.transaction, self.session)
 
-        for i in range(10):
-            newval = random.randint(-30, 70)
-            oldval = random.randint(-30, 70)
-            entry = (user, attribute, newval, oldval, )
-            self._add_one(entry)
-            expected.append((wp_datetime.strip_ms(datetime.datetime.now()),
-                             user, attribute, str(oldval), str(newval),
-                             'pending', '', ))
-
+        expected = [ tuple([row[4], row[0], row[1], row[3], row[2], 'pending', '', ])
+                     for row in create_entries.set_data_entries]
         expected.reverse()
+
         request = testing.DummyRequest()
         response = views.view_set_val(request)
 
         self.assertTrue(response['current_values'] is None)
-        self.assertEqual(response['log'], expected)
+        for actual, exp in zip(response['log'], expected):
+            self.assertEqual(actual, exp)
 
     def test_submit_works(self):
 
@@ -174,13 +168,16 @@ class ViewSetValTests(BaseTestWithDB):
         user = None
         attribute = map_to_beautifull_names[attribute]
                                        
-        expected = (wp_datetime.strip_ms(datetime.datetime.now()), user, attribute,
+        expected = ("don't compare datetime", user, attribute,
                     oldval, str(newval), 'pending', '', )
-
+        dt_before = wp_datetime.strip_ms(datetime.datetime.now())
         response = views.view_set_val(request)
-
+        dt_after = wp_datetime.strip_ms(datetime.datetime.now())
+        
         self.assertTrue(response['current_values'] is None)
-        self.assertEqual(response['log'][0], expected)
+        self.assertTrue(response['log'][0][0] >= dt_before)
+        self.assertTrue(dt_after >= response['log'][0][0])
+        self.assertEqual(response['log'][0][1:-1], expected[1:-1])
         
     def test_submit_garbage_gives_error(self):
         request = testing.DummyRequest(params={'invalid_attr': 'invalid_value',
