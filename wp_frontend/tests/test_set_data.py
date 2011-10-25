@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import datetime
 from wp_frontend.models import set_data
-from wp_frontend.tests import BaseTestWithDB, strip_ms
+from wp_frontend.tests import BaseTestWithDB
+from wp_frontend.views.wp_datetime import strip_ms
 
 
 class DataToSetTest(BaseTestWithDB):

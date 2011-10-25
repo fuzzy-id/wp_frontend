@@ -6,10 +6,11 @@ import unittest
 
 import wp_frontend.views.graphs
 from pyramid import testing
-from wp_frontend import views, tests
+from wp_frontend import views
 from wp_frontend.models import get_data, map_to_beautifull_names
 from wp_frontend.models.set_data import DataToSet
 from wp_frontend.tests import BaseTestWithDB
+from wp_frontend.views import wp_datetime
 
 
 class RootViewTest(unittest.TestCase):
@@ -150,7 +151,7 @@ class ViewSetValTests(BaseTestWithDB):
             oldval = random.randint(-30, 70)
             entry = (user, attribute, newval, oldval, )
             self._add_one(entry)
-            expected.append((tests.strip_ms(datetime.datetime.now()),
+            expected.append((wp_datetime.strip_ms(datetime.datetime.now()),
                              user, attribute, str(oldval), str(newval),
                              'pending', '', ))
 
@@ -173,7 +174,7 @@ class ViewSetValTests(BaseTestWithDB):
         user = None
         attribute = map_to_beautifull_names[attribute]
                                        
-        expected = (tests.strip_ms(datetime.datetime.now()), user, attribute,
+        expected = (wp_datetime.strip_ms(datetime.datetime.now()), user, attribute,
                     oldval, str(newval), 'pending', '', )
 
         response = views.view_set_val(request)

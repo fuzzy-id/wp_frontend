@@ -2,20 +2,24 @@
 import datetime
 import time
 
-
-def strip_sec_ms(dt):
-    return datetime.datetime(dt.year, dt.month, dt.day, dt.hour, dt.minute)
-
 def strip_ms(dt):
     return datetime.datetime(dt.year, dt.month, dt.day, dt.hour, dt.minute, dt.second)
 
-
 class TimespanWithResolution(object):
     
-    def __init__(self):
-        self.end = datetime.datetime.now()
-        self.start = self.end - datetime.timedelta(days=30)
-        self.resolution = 500
+    def __init__(self, start=None, end=None, resolution=500):
+
+        if end is None:
+            self.end = datetime.datetime.now()
+        else:
+            self.end = end
+
+        if start is None:
+            self.start = self.end - datetime.timedelta(days=30)
+        else:
+            self.start = start
+
+        self.resolution = resolution
 
     @property
     def start(self):

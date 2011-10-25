@@ -3,7 +3,8 @@ import datetime
 import random
 from wp_frontend.models import get_data
 from wp_frontend.models.calculations import calc_currKW
-from wp_frontend.tests import BaseTestWithDB, strip_ms
+from wp_frontend.tests import BaseTestWithDB
+from wp_frontend.tests import create_entries
 from wp_frontend.views import wp_datetime
 
 
@@ -33,46 +34,30 @@ class PulledDataTest(BaseTestWithDB):
 
     def test_datetime_of_entry(self):
         self._add_one({})
-        dt_after = strip_ms(datetime.datetime.now())
+        dt_after = wp_datetime.strip_ms(datetime.datetime.now())
         entry = get_data.PulledData.get_latest(self.session, ['tsp'])
         entry_date = datetime.datetime.fromtimestamp(entry[0])
         self.assertEquals(dt_after, entry_date)
 
     def test_get_values_in_timespan_with_avg(self):
-        span_with_resolution = wp_datetime.TimespanWithResolution()
+        create_entries.add_entries_to_db(self.transaction, self.session)
+
+        span_with_resolution = wp_datetime.TimespanWithResolution(
+            start=create_entries.entries_start,
+            end=create_entries.entries_end,
+            resolution=10)
 
         expected = {}
 
-        for avg_start, avg_end in span_with_resolution:
-            temp_aussen_sum = 0
-            temp_Vl_sum = 0
-            tsp_sum = 0
-            count = 0
-            
-            for i in range(10):
-                temp_aussen = random.randint(-10, 50)
-                temp_Vl = random.randint(-10, 50)
-                tsp = random.randint(avg_start, avg_end)
-                
-                temp_aussen_sum += temp_aussen
-                temp_Vl_sum += temp_Vl
-                tsp_sum += tsp
-                
-                count += 1
-                entry = {'tsp': tsp,
-                         'temp_aussen': temp_aussen,
-                         'temp_Vl': temp_Vl}
-                self._add_one(entry)
-                
-            avg_tsp = int(1.0*tsp_sum/count)
-            expected[avg_tsp] = (1.0*temp_aussen_sum/count,
-                                 calc_currKW(1.0*temp_Vl_sum/count), )
+        for expected_entry in range( 2, 50, 5):
+            row = create_entries.entries[expected_entry]
+            expected[row['tsp']] = ( row['temp_aussen'], calc_currKW(row['temp_Vl']), )
 
         number, entries = get_data.PulledData.get_values_in_timespan(
             self.session, ['tsp', 'temp_aussen', 'currKW'], span_with_resolution)
 
-        self.assertEquals(number, quantity)
-        
+        self.assertEquals(number, span_with_resolution.resolution)
+
         for entry in entries:
             res_tsp = int(entry[0])
             self.assertTrue(res_tsp in expected)
@@ -80,31 +65,21 @@ class PulledDataTest(BaseTestWithDB):
             self.assertEquals(entry[2], expected[res_tsp][1])
         
     def test_get_values_in_timespan_wo_avg(self):
-        span_with_resolution = wp_datetime.TimespanWithResolution()
-        span_with_resolution.start = datetime.datetime.min
-        span_with_resolution.end = span_with_resolution.start + datetime.timedelta(days=10)
-        span_with_resolution.resolution = 100
+        create_entries.add_entries_to_db(self.transaction, self.session)
+
+        span_with_resolution = wp_datetime.TimespanWithResolution(
+            start=create_entries.entries_start,
+            end=create_entries.entries_end,
+            resolution=len(create_entries.entries))
 
         expected = {}
-
-        for avg_start, avg_end in span_with_resolution:
-            tsp = (avg_start + avg_end) / 2.0
-            temp_aussen = random.randint(-10, 50)
-            temp_Vl = random.randint(-10, 50)
-                
-            entry = {'tsp': tsp,
-                     'temp_aussen': temp_aussen,
-                     'temp_Vl': temp_Vl}
-
-            self._add_one(entry)
-                
-            expected[tsp] = (temp_aussen,
-                             calc_currKW(temp_Vl), )
+        for row in create_entries.entries:
+            expected[row['tsp']] = ( row['temp_aussen'], calc_currKW(row['temp_Vl']), )
 
         number, entries = get_data.PulledData.get_values_in_timespan(
             self.session, ['tsp', 'temp_aussen', 'currKW'], span_with_resolution)
 
-        self.assertEquals(number, span_with_resolution.resolution)
+        self.assertEquals(number, len(create_entries.entries))
         
         for entry in entries:
             res_tsp = int(entry[0])
