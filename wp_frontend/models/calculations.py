@@ -43,7 +43,7 @@ class DeltaWQaVerdamp(object):
         return temp_WQaus - temp_Verdamp
 
 available_calculations = [CurrKW, DeltaVlRl, DeltaWQea, DeltaKondensVl,
-                          ]
+                          DeltaWQaVerdamp]
 
 def register_all_calculations():
     from wp_frontend.models.column_calculator import ColumnCalculator
