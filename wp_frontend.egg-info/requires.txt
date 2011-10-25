@@ -6,3 +6,4 @@ zope.sqlalchemy
 WebError
 WebTest
 deform
+matplotlib

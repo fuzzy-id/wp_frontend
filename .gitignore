@@ -9,3 +9,7 @@
 .coverage
 
 wp_frontend/plots/plot-*
+
+# files generated when doing setup.py install
+build/
+dist/
