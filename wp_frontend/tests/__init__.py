@@ -6,7 +6,14 @@ import transaction
 from pyramid import testing
 from sqlalchemy import create_engine
 from wp_frontend.models import DBSession, Base, initialize_sql
+from wp_frontend import settings
+import wp_frontend
 
+settings.plots_dir = tempfile.mkdtemp()
+
+sql_url = 'mysql://test_user:D3v3L0p3R@localhost/testing'
+
+settings = {'sqlalchemy.url': sql_url, }
 
 class BaseTestWithDB(unittest.TestCase):
 
@@ -24,11 +31,6 @@ class BaseTestWithDB(unittest.TestCase):
         entry = self._make_the_class(*args)            
         self.session.add(entry)
         self.transaction.commit()
-
-sql_url = 'mysql://test_user:D3v3L0p3R@localhost/testing'
-
-settings = {'sqlalchemy.url': sql_url,
-            'plots_dir': tempfile.mkdtemp()}
 
 def createEngineAndInitDB(sql_url=sql_url,
                           sql_echo=False):

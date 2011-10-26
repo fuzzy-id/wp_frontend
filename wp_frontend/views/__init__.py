@@ -1,22 +1,27 @@
-import datetime
+# -*- coding: utf-8 -*-
+import os.path
 
 import deform
 import transaction
 from pyramid.httpexceptions import HTTPFound
 from pyramid.security import authenticated_userid, remember, forget
 from pyramid.url import route_url
-
+from pyramid.view import view_config
+from wp_frontend import settings
 from wp_frontend.models import DBSession, get_data, map_to_beautifull_names
 from wp_frontend.models.set_data import DataToSet, setable
 from wp_frontend.views.forms import login_form, submit_msg, set_val_form
 
 
+@view_config(route_name='view_logout')
 def view_logout(request):
     headers = forget(request)
     return HTTPFound(location = route_url('view_wp', 
                                           request),
                      headers = headers)
 
+@view_config(route_name='view_login',
+             renderer=os.path.join(settings.templates_dir, 'login.pt'))
 def view_login(request):
     if request.url == route_url('view_login', request):
         came_from = request.params.get('came_from', '/')
@@ -37,10 +42,13 @@ def view_login(request):
     return { 'url': request.application_url + '/view_login',
              'form': login_form.render(appstruct={'came_from': came_from}) }
 
-def view_wp(request):
-    return HTTPFound(location = route_url('view_home', 
-                                          request))
 
+@view_config(route_name='view_wp')
+def view_wp(request):
+    return HTTPFound(location = route_url('view_home', request))
+
+@view_config(route_name='view_home', permission='user', 
+             renderer=os.path.join(settings.templates_dir, 'home.pt'))
 def view_home(request):
     needed_columns = ['version', 'datum_version', 'betriebsmodus',
                       'temp_aussen', 'temp_aussen24', 'temp_aussen1',
@@ -57,6 +65,8 @@ def view_home(request):
     ret_dict = {'data': data, }
     return ret_dict
 
+@view_config(route_name='view_set_val', permission='user',
+             renderer=os.path.join(settings.templates_dir, 'set_val.pt'))
 def view_set_val(request):
 
     current_values = get_data.PulledData.get_latest(DBSession, setable)

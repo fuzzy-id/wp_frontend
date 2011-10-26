@@ -11,13 +11,14 @@ import matplotlib.backends.backend_tkagg as plt
 from matplotlib.font_manager import FontProperties
 from pyramid.response import Response
 
-from wp_frontend import plots_dir
+from wp_frontend import settings
 from wp_frontend.models import map_to_beautifull_names
+from pyramid.view import view_config
 
-
+@view_config(route_name='plots', permission='user')
 def get_plot(request):
     img_name = request.matchdict['img_name']
-    f = open(os.path.join(plots_dir, img_name))
+    f = open(os.path.join(settings.plots_dir, img_name))
     response = Response(content_type='image/svg+xml',
                         content_encoding='gzip',
                         app_iter=f)
@@ -35,7 +36,7 @@ def make_plot(columns, values):
         ax.plot(x_axis, tuple( d[i] for d in values ), label=label)
 
     img = tempfile.mkstemp(prefix='plot-', suffix='.svgz',
-                           dir=plots_dir)
+                           dir=settings.plots_dir)
     img = img[1]
 
     fontP = FontProperties()

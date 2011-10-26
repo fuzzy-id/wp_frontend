@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-import datetime
 import os.path
 
 import deform
+from pyramid.view import view_config
+from wp_frontend import settings
 from wp_frontend.models import DBSession, get_data
 from wp_frontend.views import plots, wp_datetime
 from wp_frontend.views.forms import timespan_form, submit_msg
@@ -18,6 +19,9 @@ needed_columns = {
                       'deltaWQaVerdamp'),
     }
 
+
+@view_config(route_name='view_graph', permission='user',
+             renderer=os.path.join(settings.templates_dir, 'graph.pt'))
 def view_graph(request):
 
     graph_name = request.matchdict['graph_name']

@@ -129,9 +129,6 @@ from wp_frontend.tests import create_entries
 
 class ViewSetValTests(BaseTestWithDB):
 
-    def _make_the_class(self, args):
-        return DataToSet(*args)
-
     def test_view_without_data_present(self):
 
         request = testing.DummyRequest()
