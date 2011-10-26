@@ -1,4 +1,5 @@
-import unittest2
+# -*- coding: utf-8 -*-
+import unittest
 import re
 
 import wp_frontend
@@ -12,7 +13,7 @@ valid_credentials = { 'user': 'test_user',
                       'came_from': '/',
                       'submit': '', }
 
-class BasicFunctionalTestCase(unittest2.TestCase):
+class BasicFunctionalTestCase(unittest.TestCase):
     
     def setUp(self):
         app = wp_frontend.main({}, 
