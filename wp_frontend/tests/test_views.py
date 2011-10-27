@@ -7,10 +7,10 @@ import unittest
 import wp_frontend.views.graphs
 from pyramid import testing
 from wp_frontend import views
-from wp_frontend.models import get_data, map_to_beautifull_names
-from wp_frontend.models.set_data import DataToSet
-from wp_frontend.tests import BaseTestWithDB
-from wp_frontend.views import wp_datetime
+from wp_frontend.models import calculations
+from wp_frontend.models import get_data, helpers
+from wp_frontend.tests import BaseTestWithDB, create_entries
+from wp_frontend.views import wp_datetime, set_val
 
 
 class RootViewTest(unittest.TestCase):
@@ -35,7 +35,7 @@ class ViewHomeTests(BaseTestWithDB):
     def test_view_home_without_data(self):
         request = testing.DummyRequest()
         response = views.view_home(request)
-        self.assertTrue(response['data'] is None)
+        self.assertFalse(response['current_data'].data_available)
 
     def test_view_home_with_data(self):
         data = {'version':8,
@@ -56,17 +56,15 @@ class ViewHomeTests(BaseTestWithDB):
 
         self._add_one(data)
 
-        request = testing.DummyRequest()
-        response = views.view_home(request)
-        result = response['data']
-
-        from wp_frontend.models.calculations import calc_currKW
-        data['currKW'] = calc_currKW(data['temp_Vl'])
+        data['currKW'] = calculations.calc_currKW(data['temp_Vl'])
         data['deltaVlRl'] = data['temp_Vl'] - data['temp_Rl']
         data['deltaWQea'] = data['temp_WQein'] - data['temp_WQaus']
 
-        expected = data
-        self.assertEqual(result, expected)
+        request = testing.DummyRequest()
+        response = views.view_home(request)
+        result = dict([ x for x in response['current_data']])
+
+        self.assertEqual(result, data)
 
 class ViewHzgWWTests(BaseTestWithDB):
 
@@ -125,16 +123,15 @@ class ViewHzgWWTests(BaseTestWithDB):
         self.assertTrue(response['vals_available'] == False)
         self.assertTrue('Start has to be before End' in response['form'])
         
-from wp_frontend.tests import create_entries
 
 class ViewSetValTests(BaseTestWithDB):
 
     def test_view_without_data_present(self):
 
         request = testing.DummyRequest()
-        response = views.view_set_val(request)
+        response = set_val.view_set_val(request)
 
-        self.assertTrue(response['current_values'] is None)
+        self.assertFalse(response['current_data'].data_available)
         self.assertTrue(response['log'] is None)
         self.assertTrue(response['form'] is not None)
 
@@ -147,9 +144,9 @@ class ViewSetValTests(BaseTestWithDB):
         expected.reverse()
 
         request = testing.DummyRequest()
-        response = views.view_set_val(request)
+        response = set_val.view_set_val(request)
 
-        self.assertTrue(response['current_values'] is None)
+        self.assertFalse(response['current_data'].data_available)
         for actual, exp in zip(response['log'], expected):
             self.assertEqual(actual, exp)
 
@@ -163,15 +160,15 @@ class ViewSetValTests(BaseTestWithDB):
 
         oldval = None
         user = None
-        attribute = map_to_beautifull_names[attribute]
+        attribute = helpers.map_to_beautifull_names[attribute]
                                        
         expected = ("don't compare datetime", user, attribute,
                     oldval, str(newval), 'pending', '', )
         dt_before = wp_datetime.strip_ms(datetime.datetime.now())
-        response = views.view_set_val(request)
+        response = set_val.view_set_val(request)
         dt_after = wp_datetime.strip_ms(datetime.datetime.now())
         
-        self.assertTrue(response['current_values'] is None)
+        self.assertFalse(response['current_data'].data_available)
         self.assertTrue(response['log'][0][0] >= dt_before)
         self.assertTrue(dt_after >= response['log'][0][0])
         self.assertEqual(response['log'][0][1:-1], expected[1:-1])
@@ -180,7 +177,7 @@ class ViewSetValTests(BaseTestWithDB):
         request = testing.DummyRequest(params={'invalid_attr': 'invalid_value',
                                                'submit': ''})
 
-        response = views.view_set_val(request)
+        response = set_val.view_set_val(request)
         self.assertTrue('There was a problem with your submission' 
                         in response['form'])
         

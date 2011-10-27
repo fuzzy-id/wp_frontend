@@ -12,7 +12,7 @@ from matplotlib.font_manager import FontProperties
 from pyramid.response import Response
 
 from wp_frontend import settings
-from wp_frontend.models import map_to_beautifull_names
+from wp_frontend.models import helpers
 from pyramid.view import view_config
 
 @view_config(route_name='plots', permission='user')
@@ -32,7 +32,7 @@ def make_plot(columns, values):
     
     x_axis = tuple(datetime.datetime.fromtimestamp(d[0]) for d in values)
     for i in range(1, len(columns)):
-        label = map_to_beautifull_names[columns[i]]
+        label = helpers.map_to_beautifull_names[columns[i]]
         ax.plot(x_axis, tuple( d[i] for d in values ), label=label)
 
     img = tempfile.mkstemp(prefix='plot-', suffix='.svgz',

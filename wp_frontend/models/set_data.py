@@ -1,6 +1,6 @@
 import datetime
 from sqlalchemy import Column, Integer, Enum, Sequence, DateTime, String
-from wp_frontend.models import Base, map_to_beautifull_names
+from wp_frontend.models import Base, helpers
 
 setable = ['temp_einsatz',
            'temp_BasisSoll',
@@ -14,7 +14,7 @@ setable = ['temp_einsatz',
            'datum',
            'handabschaltung']
 
-attribute_enum = [ map_to_beautifull_names[s] for s in setable ]
+attribute_enum = [ helpers.map_to_beautifull_names[s] for s in setable ]
 
 class DataToSet(Base):
     __tablename__ = 'wp_setdata'

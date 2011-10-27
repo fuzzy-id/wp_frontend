@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-import os.path
-
+import wp_frontend.views
 from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.config import Configurator
@@ -8,8 +7,7 @@ from pyramid.renderers import get_renderer
 from sqlalchemy import engine_from_config
 from wp_frontend.models import initialize_sql
 from wp_frontend.security import groupfinder
-import wp_frontend.views
-from wp_frontend import settings
+
 
 def main(global_config, sql_init_function=initialize_sql, **settings):
     """ This function returns a Pyramid WSGI application.
@@ -36,11 +34,11 @@ def main(global_config, sql_init_function=initialize_sql, **settings):
     config.add_route('plots', '/plots/{img_name}')
     config.add_route('view_set_val', '/set_val')
     config.add_route('view_login', '/login')
+    config.add_route('view_logout', '/logout')
+
     config.add_view('wp_frontend.views.view_login',
                     context='pyramid.httpexceptions.HTTPForbidden',
                     renderer='templates/login.pt')
-
-    config.add_route('view_logout', '/logout')
 
     config.scan(wp_frontend.views)
     return config.make_wsgi_app()

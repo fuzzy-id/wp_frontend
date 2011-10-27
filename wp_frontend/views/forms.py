@@ -1,10 +1,36 @@
 # -*- coding: utf-8 -*-
 import colander
 import deform
-from wp_frontend.models import map_to_beautifull_names
-from wp_frontend.models.set_data import setable
+from wp_frontend.models import helpers, set_data
 from wp_frontend.security import PASSWD
 
+
+class FormEvaluatorAndHandler(object):
+
+    def __init__(self, form, handling_obj):
+        self.form = form
+        self.handling_obj = handling_obj
+        self.new_rendered_form = None
+
+    def handle_request(self, request, pass_to_handler=None, callback=None):
+        if submit_msg in request.params:
+            self._handle_form(request, pass_to_handler)
+        else:
+            self.new_rendered_form = self.form.render(appstruct=self.handling_obj.as_dict())
+        if callback is not None:
+            callback()
+
+    def _handle_form(self, request, pass_to_handler):
+        controls = request.params.items()
+        try:
+            appstruct = self.form.validate(controls)
+        except deform.ValidationFailure, e:
+            self.new_rendered_form = e.render()
+        else:
+            if pass_to_handler is not None:
+                appstruct.update(pass_to_handler)
+            self.handling_obj.extract_vals_from_form(appstruct)
+            self.new_rendered_form = self.form.render(appstruct=self.handling_obj.as_dict())        
 
 submit_msg = 'submit'
 
@@ -43,12 +69,11 @@ def timespan_validator(form, value):
         raise exc
 
 _timespan_schema = TimespanSchema(validator=timespan_validator)
-timespan_form = deform.Form(_timespan_schema,
-                            method="POST",
-                            buttons=(submit_msg, ))
+timespan_form = deform.Form(_timespan_schema, method="POST",
+                            buttons=(submit_msg,))
 
-_set_val_choices = [ (attr, map_to_beautifull_names[attr], )
-                     for attr in setable ]
+_set_val_choices = [ (attr, helpers.map_to_beautifull_names[attr], )
+                     for attr in set_data.setable ]
 
 class SetValSchema(colander.Schema):
     attr = colander.SchemaNode(colander.String(),

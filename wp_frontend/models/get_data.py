@@ -5,6 +5,38 @@ from sqlalchemy import Column, Float, Integer, Enum, Sequence, Date, Time, Strin
 
 from wp_frontend.models import Base
 from wp_frontend.models.column_calculator import ColumnCalculator
+from wp_frontend.models import helpers 
+from wp_frontend.models.set_data import setable
+
+
+class CurrentData(object):
+
+    def __init__(self, cols, db_session, beauty_names=False):
+        self.db_session = db_session
+        self._data = []
+        self.data_available = False
+        self.cols = cols
+        if beauty_names:
+            self.col_names = [ helpers.map_to_beautifull_names[s] for s in setable ]
+        else:
+            self.col_names = cols
+        self._set_data_as_attr()
+
+    def fetch_data(self):
+        self._data = PulledData.get_latest(self.db_session, self.cols)
+        if self._data is None:
+            self.data_available = False
+            self._data = []
+        else:
+            self.data_available = True
+            self._set_data_as_attr()
+
+    def _set_data_as_attr(self):
+        map(self.__setattr__, self.col_names, self._data)
+
+    def __iter__(self):
+        for col in self.col_names:
+            yield (col, self.__getattribute__(col))
 
 
 class PulledData(Base):
@@ -191,15 +223,12 @@ class PulledData(Base):
         number = query.count()
 
         if number > 2*span_with_resolution.resolution:
-            return (span_with_resolution.resolution,
-                    cls.get_values_in_timespan_with_avg(session, columns,
-                                                        span_with_resolution),
-                    )
+            return cls.get_values_in_timespan_with_avg(session, columns,
+                                                        span_with_resolution)
         else:
-            return (number,
-                    cls.get_values_in_timespan_wo_avg(session, columns,
-                                                        span_with_resolution),
-                    )
+            span_with_resolution.resolution = number
+            return cls.get_values_in_timespan_wo_avg(session, columns,
+                                                        span_with_resolution)
 
     @classmethod
     def get_values_in_timespan_wo_avg(cls, session, columns, span_with_resolution):
@@ -222,6 +251,7 @@ class PulledData(Base):
 
     @classmethod
     def get_values_in_timespan_with_avg(cls, session, columns, span_with_resolution):
+
         cc = ColumnCalculator(columns)
         menu_entries = cls.map_names_to_attributes(columns)
         menu_entries = cc.add_entries(menu_entries)

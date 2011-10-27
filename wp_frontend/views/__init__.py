@@ -2,15 +2,14 @@
 import os.path
 
 import deform
-import transaction
 from pyramid.httpexceptions import HTTPFound
-from pyramid.security import authenticated_userid, remember, forget
+from pyramid.security import remember, forget
 from pyramid.url import route_url
 from pyramid.view import view_config
+
 from wp_frontend import settings
-from wp_frontend.models import DBSession, get_data, map_to_beautifull_names
-from wp_frontend.models.set_data import DataToSet, setable
-from wp_frontend.views.forms import login_form, submit_msg, set_val_form
+from wp_frontend.models import DBSession, get_data, helpers
+from wp_frontend.views.forms import login_form, submit_msg
 
 
 @view_config(route_name='view_logout')
@@ -42,7 +41,6 @@ def view_login(request):
     return { 'url': request.application_url + '/view_login',
              'form': login_form.render(appstruct={'came_from': came_from}) }
 
-
 @view_config(route_name='view_wp')
 def view_wp(request):
     return HTTPFound(location = route_url('view_home', request))
@@ -59,50 +57,8 @@ def view_home(request):
                       'druck_Kondensator', 'uhrzeit', 'datum',
                       'betriebsstunden', 'DO_buffer', 'DI_buffer',
                       'currKW', 'deltaVlRl', 'deltaWQea']
-    data = get_data.PulledData.get_latest(DBSession, needed_columns)
-    if data is not None:
-        data = dict(zip(needed_columns, data))
-    ret_dict = {'data': data, }
+    current_data = get_data.CurrentData(needed_columns, DBSession)
+    current_data.fetch_data()
+
+    ret_dict = {'current_data': current_data, }
     return ret_dict
-
-@view_config(route_name='view_set_val', permission='user',
-             renderer=os.path.join(settings.templates_dir, 'set_val.pt'))
-def view_set_val(request):
-
-    current_values = get_data.PulledData.get_latest(DBSession, setable)
-    if current_values is not None:
-        beauty_setable = [ map_to_beautifull_names[s] for s in setable ]
-        current_values = dict(zip(beauty_setable, current_values))
-
-    ret_dict = {'current_values': current_values, }
-
-    if submit_msg in request.params:
-        controls = request.params.items()
-        try:
-            appstruct = set_val_form.validate(controls)
-        except deform.ValidationFailure, e:
-            ret_dict['form'] = e.render()
-            ret_dict['log'] = get_log()
-            return ret_dict
-        attr = map_to_beautifull_names[appstruct['attr']]
-        newval = appstruct['newval']
-        if current_values is None:
-            oldval = None
-        else:
-            oldval = current_values[attr]
-        user = authenticated_userid(request)
-        transaction.begin()
-        entry = DataToSet(user, attr, newval, oldval)
-        DBSession.add(entry)
-        transaction.commit()
-        
-    ret_dict['form'] = set_val_form.render()
-    ret_dict['log'] = get_log()
-
-    return ret_dict
-
-def get_log():
-    log = DataToSet.get_latest(DBSession, 10)
-    if len(log) == 0:
-        return None
-    return log

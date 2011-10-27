@@ -9,6 +9,9 @@
   <link rel="stylesheet"
 	href="${request.static_url('deform:static/css/form.css')}"
 	type="text/css" />
+  <link rel="stylesheet"
+	href="${request.static_url('deform:static/css/beautify.css')}"
+	type="text/css" />
   <script type="text/javascript" 
 	  src="${request.static_url('deform:static/scripts/jquery-1.4.2.min.js')}">
   </script>
@@ -18,16 +21,16 @@
 </tal:block>
 <tal:block metal:fill-slot="content">
   <span tal:replace="structure form"/>
-  <div tal:switch="current_values is None">
-    <span tal:case="True">
+  <div tal:switch="current_data.data_available">
+    <span tal:case="False">
       Couldn't fetch current values.
     </span>
-    <span tal:case="False">
+    <span tal:case="True">
       Current values:
       <table>
-	<tr tal:repeat="cv current_values">
-	  <td> <span tal:replace="cv">name</span></td>
-	  <td> <span tal:replace="current_values[cv]">val</span></td>
+	<tr tal:repeat="(name, val) current_data">
+	  <td> <span tal:replace="name">name</span></td>
+	  <td> <span tal:replace="val">val</span></td>
 	</tr>
       </table>
     </span>

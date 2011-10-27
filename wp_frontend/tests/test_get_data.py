@@ -55,10 +55,10 @@ class PulledDataTest(BaseTestWithDB):
             row = create_entries.get_data_entries[expected_entry]
             expected[row['tsp']] = ( row['temp_aussen'], calc_currKW(row['temp_Vl']), )
 
-        number, entries = get_data.PulledData.get_values_in_timespan(
+        entries = get_data.PulledData.get_values_in_timespan(
             self.session, ['tsp', 'temp_aussen', 'currKW'], span_with_resolution)
 
-        self.assertEquals(number, span_with_resolution.resolution)
+        self.assertEquals(10, span_with_resolution.resolution)
 
         for entry in entries:
             res_tsp = int(entry[0])
@@ -78,10 +78,11 @@ class PulledDataTest(BaseTestWithDB):
         for row in create_entries.get_data_entries:
             expected[row['tsp']] = ( row['temp_aussen'], calc_currKW(row['temp_Vl']), )
 
-        number, entries = get_data.PulledData.get_values_in_timespan(
+        entries = get_data.PulledData.get_values_in_timespan(
             self.session, ['tsp', 'temp_aussen', 'currKW'], span_with_resolution)
 
-        self.assertEquals(number, len(create_entries.get_data_entries))
+        self.assertEquals(span_with_resolution.resolution, 
+                          len(create_entries.get_data_entries))
         
         for entry in entries:
             res_tsp = int(entry[0])
