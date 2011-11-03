@@ -31,12 +31,13 @@ def main(global_config, sql_init_function=initialize_sql, **settings):
     config.add_route('view_wp', '/')
     config.add_route('view_home', '/home')
     config.add_route('view_graph', '/graph/{graph_name}')
+    config.add_route('user_graph', '/user_graph')
     config.add_route('plots', '/plots/{img_name}')
     config.add_route('view_set_val', '/set_val')
     config.add_route('view_login', '/login')
     config.add_route('view_logout', '/logout')
 
-    config.add_view('wp_frontend.views.view_login',
+    config.add_view('wp_frontend.views.login.view_login',
                     context='pyramid.httpexceptions.HTTPForbidden',
                     renderer='templates/login.pt')
 

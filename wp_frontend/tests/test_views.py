@@ -75,7 +75,7 @@ class ViewHzgWWTests(BaseTestWithDB):
         now = datetime.datetime.now()
         thirty_days_ago = now - datetime.timedelta(days=30)
         two_minutes = datetime.timedelta(minutes=2)
-        self.assertTrue(response['vals_available'] == False)
+        self.assertTrue(response['graph'].plot_url is None)
         self.assertTrue(two_minutes >= now - response['timespan'].end)
         self.assertTrue(two_minutes >= thirty_days_ago - response['timespan'].start)
 
@@ -90,7 +90,7 @@ class ViewHzgWWTests(BaseTestWithDB):
         request.params = request.get
         response = wp_frontend.views.graphs.view_graph(request)
 
-        self.assertTrue(response['vals_available'] == False)
+        self.assertTrue(response['graph'].plot_url is None)
         result = response['timespan'].start.strftime("%Y-%m-%d %H:%M:%S")
         self.assertEquals(result, start)
         result = response['timespan'].end.strftime("%Y-%m-%d %H:%M:%S")
@@ -106,7 +106,7 @@ class ViewHzgWWTests(BaseTestWithDB):
         request.params = request.get
         response = wp_frontend.views.graphs.view_graph(request)
 
-        self.assertTrue(response['vals_available'] == False)
+        self.assertTrue(response['graph'].plot_url is None)
         self.assertTrue('Invalid date' in response['form'])
 
     def test_end_before_start_gives_error_in_form(self):
@@ -120,7 +120,7 @@ class ViewHzgWWTests(BaseTestWithDB):
         request.params = request.get
         response = wp_frontend.views.graphs.view_graph(request)
 
-        self.assertTrue(response['vals_available'] == False)
+        self.assertTrue(response['graph'].plot_url is None)
         self.assertTrue('Start has to be before End' in response['form'])
         
 

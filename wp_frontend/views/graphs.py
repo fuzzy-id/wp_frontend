@@ -8,7 +8,7 @@ from wp_frontend.models import DBSession, get_data
 from wp_frontend.views import plots, wp_datetime, forms
 from wp_frontend.views.forms import timespan_form, submit_msg
 
-class Graph(object):
+class PredefinedGraph(forms.FormEvaluatorObserver):
     
     needed_columns = {
         'hzg_ww': ('tsp', 'temp_aussen', 'temp_einsatz', 'temp_Vl',
@@ -41,26 +41,50 @@ class Graph(object):
             self.plot_url = request.route_path('plots',
                                                img_name=self.img_name)
 
+class UserDefinedGraph(object):
+    
+    def __init__(self, name):
+        self.name = name
+
+class GraphTimespanWithResolutionMediator(object):
+    
+    def __init__(self, graph, tsp_w_res):
+        self.graph = graph
+        self.tsp_w_res = tsp_w_res
+
+    def notify(self, subj):
+        self.tsp_w_res.notify(subj)
+        self.graph.notify(subj)
+        self.gen_graph(subj.request)
+        
+    def gen_graph(self, request):
+        self.graph.catch_values(self.tsp_w_res)
+        self.graph.create_plot()
+        self.graph.gen_url_to_plot(request)
 
 @view_config(route_name='view_graph', permission='user',
              renderer=os.path.join(settings.templates_dir, 'graph.pt'))
 def view_graph(request):
 
-    timespan = wp_datetime.TimespanWithResolution()
-    ret_dict = {'timespan': timespan,
-                'vals_available': False, }
+    tsp_w_res = wp_datetime.TimespanWithResolution()
+    graph = PredefinedGraph(request.matchdict['graph_name'])
+    mediator = GraphTimespanWithResolutionMediator(graph, tsp_w_res)
+    new_form = forms.NewFormRenderer()
+    
+    fes = forms.FormEvaluatorSubject(request, forms.timespan_form)
+    fes.add_observer(mediator)
+    fes.add_observer(new_form)
 
-    graph = Graph(request.matchdict['graph_name'])
-    ret_dict['graph'] = graph
+    fes.evaluate_form()
 
-    def gen_graph():
-        graph.catch_values(timespan)
-        graph.create_plot()
-        graph.gen_url_to_plot(request)
+    return { 'graph': graph,
+             'timespan': tsp_w_res,
+             'form': new_form.form, }
 
-    feh = forms.FormEvaluatorAndHandler(timespan_form, timespan)
-    feh.handle_request(request, callback=gen_graph)
+import pprint
 
-    ret_dict['form'] = feh.new_rendered_form
-
-    return ret_dict
+@view_config(route_name='user_graph', permission='user',
+             renderer=os.path.join(settings.templates_dir, 'user_graph.pt'))
+def user_graph(request):
+    pprint.pprint(request.GET)
+    return { 'form': forms.user_graph_form.render(), }

@@ -10,43 +10,25 @@
 	href="${request.static_url('deform:static/css/form.css')}"
 	type="text/css" />
   <link rel="stylesheet"
-	href="${request.static_url('deform:static/css/ui-lightness/jquery-ui-1.8.11.custom.css')}"
-	type="text/css" />
-  <link rel="stylesheet"
 	href="${request.static_url('deform:static/css/jquery-ui-timepicker-addon.css')}"
 	type="text/css" />
+  <link rel="stylesheet"
+	href="${request.static_url('deform:static/css/beautify.css')}"
+	type="text/css" />
   <script type="text/javascript" 
-	  src="${request.static_url('deform:static/scripts/jquery-1.4.2.min.js')}">
+	  src="${request.static_url('deform:static/scripts/deform.js')}">
   </script>
   <script type="text/javascript" 
 	  src="${request.static_url('deform:static/scripts/jquery.form.js')}">
   </script>
   <script type="text/javascript" 
-	  src="${request.static_url('deform:static/scripts/deform.js')}">
-  </script>
-  <script type="text/javascript" 
-	  src="${request.static_url('deform:static/scripts/jquery-ui-1.8.11.custom.min.js')}">
-  </script>
-  <script type="text/javascript" 
 	  src="${request.static_url('deform:static/scripts/jquery-ui-timepicker-addon.js')}">
-  </script>
-  <script type="text/javascript" 
-	  src="${request.static_url('deform:static/scripts/jquery.maskedinput-1.2.2.min.js')}">
   </script>
 </tal:block>
 <tal:block metal:fill-slot="title">
-  Graph
+  Eigenen Graphen Zusammenstellen
 </tal:block>
 <tal:block metal:fill-slot="content">
   <span tal:replace="structure form"/>
-  <div tal:switch="graph.plot_url is None">
-    <span tal:case="True">
-      Couldn't fetch any data to plot.
-    </span>
-    <span tal:case="False">
-      Plotted from ${timespan.start} to ${timespan.end} with ${timespan.resolution} dots.
-      <img id="diag" src="${graph.plot_url}" />
-    </span>
-  </div>
 </tal:block>
 </html>

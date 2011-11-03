@@ -5,32 +5,87 @@ from wp_frontend.models import helpers, set_data
 from wp_frontend.security import PASSWD
 
 
-class FormEvaluatorAndHandler(object):
+class FormEvaluatorSubject(object):
 
-    def __init__(self, form, handling_obj):
+    states = { 0: 'not_evaluated',
+               1: 'no_submission',
+               2: 'form_invalid',
+               3: 'form_evaluated' }
+
+    def __init__(self, request, form):
+        self.request = request
         self.form = form
-        self.handling_obj = handling_obj
-        self.new_rendered_form = None
+        self.observers = []
+        self.appstruct = None
+        self.exception = None
+        self._state = 0
 
-    def handle_request(self, request, pass_to_handler=None, callback=None):
-        if submit_msg in request.params:
-            self._handle_form(request, pass_to_handler)
-        else:
-            self.new_rendered_form = self.form.render(appstruct=self.handling_obj.as_dict())
-        if callback is not None:
-            callback()
+    @property
+    def state(self):
+        return self.states[self._state]
 
-    def _handle_form(self, request, pass_to_handler):
-        controls = request.params.items()
-        try:
-            appstruct = self.form.validate(controls)
-        except deform.ValidationFailure, e:
-            self.new_rendered_form = e.render()
+    @state.setter
+    def state(self, new_state):
+        self._state = new_state
+        self._update_observers()
+
+    def add_observer(self, observer):
+        self.observers.append(observer)
+
+    def _update_observers(self):
+        for observer in self.observers:
+            observer.notify(self)
+
+    def evaluate_form(self):
+        if submit_msg in self.request.params:
+            try:
+                self._extract_values()
+                self.state = 3
+            except deform.ValidationFailure, e:
+                self.exception = e
+                self.state = 2
         else:
-            if pass_to_handler is not None:
-                appstruct.update(pass_to_handler)
-            self.handling_obj.extract_vals_from_form(appstruct)
-            self.new_rendered_form = self.form.render(appstruct=self.handling_obj.as_dict())        
+            self.state = 1
+
+    def _extract_values(self):
+        controls = self.request.params.items()
+        self.appstruct = self.form.validate(controls)
+
+class FormEvaluatorObserver(object):
+
+    def notify(self, subj):
+        if subj.state == 'no_submission':
+            self._observe_no_submission(subj)
+        elif subj.state == 'form_invalid':
+            self._observe_form_invalid(subj)
+        elif subj.state == 'form_evaluated':
+            self._observe_form_evaluated(subj)
+        else:
+            raise Exception('unknown state')
+
+    def _observe_form_evaluated(self, subj):
+        pass
+
+    def _observe_form_invalid(self, subj):
+        pass
+
+    def _observe_no_submission(self, subj):
+        pass
+
+class NewFormRenderer(FormEvaluatorObserver):
+    
+    def __init__(self, default_values={}):
+        self.form = None
+        self.default_values = default_values
+
+    def _observe_form_evaluated(self, subj):
+        self.form = subj.form.render(appstruct=subj.appstruct)
+
+    def _observe_form_invalid(self, subj):
+        self.form = subj.exception.render()
+
+    def _observe_no_submission(self, subj):
+        self.form = subj.form.render(appstruct=self.default_values)
 
 submit_msg = 'submit'
 
@@ -71,6 +126,18 @@ def timespan_validator(form, value):
 _timespan_schema = TimespanSchema(validator=timespan_validator)
 timespan_form = deform.Form(_timespan_schema, method="POST",
                             buttons=(submit_msg,))
+
+_user_graph_choices = [ (attr, helpers.map_to_beautifull_names[attr], )
+                        for attr in helpers.plotable_fields ]
+
+class UserGraphSchema(colander.Schema):
+    attr_list = colander.SchemaNode(colander.Sequence(),
+                                    widget=deform.widget.CheckboxChoiceWidget(
+            values=_user_graph_choices))
+
+_user_graph_schema = UserGraphSchema()
+user_graph_form = deform.Form(_user_graph_schema, method="GET",
+                              buttons=(submit_msg, ))
 
 _set_val_choices = [ (attr, helpers.map_to_beautifull_names[attr], )
                      for attr in set_data.setable ]

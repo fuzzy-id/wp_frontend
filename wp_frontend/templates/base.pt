@@ -37,6 +37,9 @@
 	  <a href="${request.application_url}/graph/wqaus_verdamp">WQaus/Verdampfer</a>
 	</span>
 	<span id="menuentry">
+	  <a href="${request.application_url}/user_graph">Eigener Graph</a>
+	</span>
+	<span id="menuentry">
 	  <a href="${request.application_url}/set_val">Werte-Setzen</a>
 	</span>
 	<span id="menuentry">
