@@ -73,3 +73,7 @@ class BehaviourForUserWithDBTests(BasicFunctionalTestCase):
 
     def test_plot_wqaus_verdamp(self):
         self._get_plot('/graph/wqaus_verdamp')
+
+    def test_field_defaults_are_not_empty(self):
+        resp = self.testapp.get('/graph/erdsonde')
+        self.assertNotIn('value=""', resp.body)
