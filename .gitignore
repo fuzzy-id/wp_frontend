@@ -6,6 +6,7 @@
 .ropeproject/
 
 # nosetest coverage
+.noseids
 .coverage
 
 wp_frontend/plots/plot-*
