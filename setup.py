@@ -23,7 +23,7 @@ if sys.version_info[:3] < (2,5,0):
     requires.append('pysqlite')
 
 setup(name='wp_frontend',
-      version='0.0',
+      version='0.1',
       description='wp_frontend',
       long_description=README + '\n\n' +  CHANGES,
       classifiers=[
@@ -32,8 +32,8 @@ setup(name='wp_frontend',
         "Topic :: Internet :: WWW/HTTP",
         "Topic :: Internet :: WWW/HTTP :: WSGI :: Application",
         ],
-      author='',
-      author_email='',
+      author='Thomas Bach',
+      author_email='bachth@uni-mainz.de',
       url='',
       keywords='web wsgi bfg pylons pyramid',
       packages=find_packages(),
