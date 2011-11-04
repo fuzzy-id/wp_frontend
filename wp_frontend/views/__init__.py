@@ -3,7 +3,7 @@ import os.path
 
 from pyramid.httpexceptions import HTTPFound
 from pyramid.security import forget
-from pyramid.url import route_url
+from pyramid.url import route_url, route_path
 from pyramid.view import view_config
 
 from wp_frontend import settings
@@ -13,13 +13,13 @@ from wp_frontend.models import DBSession, get_data
 @view_config(route_name='view_logout')
 def view_logout(request):
     headers = forget(request)
-    return HTTPFound(location = route_url('view_wp', 
+    return HTTPFound(location = route_path('view_wp', 
                                           request),
                      headers = headers)
 
 @view_config(route_name='view_wp')
 def view_wp(request):
-    return HTTPFound(location = route_url('view_home', request))
+    return HTTPFound(location = route_path('view_home', request))
 
 @view_config(route_name='view_home', permission='user', 
              renderer=os.path.join(settings.templates_dir, 'home.pt'))
