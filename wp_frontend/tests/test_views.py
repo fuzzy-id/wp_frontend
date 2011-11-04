@@ -25,7 +25,7 @@ class RootViewTest(unittest.TestCase):
         request = testing.DummyRequest()
         self.config.add_route('view_home', '/home')
         response = views.view_wp(request)
-        self.assertEqual(response.location, 'http://example.com/home')
+        self.assertEqual(response.location, '/home')
 
 class ViewHomeTests(BaseTestWithDB):
 
