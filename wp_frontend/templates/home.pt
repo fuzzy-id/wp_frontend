@@ -13,7 +13,7 @@
     <span tal:case="False">Couldn't get any data!</span>
     <span tal:case="True">
       <div id="ovdiag">
-	<img id="ovdiag" src="${request.static_url('wp_frontend:static/diagramm.jpg')}"/>
+	<img id="ovdiag" src="${request.static_path('wp_frontend:static/diagramm.jpg')}"/>
 	<!-- ================================ Umgebungstemperaturen ================================================= -->
 	<div id="ovvalue" style="right:84%; top:5.0%;">${current_data.temp_aussen} °C</div>
 	<div id="ovvalue" style="right:84%; top:9.1%;">${current_data.temp_aussen1} °C</div>
