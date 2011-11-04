@@ -8,7 +8,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
   <link rel="stylesheet"
-	href="${request.static_url('wp_frontend:static/wp.css')}"
+	href="${request.static_path('wp_frontend:static/wp.css')}"
 	type="text/css" media="screen" charset="utf-8" />
   <tal:block metal:define-slot="headers">
   </tal:block>
@@ -22,28 +22,25 @@
     <div id="header">
       <div id="menu">
 	<span id="menuentry">
-	  <a href="${request.application_url}/home">Home</a>
+	  <a href="${request.route_path('view_home')}">Home</a>
 	</span>
 	<span id="menuentry">
-	  <a href="${request.application_url}/graph/hzg_ww">Hzg/WW</a>
+	  <a href="${request.route_path('view_graph', graph_name='hzg_ww')}">Hzg/WW</a>
 	</span>
 	<span id="menuentry">
-	  <a href="${request.application_url}/graph/erdsonde">Erdsonde</a>
+	  <a href="${request.route_path('view_graph', graph_name='erdsonde')}">Erdsonde</a>
 	</span>
 	<span id="menuentry">
-	  <a href="${request.application_url}/graph/vorl_kondens">Vorl/Kondens</a>
+	  <a href="${request.route_path('view_graph', graph_name='vorl_kondens')}">Vorl/Kondens</a>
 	</span>
 	<span id="menuentry">
-	  <a href="${request.application_url}/graph/wqaus_verdamp">WQaus/Verdampfer</a>
+	  <a href="${request.route_path('view_graph', graph_name='wqaus_verdamp')}">WQaus/Verdampfer</a>
 	</span>
 	<span id="menuentry">
-	  <a href="${request.application_url}/user_graph">Eigener Graph</a>
+	  <a href="${request.route_path('view_set_val')}">Werte-Setzen</a>
 	</span>
 	<span id="menuentry">
-	  <a href="${request.application_url}/set_val">Werte-Setzen</a>
-	</span>
-	<span id="menuentry">
-	  <a href="${request.application_url}/logout">Logout</a>
+	  <a href="${request.route_path('view_logout')}">Logout</a>
 	</span>
       </div>
     </div>
