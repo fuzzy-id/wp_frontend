@@ -7,6 +7,7 @@ setup.cfg
 setup.py
 wp_frontend/__init__.py
 wp_frontend/security.py
+wp_frontend/settings.py
 wp_frontend.egg-info/PKG-INFO
 wp_frontend.egg-info/SOURCES.txt
 wp_frontend.egg-info/dependency_links.txt
@@ -19,6 +20,7 @@ wp_frontend/models/__init__.py
 wp_frontend/models/calculations.py
 wp_frontend/models/column_calculator.py
 wp_frontend/models/get_data.py
+wp_frontend/models/helpers.py
 wp_frontend/models/set_data.py
 wp_frontend/static/diagramm.jpg
 wp_frontend/static/wp.css
@@ -27,8 +29,10 @@ wp_frontend/templates/graph.pt
 wp_frontend/templates/home.pt
 wp_frontend/templates/login.pt
 wp_frontend/templates/set_val.pt
+wp_frontend/templates/user_graph.pt
 wp_frontend/tests/__init__.py
 wp_frontend/tests/create_entries.py
+wp_frontend/tests/interactive_helpers.py
 wp_frontend/tests/test_column_calculator.py
 wp_frontend/tests/test_get_data.py
 wp_frontend/tests/test_set_data.py
@@ -39,5 +43,7 @@ wp_frontend/tests/test_functionals/test_behaviour_for_user.py
 wp_frontend/views/__init__.py
 wp_frontend/views/forms.py
 wp_frontend/views/graphs.py
+wp_frontend/views/login.py
 wp_frontend/views/plots.py
+wp_frontend/views/set_val.py
 wp_frontend/views/wp_datetime.py
