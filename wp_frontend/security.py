@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-
-PASSWD = {'test_user':'password'}
-GROUPS = {'test_user':['group:users']}
+from wp_frontend.passwd import PASSWD, GROUPS
 
 def groupfinder(userid, request):
     if userid in PASSWD:

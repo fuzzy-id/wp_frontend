@@ -14,3 +14,7 @@ wp_frontend/plots/plot-*
 # files generated when doing setup.py install
 build/
 dist/
+
+# production.ini and passwd.py hold sensitive data
+production.ini
+wp_frontend/passwd.py
