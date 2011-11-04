@@ -19,7 +19,7 @@ def view_login(request):
         came_from = request.params.get('came_from', request.url)
 
     resp_gen = LoginResponseGenerator(came_from)
-    fes = forms.FormEvaluatorSubject(request, forms.login_form)
+    fes = forms.FormEvaluatorSubject(request, forms.get_login_form())
     fes.add_observer(resp_gen)
     fes.evaluate_form()
     return resp_gen.response
@@ -41,6 +41,6 @@ class LoginResponseGenerator(forms.FormEvaluatorObserver):
 
     def _observe_no_submission(self, subj):
         self.response = { 'url': subj.request.application_url + '/view_login',
-                          'form': forms.login_form.render(appstruct={'came_from': 
-                                                                     self.came_from, }),
+                          'form': forms.get_login_form().render(appstruct={'came_from': 
+                                                                           self.came_from, }),
                           }

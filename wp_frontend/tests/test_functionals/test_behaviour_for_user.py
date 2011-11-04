@@ -74,6 +74,22 @@ class BehaviourForUserWithDBTests(BasicFunctionalTestCase):
     def test_plot_wqaus_verdamp(self):
         self._get_plot('/graph/wqaus_verdamp')
 
-    def test_field_defaults_are_not_empty(self):
+class GraphFormTests(BasicFunctionalTestCase):
+
+    def setUp(self):
+        BehaviourForUserWithoutDBTests.__base__.setUp(self)
+        self.login()
+
+    def test_field_defaults_are_setted(self):
         resp = self.testapp.get('/graph/erdsonde')
         self.assertNotIn('value=""', resp.body)
+
+    def test_error_goes_away_when_requesting_other_page(self):
+        wrong_tsp = { 'start': "2011-10-24 18:00:00",
+                      'end': "2011-10-14 18:00:00",
+                      'resolution': '10',
+                      'submit': 'submit'}
+        resp = self.testapp.post('/graph/erdsonde', wrong_tsp)
+        self.assertIn('There was a problem with your submission', resp.body)
+        resp = self.testapp.get('/graph/hzg_ww')
+        self.assertNotIn('There was a problem with your submission', resp.body)

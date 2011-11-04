@@ -108,7 +108,8 @@ def credential_validator(form, value):
         raise exc
 
 _login_schema = LoginSchema(validator=credential_validator)
-login_form = deform.Form(_login_schema, buttons=(submit_msg,))
+def get_login_form():
+    return deform.Form(_login_schema, buttons=(submit_msg,))
     
 
 class TimespanSchema(colander.Schema):
@@ -124,8 +125,9 @@ def timespan_validator(form, value):
         raise exc
 
 _timespan_schema = TimespanSchema(validator=timespan_validator)
-timespan_form = deform.Form(_timespan_schema, method="POST",
-                            buttons=(submit_msg,))
+def get_tsp_w_res_form():
+    return deform.Form(_timespan_schema, method="POST",
+                       buttons=(submit_msg,))
 
 _user_graph_choices = [ (attr, helpers.map_to_beautifull_names[attr], )
                         for attr in helpers.plotable_fields ]

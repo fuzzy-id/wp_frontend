@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 import os.path
+import datetime
 
 import deform
 from pyramid.view import view_config
 from wp_frontend import settings
 from wp_frontend.models import DBSession, get_data
 from wp_frontend.views import plots, wp_datetime, forms
-from wp_frontend.views.forms import timespan_form, submit_msg
+from wp_frontend.views.forms import get_tsp_w_res_form, submit_msg
 
 class PredefinedGraph(forms.FormEvaluatorObserver):
     
@@ -69,9 +70,10 @@ def view_graph(request):
     tsp_w_res = wp_datetime.TimespanWithResolution()
     graph = PredefinedGraph(request.matchdict['graph_name'])
     mediator = GraphTimespanWithResolutionMediator(graph, tsp_w_res)
-    new_form = forms.NewFormRenderer()
+
+    new_form = forms.NewFormRenderer(default_values=tsp_w_res.as_dict())
     
-    fes = forms.FormEvaluatorSubject(request, forms.timespan_form)
+    fes = forms.FormEvaluatorSubject(request, forms.get_tsp_w_res_form())
     fes.add_observer(mediator)
     fes.add_observer(new_form)
 
