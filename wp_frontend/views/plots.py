@@ -8,7 +8,7 @@ try:
     import matplotlib
 except RuntimeError, e:
     # When executed in a system wide supervisor
-    import os.environ
+    import os
     os.environ['MPLCONFIGDIR'] = tempfile.mkdtemp()
     import matplotlib
 matplotlib.use('cairo.svg')
