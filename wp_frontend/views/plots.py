@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import datetime
+import os
 import os.path
 import tempfile
 
@@ -38,6 +39,7 @@ def make_plot(columns, values):
     img = tempfile.mkstemp(prefix='plot-', suffix='.svgz',
                            dir=settings.plots_dir)
     img = img[1]
+    os.chmod(img, 0644)
 
     fontP = FontProperties()
     fontP.set_size('small')
