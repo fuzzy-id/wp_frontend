@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 import os.path
-import datetime
+import pprint
 
-import deform
 from pyramid.view import view_config
+
 from wp_frontend import settings
 from wp_frontend.models import DBSession, get_data
 from wp_frontend.views import plots, wp_datetime, forms
-from wp_frontend.views.forms import get_tsp_w_res_form, submit_msg
+
 
 class PredefinedGraph(forms.FormEvaluatorObserver):
     
@@ -83,7 +83,6 @@ def view_graph(request):
              'timespan': tsp_w_res,
              'form': new_form.form, }
 
-import pprint
 
 @view_config(route_name='user_graph', permission='user',
              renderer=os.path.join(settings.templates_dir, 'user_graph.pt'))
