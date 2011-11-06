@@ -4,13 +4,7 @@ import datetime
 import os.path
 import tempfile
 
-try:
-    import matplotlib
-except RuntimeError, e:
-    # When executed in a system wide supervisor
-    import os
-    os.environ['MPLCONFIGDIR'] = tempfile.mkdtemp()
-    import matplotlib
+import matplotlib
 matplotlib.use('cairo.svg')
 
 import matplotlib.backends.backend_tkagg as plt
