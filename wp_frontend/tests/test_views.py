@@ -66,64 +66,6 @@ class ViewHomeTests(BaseTestWithDB):
 
         self.assertEqual(result, data)
 
-class ViewHzgWWTests(BaseTestWithDB):
-
-    def test_without_data_present(self):
-        request = testing.DummyRequest()
-        request.matchdict['graph_name'] = 'hzg_ww'
-        response = wp_frontend.views.graphs.view_graph(request)
-        now = datetime.datetime.now()
-        thirty_days_ago = now - datetime.timedelta(days=30)
-        two_minutes = datetime.timedelta(minutes=2)
-        self.assertTrue(response['graph'].plot_url is None)
-        self.assertTrue(two_minutes >= now - response['timespan'].end)
-        self.assertTrue(two_minutes >= thirty_days_ago - response['timespan'].start)
-
-    def test_without_data_with_submitted_date(self):
-        end = "2011-08-20 23:18:00"
-        start = "2011-08-10 20:18:00"
-        request = testing.DummyRequest(get={'start': start,
-                                            'end': end,
-                                            'resolution': '30',
-                                            'submit': 'submit', })
-        request.matchdict['graph_name'] = 'hzg_ww'
-        request.params = request.get
-        response = wp_frontend.views.graphs.view_graph(request)
-
-        self.assertTrue(response['graph'].plot_url is None)
-        result = response['timespan'].start.strftime("%Y-%m-%d %H:%M:%S")
-        self.assertEquals(result, start)
-        result = response['timespan'].end.strftime("%Y-%m-%d %H:%M:%S")
-        self.assertEquals(result, end)
-        
-    def test_invalid_date_format_gives_error_in_form(self):
-        start = "2011-08-10 20"
-        end = "2011-08-20 23:18:00"
-        request = testing.DummyRequest(get={'start': start,
-                                            'end': end,
-                                            'submit': 'submit', })
-        request.matchdict['graph_name'] = 'hzg_ww'
-        request.params = request.get
-        response = wp_frontend.views.graphs.view_graph(request)
-
-        self.assertTrue(response['graph'].plot_url is None)
-        self.assertTrue('Invalid date' in response['form'])
-
-    def test_end_before_start_gives_error_in_form(self):
-        end = "2011-08-10 20:18:00"
-        start = "2011-08-20 23:18:00"
-        request = testing.DummyRequest(get={'start': start,
-                                            'end': end,
-                                            'resolution': '30',
-                                            'submit': 'submit', })
-        request.matchdict['graph_name'] = 'hzg_ww'
-        request.params = request.get
-        response = wp_frontend.views.graphs.view_graph(request)
-
-        self.assertTrue(response['graph'].plot_url is None)
-        self.assertTrue('Start has to be before End' in response['form'])
-        
-
 class ViewSetValTests(BaseTestWithDB):
 
     def test_view_without_data_present(self):
@@ -198,5 +140,4 @@ class PlotsTests(unittest.TestCase):
         expected = ''.join(orig_img.readlines())
         self.assertEqual(expected, response.body)
 
-        
-        
+    

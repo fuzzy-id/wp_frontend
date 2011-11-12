@@ -25,16 +25,19 @@
 	  <a href="${request.route_path('view_home')}">Home</a>
 	</span>
 	<span id="menuentry">
-	  <a href="${request.route_path('view_graph', graph_name='hzg_ww')}">Hzg/WW</a>
+	  <a href="${request.route_path('view_graph', graph_name='hzg_ww', attrs=[])}">Hzg/WW</a>
 	</span>
 	<span id="menuentry">
-	  <a href="${request.route_path('view_graph', graph_name='erdsonde')}">Erdsonde</a>
+	  <a href="${request.route_path('view_graph', graph_name='erdsonde', attrs=[])}">Erdsonde</a>
 	</span>
 	<span id="menuentry">
-	  <a href="${request.route_path('view_graph', graph_name='vorl_kondens')}">Vorl/Kondens</a>
+	  <a href="${request.route_path('view_graph', graph_name='vorl_kondens', attrs=[])}">Vorl/Kondens</a>
 	</span>
 	<span id="menuentry">
-	  <a href="${request.route_path('view_graph', graph_name='wqaus_verdamp')}">WQaus/Verdampfer</a>
+	  <a href="${request.route_path('view_graph', graph_name='wqaus_verdamp', attrs=[])}">WQaus/Verdampfer</a>
+	</span>
+	<span id="menuentry">
+	  <a href="${request.route_path('view_choose_graph_attrs')}">Eigener Graph</a>
 	</span>
 	<span id="menuentry">
 	  <a href="${request.route_path('view_set_val')}">Werte-Setzen</a>

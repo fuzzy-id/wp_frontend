@@ -133,12 +133,13 @@ _user_graph_choices = [ (attr, helpers.map_to_beautifull_names[attr], )
                         for attr in helpers.plotable_fields ]
 
 class UserGraphSchema(colander.Schema):
-    attr_list = colander.SchemaNode(colander.Sequence(),
+    attr_list = colander.SchemaNode(deform.Set(),
                                     widget=deform.widget.CheckboxChoiceWidget(
             values=_user_graph_choices))
+    tsp_w_res = colander.SchemaNode(TimespanSchema())
 
 _user_graph_schema = UserGraphSchema()
-user_graph_form = deform.Form(_user_graph_schema, method="GET",
+user_graph_form = deform.Form(_user_graph_schema, method="POST",
                               buttons=(submit_msg, ))
 
 _set_val_choices = [ (attr, helpers.map_to_beautifull_names[attr], )

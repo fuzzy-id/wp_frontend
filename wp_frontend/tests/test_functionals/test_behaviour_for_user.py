@@ -36,6 +36,13 @@ class BehaviourForUserWithoutDBTests(BasicFunctionalTestCase):
     def test_view_graph_wqaus_verdamp(self):
         self._test_view_graph('/graph/wqaus_verdamp')
 
+    def test_view_user_graph(self):
+        self._test_view_graph('/graph/user/temp_Vl/temp_Rl')
+        
+    def test_choose_graph_attrs(self):
+        res = self.testapp.get('/user_graph')
+        self.assertIn('temp_Vl', res.body)
+
 
 class BehaviourForUserWithDBTests(BasicFunctionalTestCase):
 

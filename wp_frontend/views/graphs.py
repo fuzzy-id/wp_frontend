@@ -21,9 +21,12 @@ class PredefinedGraph(forms.FormEvaluatorObserver):
                           'deltaWQaVerdamp'),
         }
 
-    def __init__(self, name):
+    def __init__(self, name, attributes=[]):
         self.name = name
-        self.columns = self.needed_columns[self.name]
+        if name == 'user':
+            self.columns = attributes
+        else:
+            self.columns = self.needed_columns[self.name]
         self.values = []
         self.img_name = None
         self.plot_url = None
@@ -41,11 +44,6 @@ class PredefinedGraph(forms.FormEvaluatorObserver):
         if self.img_name is not None:
             self.plot_url = request.route_path('plots',
                                                img_name=self.img_name)
-
-class UserDefinedGraph(object):
-    
-    def __init__(self, name):
-        self.name = name
 
 class GraphTimespanWithResolutionMediator(object):
     
@@ -68,7 +66,8 @@ class GraphTimespanWithResolutionMediator(object):
 def view_graph(request):
 
     tsp_w_res = wp_datetime.TimespanWithResolution()
-    graph = PredefinedGraph(request.matchdict['graph_name'])
+    graph = PredefinedGraph(request.matchdict['graph_name'], 
+                            request.matchdict['attrs'])
     mediator = GraphTimespanWithResolutionMediator(graph, tsp_w_res)
 
     new_form = forms.NewFormRenderer(default_values=tsp_w_res.as_dict())
@@ -84,8 +83,7 @@ def view_graph(request):
              'form': new_form.form, }
 
 
-@view_config(route_name='user_graph', permission='user',
+@view_config(route_name='view_choose_graph_attrs', permission='user',
              renderer=os.path.join(settings.templates_dir, 'user_graph.pt'))
 def user_graph(request):
-    pprint.pprint(request.GET)
     return { 'form': forms.user_graph_form.render(), }

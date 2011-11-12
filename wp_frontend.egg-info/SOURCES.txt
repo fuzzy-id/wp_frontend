@@ -2,10 +2,10 @@ CHANGES.txt
 MANIFEST.in
 README.txt
 development.ini
-production.ini
 setup.cfg
 setup.py
 wp_frontend/__init__.py
+wp_frontend/passwd.py
 wp_frontend/security.py
 wp_frontend/settings.py
 wp_frontend.egg-info/PKG-INFO
