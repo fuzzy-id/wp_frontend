@@ -55,7 +55,7 @@ class BehaviourForUserWithoutDBTests(BasicFunctionalTestCase):
                       ('__end__', 'attr_list:sequence'), 
                       ('submit', 'submit')]
         resp = self.testapp.post('/user_graph', attributes)
-        self.assertIn('Unknown attribute: not_existing_attribute', resp.body)
+        self.assertIn("Unknown attribute: 'not_existing_attribute'", resp.body)
 
     def test_user_graph_forwards_properly_to_graph_page(self):
         attributes = [('__start__', 'attr_list:sequence'), 
