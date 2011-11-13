@@ -136,7 +136,6 @@ class UserGraphSchema(colander.Schema):
     attr_list = colander.SchemaNode(deform.Set(),
                                     widget=deform.widget.CheckboxChoiceWidget(
             values=_user_graph_choices))
-    tsp_w_res = colander.SchemaNode(TimespanSchema())
 
 _user_graph_schema = UserGraphSchema()
 user_graph_form = deform.Form(_user_graph_schema, method="POST",
