@@ -66,6 +66,10 @@ class BehaviourForUserWithoutDBTests(BasicFunctionalTestCase):
         resp = self.testapp.post('/user_graph', attributes, status=302)
         self.assertIn('/graph/user/ww_TempSoll/deltaVlRl', resp.body)
 
+    def test_invalid_attr_is_properly_handled_on_graph_user(self):
+        resp = self.testapp.get('/graph/user/foo', status=400)
+        self.assertIn("Attribute '%s' is not plotable.", resp.body)
+
 class BehaviourForUserWithDBTests(BasicFunctionalTestCase):
 
     timespan = {'start': "2011-10-14 18:00:00",

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 import os.path
 
-from pyramid.httpexceptions import HTTPFound
+from pyramid.httpexceptions import HTTPFound, HTTPBadRequest
 from pyramid.view import view_config
 
 from wp_frontend import settings
-from wp_frontend.models import DBSession, get_data
+from wp_frontend.models import DBSession, get_data, helpers
 from wp_frontend.views import plots, wp_datetime, forms
 
 
@@ -24,6 +24,9 @@ class PredefinedGraph(forms.FormEvaluatorObserver):
     def __init__(self, name, attributes=[]):
         self.name = name
         if name == 'user':
+            for attr in attributes:
+                if attr not in helpers.plotable_fields:
+                    raise HTTPBadRequest("Attribute '%s' is not plotable.")
             self.columns = attributes
         else:
             self.columns = self.needed_columns[self.name]
