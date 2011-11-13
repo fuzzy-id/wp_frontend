@@ -49,16 +49,22 @@ class BehaviourForUserWithoutDBTests(BasicFunctionalTestCase):
         resp = self.testapp.post('/user_graph', attributes)
         self.assertIn('There was a problem with your submission', resp.body)
 
+    def test_wrong_attributes_result_in_form_error(self):
+        attributes = [('__start__', 'attr_list:sequence'), 
+                      ('checkbox', 'not_existing_attribute'), 
+                      ('__end__', 'attr_list:sequence'), 
+                      ('submit', 'submit')]
+        resp = self.testapp.post('/user_graph', attributes)
+        self.assertIn('There was a problem with your submission', resp.body)
+
     def test_user_graph_forwards_properly_to_graph_page(self):
-        # [(u'_charset_', u'UTF-8'), (u'__formid__', u'deform'), (u'__start__', u'attr_list:sequence'), (u'checkbox', u'ww_TempSoll'), (u'checkbox', u'deltaVlRl'), (u'__end__', u'attr_list:sequence'), (u'submit', u'submit')]
         attributes = [('__start__', 'attr_list:sequence'), 
                       ('checkbox', 'ww_TempSoll'), 
                       ('checkbox', 'deltaVlRl'), 
                       ('__end__', 'attr_list:sequence'), 
                       ('submit', 'submit')]
         resp = self.testapp.post('/user_graph', attributes, status=302)
-        pprint.pprint(resp)
-        # TODO: test redirection to '/graph/user/ww_TempSoll/deltaVlRl'
+        self.asserIn('/graph/user/ww_TempSoll/deltaVlRl', resp.body)
 
 class BehaviourForUserWithDBTests(BasicFunctionalTestCase):
 
