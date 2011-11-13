@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-import wp_frontend.views
 from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.config import Configurator
 from pyramid.renderers import get_renderer
 from sqlalchemy import engine_from_config
+
+import wp_frontend.views
 from wp_frontend.models import initialize_sql
 from wp_frontend.security import groupfinder
 
@@ -23,10 +24,12 @@ def main(global_config, sql_init_function=initialize_sql, **settings):
                           authorization_policy=authz_policy)
 
     config.add_subscriber('wp_frontend.add_base_template',
-                          'pyramid.events.BeforeRender')
+                          'pyramid.events.BeforeRender',
+                           cache_max_age=(3 * 31 * 24 * 60 * 60) # cache for three months
 
     config.add_static_view('static', 'wp_frontend:static')
-    config.add_static_view('deform_static', 'deform:static')
+    config.add_static_view('deform_static', 'deform:static',
+                           cache_max_age=(3 * 31 * 24 * 60 * 60) # cache for three months
     
     config.add_route('view_wp', '/')
     config.add_route('view_home', '/home')
