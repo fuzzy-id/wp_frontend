@@ -138,8 +138,9 @@ class UserGraphSchema(colander.Schema):
             values=_user_graph_choices))
 
 _user_graph_schema = UserGraphSchema()
-user_graph_form = deform.Form(_user_graph_schema, method="POST",
-                              buttons=(submit_msg, ))
+def get_user_graph_form():
+    return deform.Form(_user_graph_schema, method="POST",
+                       buttons=(submit_msg, ))
 
 _set_val_choices = [ (attr, helpers.map_to_beautifull_names[attr], )
                      for attr in set_data.setable ]

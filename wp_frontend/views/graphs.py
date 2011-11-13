@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import os.path
-import pprint
 
+from pyramid.httpexceptions import HTTPFound
 from pyramid.view import view_config
 
 from wp_frontend import settings
@@ -82,8 +82,27 @@ def view_graph(request):
              'timespan': tsp_w_res,
              'form': new_form.form, }
 
+class UserGraphForwarder(forms.FormEvaluatorObserver):
+    
+    def __init__(self):
+        self.redirect = None
+    
+    def _observe_form_evaluated(self, subj):
+        self.redirect = subj.request.route_path('view_graph', graph_name='user', 
+                                       attrs=subj.appstruct['attr_list'])
 
 @view_config(route_name='view_choose_graph_attrs', permission='user',
              renderer=os.path.join(settings.templates_dir, 'user_graph.pt'))
 def user_graph(request):
-    return { 'form': forms.user_graph_form.render(), }
+    new_form = forms.NewFormRenderer()
+    ug_forw = UserGraphForwarder()
+
+    fes = forms.FormEvaluatorSubject(request, forms.get_user_graph_form())
+    fes.add_observer(new_form)
+    fes.add_observer(ug_forw)
+
+    fes.evaluate_form()
+
+    if ug_forw.redirect is not None:
+        return HTTPFound(location=ug_forw.redirect)
+    return { 'form': new_form.form, }

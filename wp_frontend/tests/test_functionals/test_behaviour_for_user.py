@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import pprint
 import re
 from wp_frontend import tests
 from wp_frontend.tests import create_entries
@@ -25,24 +26,39 @@ class BehaviourForUserWithoutDBTests(BasicFunctionalTestCase):
         self.assertTrue("Couldn't fetch any data to plot." in res.body)
 
     def test_view_graph_hzg_ww(self):
-        self._test_view_graph('/graph/hzg_ww')
+        self._test_view_graph('/graph/hzg_ww/')
 
     def test_view_graph_erdsonde(self):
-        self._test_view_graph('/graph/erdsonde')
+        self._test_view_graph('/graph/erdsonde/')
 
     def test_view_graph_vorl_kondens(self):
-        self._test_view_graph('/graph/vorl_kondens')
+        self._test_view_graph('/graph/vorl_kondens/')
 
     def test_view_graph_wqaus_verdamp(self):
-        self._test_view_graph('/graph/wqaus_verdamp')
+        self._test_view_graph('/graph/wqaus_verdamp/')
 
     def test_view_user_graph(self):
         self._test_view_graph('/graph/user/temp_Vl/temp_Rl')
         
-    def test_choose_graph_attrs(self):
+    def test_form_on_user_graph_page_exists(self):
         res = self.testapp.get('/user_graph')
         self.assertIn('temp_Vl', res.body)
 
+    def test_error_in_form_submission_is_properly_handled(self):
+        attributes = [('foo', 'bar'), ('submit', 'submit')]
+        resp = self.testapp.post('/user_graph', attributes)
+        self.assertIn('There was a problem with your submission', resp.body)
+
+    def test_user_graph_forwards_properly_to_graph_page(self):
+        # [(u'_charset_', u'UTF-8'), (u'__formid__', u'deform'), (u'__start__', u'attr_list:sequence'), (u'checkbox', u'ww_TempSoll'), (u'checkbox', u'deltaVlRl'), (u'__end__', u'attr_list:sequence'), (u'submit', u'submit')]
+        attributes = [('__start__', 'attr_list:sequence'), 
+                      ('checkbox', 'ww_TempSoll'), 
+                      ('checkbox', 'deltaVlRl'), 
+                      ('__end__', 'attr_list:sequence'), 
+                      ('submit', 'submit')]
+        resp = self.testapp.post('/user_graph', attributes, status=302)
+        pprint.pprint(resp)
+        # TODO: test redirection to '/graph/user/ww_TempSoll/deltaVlRl'
 
 class BehaviourForUserWithDBTests(BasicFunctionalTestCase):
 
@@ -70,16 +86,16 @@ class BehaviourForUserWithDBTests(BasicFunctionalTestCase):
         return match.groups()[0]
 
     def test_plot_hzg_ww(self):
-        self._get_plot('/graph/hzg_ww')
+        self._get_plot('/graph/hzg_ww/')
 
     def test_plot_erdsonde(self):
-        self._get_plot('/graph/erdsonde')
+        self._get_plot('/graph/erdsonde/')
 
     def test_plot_vorl_kondens(self):
-        self._get_plot('/graph/vorl_kondens')
+        self._get_plot('/graph/vorl_kondens/')
 
     def test_plot_wqaus_verdamp(self):
-        self._get_plot('/graph/wqaus_verdamp')
+        self._get_plot('/graph/wqaus_verdamp/')
 
 class GraphFormTests(BasicFunctionalTestCase):
 
@@ -88,7 +104,7 @@ class GraphFormTests(BasicFunctionalTestCase):
         self.login()
 
     def test_field_defaults_are_setted(self):
-        resp = self.testapp.get('/graph/erdsonde')
+        resp = self.testapp.get('/graph/erdsonde/')
         self.assertNotIn('value=""', resp.body)
 
     def test_error_goes_away_when_requesting_other_page(self):
@@ -96,7 +112,7 @@ class GraphFormTests(BasicFunctionalTestCase):
                       'end': "2011-10-14 18:00:00",
                       'resolution': '10',
                       'submit': 'submit'}
-        resp = self.testapp.post('/graph/erdsonde', wrong_tsp)
+        resp = self.testapp.post('/graph/erdsonde/', wrong_tsp)
         self.assertIn('There was a problem with your submission', resp.body)
-        resp = self.testapp.get('/graph/hzg_ww')
+        resp = self.testapp.get('/graph/hzg_ww/')
         self.assertNotIn('There was a problem with your submission', resp.body)

@@ -51,7 +51,7 @@ class BehaviourForAnonymousTests(BasicFunctionalTestCase):
     def test_anonymous_cannot_view(self):
         res = self.testapp.get('/home', status=200)
         self.assertNotLoggedIn(res)
-        res = self.testapp.get('/graph/hzg_ww', status=200)
+        res = self.testapp.get('/graph/hzg_ww/', status=200)
         self.assertNotLoggedIn(res)
         res = self.testapp.get('/set_val', status=200)
         self.assertNotLoggedIn(res)

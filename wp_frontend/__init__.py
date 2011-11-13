@@ -30,7 +30,7 @@ def main(global_config, sql_init_function=initialize_sql, **settings):
     
     config.add_route('view_wp', '/')
     config.add_route('view_home', '/home')
-    config.add_route('view_graph', '/graph/{graph_name}*attrs')
+    config.add_route('view_graph', '/graph/{graph_name}/*attrs')
     config.add_route('view_choose_graph_attrs', '/user_graph')
     config.add_route('plots', '/plots/{img_name}')
     config.add_route('view_set_val', '/set_val')
