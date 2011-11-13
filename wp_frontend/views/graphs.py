@@ -24,10 +24,12 @@ class PredefinedGraph(forms.FormEvaluatorObserver):
     def __init__(self, name, attributes=[]):
         self.name = name
         if name == 'user':
+            self.columns = ['tsp']
             for attr in attributes:
                 if attr not in helpers.plotable_fields:
                     raise HTTPBadRequest("Attribute '%s' is not plotable.")
-            self.columns = attributes
+                self.columns.append(attr.encode())
+            print self.columns
         else:
             self.columns = self.needed_columns[self.name]
         self.values = []
