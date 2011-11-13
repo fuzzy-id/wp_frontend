@@ -140,7 +140,8 @@ class UserGraphSchema(colander.Schema):
 def user_graph_validator(form, value):
     for attr in value['attr_list']:
         if attr not in helpers.plotable_fields:
-            exc = colander.Invalid(form, 'Unknown attribute: %s' % attr)
+            exc = colander.Invalid(form, "Unknown attribute: '%s'" % attr)
+            exc['attr_list'] = ("Unknown attribute: '%s'" % attr)
             raise exc
 
 _user_graph_schema = UserGraphSchema(validator=user_graph_validator)
