@@ -137,7 +137,13 @@ class UserGraphSchema(colander.Schema):
                                     widget=deform.widget.CheckboxChoiceWidget(
             values=_user_graph_choices))
 
-_user_graph_schema = UserGraphSchema()
+def user_graph_validator(form, value):
+    for attr in value['attr_list']:
+        if attr not in helpers.plotable_fields:
+            exc = colander.Invalid(form, 'Unknown attribute: %s' % attr)
+            raise exc
+
+_user_graph_schema = UserGraphSchema(validator=user_graph_validator)
 def get_user_graph_form():
     return deform.Form(_user_graph_schema, method="POST",
                        buttons=(submit_msg, ))
