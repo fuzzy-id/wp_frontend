@@ -26,8 +26,8 @@ def main(global_config, sql_init_function=initialize_sql, **settings):
     config.add_subscriber('wp_frontend.add_base_template',
                           'pyramid.events.BeforeRender')
 
-    config.add_static_view('static', 'wp_frontend:static',
-                           cache_max_age=(3 * 31 * 24 * 60 * 60)) # cache for three months
+    config.add_static_view('static', 'wp_frontend:static')
+    #cache_max_age=(3 * 31 * 24 * 60 * 60)) # cache for three months
 
     config.add_static_view('deform_static', 'deform:static',
                            cache_max_age=(3 * 31 * 24 * 60 * 60)) # cache for three months
