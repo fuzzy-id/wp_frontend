@@ -93,7 +93,7 @@ class BehaviourForUserWithDBTests(BasicFunctionalTestCase):
         self.assertIn("2011-10-14 18:00:00", res.body)
         self.assertIn("2011-10-24 18:00:00", res.body)
         self.assertIn("10", res.body)
-        match = re.search(r'<img id="diag" src="(.*\.svgz)" />', res.body)
+        match = re.search(r'<img src="(.*\.svgz)" />', res.body)
         return match.groups()[0]
 
     def test_plot_hzg_ww(self):
