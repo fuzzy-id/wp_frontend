@@ -1,56 +1,58 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-	  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de"
+<html lang="en"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:metal="http://xml.zope.org/namespaces/metal">
 
-<head>
-  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
-  <link rel="stylesheet"
-	href="${request.static_path('wp_frontend:static/wp.css')}"
-	type="text/css" media="screen" charset="utf-8" />
-  <tal:block metal:define-slot="headers">
-  </tal:block>
-  <title> WP Frontend - 
-    <tal:block metal:define-slot="title">
+  <head>
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" href="${request.static_path('wp_frontend:static/html5reset-1.6.1.css')}"/>
+    <link rel="stylesheet" href="${request.static_path('wp_frontend:static/wp.css')}"/>
+    <tal:block metal:define-slot="headers">
     </tal:block>
-  </title>
-</head>
-<body>
-  <div id="wrap">
-    <div id="header">
-      <div id="menu">
-	<span id="menuentry">
-	  <a href="${request.route_path('view_home')}">Home</a>
-	</span>
-	<span id="menuentry">
-	  <a href="${request.route_path('view_graph', graph_name='hzg_ww', attrs=[])}">Hzg/WW</a>
-	</span>
-	<span id="menuentry">
-	  <a href="${request.route_path('view_graph', graph_name='erdsonde', attrs=[])}">Erdsonde</a>
-	</span>
-	<span id="menuentry">
-	  <a href="${request.route_path('view_graph', graph_name='vorl_kondens', attrs=[])}">Vorl/Kondens</a>
-	</span>
-	<span id="menuentry">
-	  <a href="${request.route_path('view_graph', graph_name='wqaus_verdamp', attrs=[])}">WQaus/Verdampfer</a>
-	</span>
-	<span id="menuentry">
-	  <a href="${request.route_path('view_choose_graph_attrs')}">Eigener Graph</a>
-	</span>
-	<span id="menuentry">
-	  <a href="${request.route_path('view_set_val')}">Werte-Setzen</a>
-	</span>
-	<span id="menuentry">
-	  <a href="${request.route_path('view_logout')}">Logout</a>
-	</span>
-      </div>
-    </div>
-    <div id="middle">
+    <title> WP Frontend - 
+      <tal:block metal:define-slot="title">
+      </tal:block>
+    </title>
+  </head>
+
+  <body>
+    <header class="container">
+      <nav>
+	<ul>
+	  <li class="container">
+	    <a href="${request.route_path('view_home')}">Home</a>
+	  </li>
+	  <li class="container">
+	    <a href="${request.route_path('view_graph', graph_name='hzg_ww', attrs=[])}">Hzg/WW</a>
+	  </li>
+	  <li class="container">
+	    <a href="${request.route_path('view_graph', graph_name='erdsonde', attrs=[])}">Erdsonde</a>
+	  </li>
+	  <li class="container">
+	    <a href="${request.route_path('view_graph', graph_name='vorl_kondens', attrs=[])}">Vorl/Kondens</a>
+	  </li>
+	  <li class="container">
+	    <a href="${request.route_path('view_graph', graph_name='wqaus_verdamp', attrs=[])}">WQaus/Verdampfer</a>
+	  </li>
+	  <li class="container">
+	    <a href="${request.route_path('view_choose_graph_attrs')}">Eigener Graph</a>
+	  </li>
+	  <li class="container">
+	    <a href="${request.route_path('view_set_val')}">Werte-Setzen</a>
+	  </li>
+	  <li class="container">
+	    <a href="${request.route_path('view_logout')}">Logout</a>
+	  </li>
+	</ul>
+      </nav>
+    </header>
+    <div class="content">
       <tal:block metal:define-slot="content">
       </tal:block>
     </div>
-  </div>
-</body>
+    <footer class="container">
+      Footer foo bar
+    </footer>
+  </body>
 </html>
