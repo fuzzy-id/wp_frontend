@@ -56,5 +56,10 @@
 	</tr>
       </table>
     </section>
+    <script type="text/javascript">
+      jQuery(function() {
+      deform.load();
+      });
+    </script>
   </tal:block>
 </html>
