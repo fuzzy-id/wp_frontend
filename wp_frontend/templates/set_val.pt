@@ -1,46 +1,46 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-	  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de"
+<html lang="en"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:metal="http://xml.zope.org/namespaces/metal"
       metal:use-macro="base">
-<tal:block metal:fill-slot="headers">
-  <link rel="stylesheet"
-	href="${request.static_url('deform:static/css/form.css')}"
-	type="text/css" />
-  <link rel="stylesheet"
-	href="${request.static_url('deform:static/css/beautify.css')}"
-	type="text/css" />
-  <script type="text/javascript" 
-	  src="${request.static_url('deform:static/scripts/jquery-1.4.2.min.js')}">
-  </script>
-  <script type="text/javascript" 
-	  src="${request.static_url('deform:static/scripts/deform.js')}">
-  </script>
-</tal:block>
-<tal:block metal:fill-slot="content">
-  <span tal:replace="structure form"/>
-  <div tal:switch="current_data.data_available">
-    <span tal:case="False">
-      Couldn't fetch current values.
-    </span>
-    <span tal:case="True">
-      Current values:
-      <table>
-	<tr tal:repeat="(name, val) current_data">
-	  <td> <span tal:replace="name">name</span></td>
-	  <td> <span tal:replace="val">val</span></td>
-	</tr>
-      </table>
-    </span>
-  </div>
-  <div tal:switch="log is None">
-    <span tal:case="True">
-      Couldn't fetch logs.
-    </span>
-    <span tal:case="False">
-      Log of last changes:
+  <tal:block metal:fill-slot="headers">
+    <link rel="stylesheet"
+	  href="${request.static_url('deform:static/css/form.css')}"
+	  type="text/css" />
+    <link rel="stylesheet"
+	  href="${request.static_url('deform:static/css/beautify.css')}"
+	  type="text/css" />
+    <script type="text/javascript" 
+	    src="${request.static_url('deform:static/scripts/jquery-1.4.2.min.js')}">
+    </script>
+    <script type="text/javascript" 
+	    src="${request.static_url('deform:static/scripts/deform.js')}">
+    </script>
+  </tal:block>
+  <tal:block metal:fill-slot="content">
+    <aside class="container">
+      <span tal:replace="structure form"/>
+      <section tal:switch="current_data.data_available"
+	       class="container">
+	<h1 tal:case="False">Couldn't fetch current values.</h1>
+	<span tal:case="True">
+	  <h1>Current Values</h1>
+	  <table>
+	    <tbody>
+	      <tr tal:repeat="(name, val) current_data">
+		<td class="key"> <span tal:replace="name">name</span></td>
+		<td class="val"> <span tal:replace="val">val</span></td>
+	      </tr>
+	    </tbody>
+	  </table>
+	</span>
+      </section>
+    </aside>
+    <section tal:switch="log is None" 
+	     class="container main">
+      <h1 tal:case="True">Couldn't fetch logs!</h1>
+      <h1 tal:case="False">Last Changes</h1>
       <table id="log">
 	<tr>
 	  <th>datetime</th>
@@ -55,7 +55,6 @@
 	  <td tal:repeat="item entry"> ${item} </td>
 	</tr>
       </table>
-    </span>
-  </div>
-</tal:block>
+    </section>
+  </tal:block>
 </html>
