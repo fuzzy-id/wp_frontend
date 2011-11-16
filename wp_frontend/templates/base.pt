@@ -52,7 +52,6 @@
       </tal:block>
     </div>
     <footer class="container">
-      Footer foo bar
     </footer>
   </body>
 </html>
