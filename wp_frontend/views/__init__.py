@@ -26,8 +26,8 @@ def view_wp(request):
 def view_home(request):
     needed_columns = ['version', 'datum_version', 'betriebsmodus',
                       'temp_aussen', 'temp_aussen24', 'temp_aussen1',
-                      'temp_RlSoll', 'temp_Rl', 'temp_Vl', 'temp_WWSoll',
-                      'temp_WW', 'temp_raum', 'temp_raum1', 'temp_WQein',
+                      'temp_RlSoll', 'temp_Rl', 'temp_Vl', 'ww_TempSolln',
+                      'ww_TempIst', 'temp_raum', 'temp_raum1', 'temp_WQein',
                       'temp_WQaus', 'temp_Verdampfer', 'temp_Kondensator',
                       'temp_Saugleitung', 'druck_Verdampfer',
                       'druck_Kondensator', 'uhrzeit', 'datum',

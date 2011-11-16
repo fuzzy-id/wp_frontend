@@ -95,7 +95,7 @@ class PulledData(Base):
                             default='undef')
     m_0401 = Column(Time, default=datetime.time())
     m_0402 = Column(Time, default=datetime.time())
-    m_0403 = Column(Float, default=0.0)
+    ww_TempIst = Column('m_0403', Float, default=0.0)
     ww_TempSoll = Column('m_0404', Float, default=0.0)
     m_0405 = Column(Float, default=0.0)
     ww_Hysterese = Column('m_0406', Float, default=0.0)

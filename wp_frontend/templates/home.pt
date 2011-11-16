@@ -36,8 +36,8 @@
 	  <span id="black" style="right:28%; top:59.0%;">${current_data.temp_RlSoll} °C</span>
 	  <span id="blue" style="right:28%; top:63.5%;">${current_data.temp_Rl} °C</span>
 	  <!-- ========================================= Warmwasser ==================================================== -->
-	  <span id="black" style="right:15.5%; top:65.4%;">${current_data.temp_WWSoll} °C</span>
-	  <span id="black" style="right:15.5%; top:69.3%;">${current_data.temp_WW} °C</span>
+	  <span id="black" style="right:15.5%; top:65.4%;">${current_data.ww_TempSoll} °C</span>
+	  <span id="black" style="right:15.5%; top:69.3%;">${current_data.ww_TempIst} °C</span>
 	  <!-- ========================================== allgemein ==================================================== -->
 	  <span id="black" style="right:13.5%; top:0.7%;">${current_data.datum}</span>
 	  <span id="black" style="right:13.5%; top:4.9%;">${current_data.uhrzeit}</span>
