@@ -46,8 +46,8 @@ class ViewHomeTests(BaseTestWithDB):
                 'DO_buffer': 'foo',
                 'DI_buffer': 'bar' }
         float_columns = ['temp_aussen', 'temp_aussen24', 'temp_aussen1',
-                         'temp_RlSoll', 'temp_Rl', 'temp_Vl', 'temp_WWSoll',
-                         'temp_WW', 'temp_raum', 'temp_raum1', 'temp_WQein',
+                         'temp_RlSoll', 'temp_Rl', 'temp_Vl', 'ww_TempSoll',
+                         'ww_TempIst', 'temp_raum', 'temp_raum1', 'temp_WQein',
                          'temp_WQaus', 'temp_Verdampfer', 'temp_Kondensator',
                          'temp_Saugleitung', 'druck_Verdampfer',
                          'druck_Kondensator', 'betriebsstunden' ]
