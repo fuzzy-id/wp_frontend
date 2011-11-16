@@ -52,15 +52,15 @@
 	    <tbody>
 	      <tr>
 		<td class="key">Start</td>
-		<td class="val">${timespan.start}</td>
+		<td>${timespan.start}</td>
 	      </tr>
 	      <tr>
 		<td class="key">End</td>
-		<td class="val">${timespan.end}</td> 
+		<td>${timespan.end}</td> 
 	      </tr>
 	      <tr>
 		<td class="key">Resolution</td>
-		<td class="val">${timespan.resolution}</td>
+		<td>${timespan.resolution}</td>
 	      </tr>
 	    </tbody>
 	  </table>
