@@ -14,16 +14,16 @@ class BehaviourForUserWithoutDBTests(BasicFunctionalTestCase):
 
     def test_view_home(self):
         res = self.testapp.get('/home')
-        self.assertTrue("Couldn't get any data!" in res.body)
+        self.assertIn("Couldn't get any data", res.body)
 
     def test_view_set_val(self):
         res = self.testapp.get('/set_val')
-        self.assertTrue("Couldn't fetch logs." in res.body)
-        self.assertTrue("Couldn't fetch current values." in res.body)
+        self.assertIn("Couldn't fetch logs", res.body)
+        self.assertIn("Couldn't fetch current values", res.body)
 
     def _test_view_graph(self, path_to_graph):
         res = self.testapp.get(path_to_graph)
-        self.assertTrue("Couldn't fetch any data to plot." in res.body)
+        self.assertIn("Couldn't fetch any data to plot", res.body)
 
     def test_view_graph_hzg_ww(self):
         self._test_view_graph('/graph/hzg_ww/')
@@ -90,8 +90,9 @@ class BehaviourForUserWithDBTests(BasicFunctionalTestCase):
 
     def _get_plot(self, path_to_plot):
         res = self.testapp.post(path_to_plot, self.timespan)
-        self.assertTrue("Plotted from 2011-10-14 18:00:00 to 2011-10-24 18:00:00 with 10 dots." 
-                        in res.body)
+        self.assertIn("2011-10-14 18:00:00", res.body)
+        self.assertIn("2011-10-24 18:00:00", res.body)
+        self.assertIn("10", res.body)
         match = re.search(r'<img id="diag" src="(.*\.svgz)" />', res.body)
         return match.groups()[0]
 
