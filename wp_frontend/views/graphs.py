@@ -29,7 +29,6 @@ class PredefinedGraph(forms.FormEvaluatorObserver):
                 if attr not in helpers.plotable_fields:
                     raise HTTPBadRequest("Attribute '%s' is not plotable.")
                 self.columns.append(attr.encode())
-            print self.columns
         else:
             self.columns = self.needed_columns[self.name]
         self.values = []
