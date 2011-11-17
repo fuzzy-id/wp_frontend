@@ -1,4 +1,20 @@
-wp_frontend README
 
+* WP Frontend – a web front end to the Waterkotte 8126
 
+This is a web frontend written against some scripts that can be found
+on:
+ftp://linux-magazin.de/pub/magazin/2010/06/Pumpensteuerung/
 
+The back end part is OK and we could adapt it to our needs. Anyhow, the
+front end was written in such a bad way and so chaotic, that I decided
+to write my own one as a WSGI application on top of Pyramid[fn:1].
+
+This is the first web application I wrote, so you can find some ugly
+design decisions I haven't come yet to resolve. Another thing is that
+I had to deal with some design decisions made by the author of the
+back end that I myself would have made surely different. Anyway, we
+have almost 99% test coverage, the look is OK and all the plots work.
+
+* Footnotes
+
+[fn:1] http://www.pylonsproject.org/
