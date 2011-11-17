@@ -76,7 +76,7 @@ class PulledDataTest(BaseTestWithDB):
 
         expected = {}
         for row in create_entries.get_data_entries:
-            expected[row['tsp']] = ( row['temp_aussen'], calc_currKW(row['temp_Vl']), )
+            expected[row['tsp']] = ( row['temp_aussen'], CurrKW.calc(row['temp_Vl']), )
 
         entries = get_data.PulledData.get_values_in_timespan(
             self.session, ['tsp', 'temp_aussen', 'currKW'], span_with_resolution)
