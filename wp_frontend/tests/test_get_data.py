@@ -2,7 +2,7 @@
 import datetime
 import random
 from wp_frontend.models import get_data
-from wp_frontend.models.calculations import calc_currKW
+from wp_frontend.models.calculations import CurrKW
 from wp_frontend.tests import BaseTestWithDB
 from wp_frontend.tests import create_entries
 from wp_frontend.views import wp_datetime
@@ -53,7 +53,7 @@ class PulledDataTest(BaseTestWithDB):
 
         for expected_entry in range( 2, 50, 5):
             row = create_entries.get_data_entries[expected_entry]
-            expected[row['tsp']] = ( row['temp_aussen'], calc_currKW(row['temp_Vl']), )
+            expected[row['tsp']] = ( row['temp_aussen'], CurrKW.calc(row['temp_Vl']), )
 
         entries = get_data.PulledData.get_values_in_timespan(
             self.session, ['tsp', 'temp_aussen', 'currKW'], span_with_resolution)
