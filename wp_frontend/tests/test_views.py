@@ -56,7 +56,7 @@ class ViewHomeTests(BaseTestWithDB):
 
         self._add_one(data)
 
-        data['currKW'] = calculations.calc_currKW(data['temp_Vl'])
+        data['currKW'] = calculations.CurrKW.calc(data['temp_Vl'])
         data['deltaVlRl'] = data['temp_Vl'] - data['temp_Rl']
         data['deltaWQea'] = data['temp_WQein'] - data['temp_WQaus']
 
