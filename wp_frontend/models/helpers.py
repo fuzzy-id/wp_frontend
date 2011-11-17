@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 map_to_beautifull_names = {
+    'betr_h_ww_pu': 'Betriebsstunden WWPumpe',
+    'betr_h_hzg_pu': 'Betriebsstunden HzgPumpe',
     'temp_aussen': 'Temp-Aussen',
     'temp_Vl': 'Temp-Vorlauf',
     'temp_RlSoll': 'Temp-Ruecklauf-Soll',
@@ -27,7 +29,9 @@ map_to_beautifull_names = {
     'deltaKondensVl': 'Delta-Temp-Kondensator-Vorlauf',
     }
 
-plotable_fields = [ 'temp_aussen',
+plotable_fields = [ 'betr_h_ww_pu',
+                    'betr_h_hzg_pu',
+                    'temp_aussen',
                     'temp_Vl',
                     'temp_RlSoll',
                     'temp_Rl',
