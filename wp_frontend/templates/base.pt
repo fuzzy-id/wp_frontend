@@ -51,7 +51,5 @@
       <tal:block metal:define-slot="content">
       </tal:block>
     </div>
-    <footer class="container">
-    </footer>
   </body>
 </html>
