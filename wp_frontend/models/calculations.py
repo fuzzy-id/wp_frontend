@@ -2,17 +2,16 @@
 from wp_frontend.models.get_data import PulledData
 
 
-def calc_currKW(temp_Vl):
-    if temp_Vl <= 40:
-        return (0.06 * temp_Vl) + 0.5
-    elif 40 < temp_Vl < 50:
-        return (0.08 * temp_Vl) - 0.3
-    return (0.1 * temp_Vl) - 1.3
-
 class CurrKW(object):
     name = 'currKW'
     needed_columns = [PulledData.temp_Vl]
-    calc = staticmethod(calc_currKW)
+    @staticmethod
+    def calc(temp_Vl):
+        if temp_Vl <= 40:
+            return (0.06 * temp_Vl) + 0.5
+        elif 40 < temp_Vl < 50:
+            return (0.08 * temp_Vl) - 0.3
+        return (0.1 * temp_Vl) - 1.3
 
 class DeltaVlRl(object):
     name = 'deltaVlRl'
