@@ -43,13 +43,13 @@
       <h1 tal:case="False">Last Changes</h1>
       <table id="log">
 	<tr>
-	  <th>datetime</th>
-	  <th>user</th>
-	  <th>attribute</th>
-	  <th>oldval</th>
-	  <th>newval</th>
-	  <th>status</th>
-	  <th>WPsetVal_output</th>
+	  <th>DateTime</th>
+	  <th>User</th>
+	  <th>Attribute</th>
+	  <th>Old Val</th>
+	  <th>New Val</th>
+	  <th>Status</th>
+	  <th>WPsetVal Output</th>
 	</tr>
 	<tr tal:repeat="entry log">
 	  <td tal:repeat="item entry"> ${item} </td>
