@@ -3,6 +3,10 @@ form.deform {
     border-style: none;
 }
 
+#ui-datepicker-div {
+    z-index: 9999 !important;
+}
+
 /* page specific stuff */
 .page {
     width: auto;
