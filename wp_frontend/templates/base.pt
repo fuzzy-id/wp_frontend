@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 
-<html lang="en"
+<html lang="de"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:metal="http://xml.zope.org/namespaces/metal">
 
   <head>
     <meta charset="UTF-8"/>
-    <link rel="stylesheet" href="${request.static_path('wp_frontend:static/html5reset-1.6.1.css')}"/>
+    <link rel="stylesheet" href="${request.static_path('wp_frontend:static/all.css')}"/>
     <link rel="stylesheet" href="${request.static_path('wp_frontend:static/wp.css')}"/>
     <tal:block metal:define-slot="headers">
     </tal:block>
@@ -15,41 +15,47 @@
       </tal:block>
     </title>
   </head>
-
   <body>
-    <header class="container">
-      <nav>
-	<ul>
-	  <li class="container">
-	    <a href="${request.route_path('view_home')}">Home</a>
-	  </li>
-	  <li class="container">
-	    <a href="${request.route_path('view_graph', graph_name='hzg_ww', attrs=[])}">Hzg/WW</a>
-	  </li>
-	  <li class="container">
-	    <a href="${request.route_path('view_graph', graph_name='erdsonde', attrs=[])}">Erdsonde</a>
-	  </li>
-	  <li class="container">
-	    <a href="${request.route_path('view_graph', graph_name='vorl_kondens', attrs=[])}">Vorl/Kondens</a>
-	  </li>
-	  <li class="container">
-	    <a href="${request.route_path('view_graph', graph_name='wqaus_verdamp', attrs=[])}">WQaus/Verdampfer</a>
-	  </li>
-	  <li class="container">
-	    <a href="${request.route_path('view_choose_graph_attrs')}">Eigener Graph</a>
-	  </li>
-	  <li class="container">
-	    <a href="${request.route_path('view_set_val')}">Werte-Setzen</a>
-	  </li>
-	  <li class="container">
-	    <a href="${request.route_path('view_logout')}">Logout</a>
-	  </li>
-	</ul>
-      </nav>
-    </header>
-    <div class="content">
-      <tal:block metal:define-slot="content">
-      </tal:block>
+    <div class="page">
+      <header class="head mod simple tabs tabPosTop">
+	<b class="top"><b class="tl"></b><b class="tr"></b></b>
+	<nav class="inner">
+	  <div class="hd topper">
+	    <ul class="tabControl">
+	      <li>
+		<a href="${request.route_path('view_home')}"><span>Home</span></a>
+	      </li>
+	      <li>
+		<a href="${request.route_path('view_graph', graph_name='hzg_ww', attrs=[])}"><span>Hzg/WW</span></a>
+	      </li>
+	      <li>
+		<a href="${request.route_path('view_graph', graph_name='erdsonde', attrs=[])}"><span>Erdsonde</span></a>
+	      </li>
+	      <li>
+		<a href="${request.route_path('view_graph', graph_name='vorl_kondens', attrs=[])}"><span>Vorl-Kondens</span></a>
+	      </li>
+	      <li>
+		<a href="${request.route_path('view_graph', graph_name='wqaus_verdamp', attrs=[])}"><span>WQaus-Verdampfer</span></a>
+	      </li>
+	      <li>
+		<a href="${request.route_path('view_choose_graph_attrs')}"><span>Eigener Graph</span></a>
+	      </li>
+	      <li>
+		<a href="${request.route_path('view_set_val')}"><span>Werte-Setzen</span></a>
+	      </li>
+	      <li>
+		<a href="${request.route_path('view_logout')}"><span>Logout</span></a>
+	      </li>
+	    </ul>
+	  </div>
+	  <span class="bd">
+	  </span>
+	</nav>
+      </header>
+      <div class="body">
+	<tal:block metal:define-slot="content">
+	</tal:block>
+      </div>
     </div>
   </body>
 </html>

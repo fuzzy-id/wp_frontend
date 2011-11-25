@@ -4,53 +4,63 @@
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:metal="http://xml.zope.org/namespaces/metal"
       metal:use-macro="base">
+  <tal:block metal:fill-slot="headers">
+    <link rel="stylesheet"
+	  href="${request.static_path('wp_frontend:static/wp.css')}"
+	  type="text/css" />
+  </tal:block>
   <tal:block metal:fill-slot="title">
     Home
   </tal:block>
   <tal:block metal:fill-slot="content">
-    <section class="container"
-	     tal:switch="current_data.data_available">
-      <h1 tal:case="False">Couldn't get any data!</h1>
-      <div tal:case="True" id="homediag">
-	<img src="${request.static_path('wp_frontend:static/diagramm.jpg')}"/>
-	<div class="homeval">
-	  <!-- ================================ Umgebungstemperaturen ================================================= -->
-	  <span id="black" style="right:84%; top:5.0%;">${current_data.temp_aussen} °C</span>
-	  <span id="black" style="right:84%; top:9.1%;">${current_data.temp_aussen1} °C</span>
-	  <span id="black" style="right:84%; top:13.0%;">${current_data.temp_aussen24} °C</span>
-	  <span id="black" style="right:68%; top:6.9%;">${current_data.temp_raum} °C</span>
-	  <span id="black" style="right:68%; top:10.8%;">${current_data.temp_raum1} °C</span>
-	  <!-- ======================================== WQ ein/aus ===================================================== -->
-	  <span id="red" style="right:82.5%; top:75.5%;">${current_data.temp_WQein} °C</span>
-	  <span id="blue" style="right:82.5%; top:80.5%">${current_data.temp_WQaus} °C</span>
-	  <span id="black" style="right:89.1%; top:78.1%;">${current_data.deltaWQea} °C</span>
-	  <!-- ======================================== Kondensator ==================================================== -->
-	  <span id="blue" style="right:41%; top:59.3%;">${current_data.temp_Kondensator} °C</span>
-	  <span id="blue" style="right:41%; top:63.0%;">${current_data.druck_Kondensator} bar</span>
-	  <!-- ========================================= Verdampfer ==================================================== -->
-	  <span id="red" style="right:67%; top:59.4%;">${current_data.temp_Verdampfer} °C</span>
-	  <span id="red" style="right:67%; top:63.2%;">${current_data.druck_Verdampfer} bar</span>
-	  <!-- ===================================== Vorlauf, Ruecklauf ================================================ -->
-	  <span id="red" style="right:28%; top:50.0%;">${current_data.temp_Vl} °C</span>
-	  <span id="black" style="right:28%; top:54.7%;">${current_data.deltaVlRl} °C</span>
-	  <span id="black" style="right:28%; top:59.0%;">${current_data.temp_RlSoll} °C</span>
-	  <span id="blue" style="right:28%; top:63.5%;">${current_data.temp_Rl} °C</span>
-	  <!-- ========================================= Warmwasser ==================================================== -->
-	  <span id="black" style="right:15.5%; top:65.4%;">${current_data.ww_TempSoll} °C</span>
-	  <span id="black" style="right:15.5%; top:69.3%;">${current_data.ww_TempIst} °C</span>
-	  <!-- ========================================== allgemein ==================================================== -->
-	  <span id="black" style="right:13.5%; top:0.7%;">${current_data.datum}</span>
-	  <span id="black" style="right:13.5%; top:4.9%;">${current_data.uhrzeit}</span>
+    <section class="main"
+      tal:switch="current_data.data_available">
+      <h1 tal:case="False">Couldn't get any data</h1>
+      <div tal:case="True" class="mod complex photo">
+	<b class="top"><b class="tl"></b><b class="tr"></b></b>
+	<div class="inner">
+	  <div class="bd" id="homediag">
+	    <img src="${request.static_path('wp_frontend:static/diagramm.jpg')}"/>
+	    <div class="homeval">
+	      <!-- ================================ Umgebungstemperaturen ================================================= -->
+	      <span id="black" style="right:84%; top:5.0%;">${current_data.temp_aussen} °C</span>
+	      <span id="black" style="right:84%; top:9.1%;">${current_data.temp_aussen1} °C</span>
+	      <span id="black" style="right:84%; top:13.0%;">${current_data.temp_aussen24} °C</span>
+	      <span id="black" style="right:68%; top:6.9%;">${current_data.temp_raum} °C</span>
+	      <span id="black" style="right:68%; top:10.8%;">${current_data.temp_raum1} °C</span>
+	      <!-- ======================================== WQ ein/aus ===================================================== -->
+	      <span id="red" style="right:82.5%; top:75.5%;">${current_data.temp_WQein} °C</span>
+	      <span id="blue" style="right:82.5%; top:80.5%">${current_data.temp_WQaus} °C</span>
+	      <span id="black" style="right:89.1%; top:78.1%;">${current_data.deltaWQea} °C</span>
+	      <!-- ======================================== Kondensator ==================================================== -->
+	      <span id="blue" style="right:41%; top:59.3%;">${current_data.temp_Kondensator} °C</span>
+	      <span id="blue" style="right:41%; top:63.0%;">${current_data.druck_Kondensator} bar</span>
+	      <!-- ========================================= Verdampfer ==================================================== -->
+	      <span id="red" style="right:67%; top:59.4%;">${current_data.temp_Verdampfer} °C</span>
+	      <span id="red" style="right:67%; top:63.2%;">${current_data.druck_Verdampfer} bar</span>
+	      <!-- ===================================== Vorlauf, Ruecklauf ================================================ -->
+	      <span id="red" style="right:28%; top:50.0%;">${current_data.temp_Vl} °C</span>
+	      <span id="black" style="right:28%; top:54.7%;">${current_data.deltaVlRl} °C</span>
+	      <span id="black" style="right:28%; top:59.0%;">${current_data.temp_RlSoll} °C</span>
+	      <span id="blue" style="right:28%; top:63.5%;">${current_data.temp_Rl} °C</span>
+	      <!-- ========================================= Warmwasser ==================================================== -->
+	      <span id="black" style="right:15.5%; top:65.4%;">${current_data.ww_TempSoll} °C</span>
+	      <span id="black" style="right:15.5%; top:69.3%;">${current_data.ww_TempIst} °C</span>
+	      <!-- ========================================== allgemein ==================================================== -->
+	      <span id="black" style="right:13.5%; top:0.7%;">${current_data.datum}</span>
+	      <span id="black" style="right:13.5%; top:4.9%;">${current_data.uhrzeit}</span>
 
-	  <span id="black" style="right:5%; top:7.1%;">${current_data.version}</span>
-	  <span id="black" style="right:5%; top:10.5%;">${current_data.datum_version}</span>
-	  <span id="black" style="right:5%; top:13.6%;">${current_data.betriebsmodus}</span>
+	      <span id="black" style="right:5%; top:7.1%;">${current_data.version}</span>
+	      <span id="black" style="right:5%; top:10.5%;">${current_data.datum_version}</span>
+	      <span id="black" style="right:5%; top:13.6%;">${current_data.betriebsmodus}</span>
 
-	  <!-- <div id="ovvalue" style="right:49%; top:71.4%;">${current_data.temp_Saugleitung} °C</span> -->
-	  <span id="black" style="right:49%; top:76.1%;">${current_data.betriebsstunden} h</span>
-	  <span id="black" style="right:49%; top:80%;">${current_data.currKW} kW</span>
+	      <!-- <div id="ovvalue" style="right:49%; top:71.4%;">${current_data.temp_Saugleitung} °C</span> -->
+	      <span id="black" style="right:49%; top:76.1%;">${current_data.betriebsstunden} h</span>
+	      <span id="black" style="right:49%; top:80%;">${current_data.currKW} kW</span>
+	    </div>
+	  </div>
 	</div>
-      </div>
+	<b class="bottom"><b class="bl"></b><b class="br"></b></b>
     </section>
   </tal:block>
 </html>

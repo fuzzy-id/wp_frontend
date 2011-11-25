@@ -19,42 +19,68 @@
     </script>
   </tal:block>
   <tal:block metal:fill-slot="content">
-    <aside class="container">
-      <span tal:replace="structure form"/>
+    <aside class="leftCol">
+      <div class="mod complex flow">
+	<b class="top"><b class="tl"></b><b class="tr"></b></b>
+	<div class="inner">
+	  <div class="hd info">Wert Setzen</div>
+	  <div class="bd">
+	    <span tal:replace="structure form"/>
+	  </div>
+	</div>
+	<b class="bottom"><b class="bl"></b><b class="br"></b></b>
+      </div>
       <section tal:switch="current_data.data_available"
-	       class="container">
-	<h1 tal:case="False">Couldn't fetch current values.</h1>
-	<span tal:case="True">
-	  <h1>Current Values</h1>
-	  <table>
-	    <tbody>
-	      <tr tal:repeat="(name, val) current_data">
-		<td class="key"> <span tal:replace="name">name</span></td>
-		<td class="val"> <span tal:replace="val">val</span></td>
-	      </tr>
-	    </tbody>
-	  </table>
-	</span>
+	       class="mod complex flow">
+	<b class="top"><b class="tl"></b><b class="tr"></b></b>
+	<div class="inner" tal:case="False">
+	  <p>Couldn't fetch current values</p>
+	</div>
+	<div class="inner" tal:case="True">
+	  <div class="hd info">Current Values</div>
+	  <div class="bd data spec">
+	    <table class="txtC">
+	      <tbody>
+		<tr tal:repeat="(name, val) current_data">
+		  <td> <span tal:replace="name">name</span></td>
+		  <td> <span tal:replace="val">val</span></td>
+		</tr>
+	      </tbody>
+	    </table>
+	  </div>
+	</div>
+	<b class="bottom"><b class="bl"></b><b class="br"></b></b>
       </section>
     </aside>
     <section tal:switch="log is None" 
-	     class="container main">
-      <h1 tal:case="True">Couldn't fetch logs!</h1>
-      <h1 tal:case="False">Last Changes</h1>
-      <table id="log">
-	<tr>
-	  <th>DateTime</th>
-	  <th>User</th>
-	  <th>Attribute</th>
-	  <th>Old Val</th>
-	  <th>New Val</th>
-	  <th>Status</th>
-	  <th>WPsetVal Output</th>
-	</tr>
-	<tr tal:repeat="entry log">
-	  <td tal:repeat="item entry"> ${item} </td>
-	</tr>
-      </table>
+	     class="main">
+      <div class="mod complex flow">
+	<b class="top"><b class="tl"></b><b class="tr"></b></b>
+	<div class="inner" tal:case="True">
+	  <div class="bd">
+	    <p>Couldn't fetch logs</p>
+	  </div>
+	</div>
+	<div class="inner" tal:case="False">
+	  <div class="hd info">Last Changes</div>
+	  <div class="bd data spec">
+	    <table class="txtC">
+	      <tr>
+		<th>Date-Time</th>
+		<th>User</th>
+		<th>Attribute</th>
+		<th>Old Val</th>
+		<th>New Val</th>
+		<th>Status</th>
+		<th>WPsetVal Output</th>
+	      </tr>
+	      <tr tal:repeat="entry log">
+		<td tal:repeat="item entry"> ${item} </td>
+	      </tr>
+	    </table>
+	  </div>
+	</div>
+	<b class="bottom"><b class="bl"></b><b class="br"></b></b>
     </section>
     <script type="text/javascript">
       jQuery(function() {
