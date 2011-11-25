@@ -1,90 +1,14 @@
-/* General layout */
-body {
-    background: black;
-    margin: 2pt 1%;
-}
-.container {
-    background: #2f2f2f;
-    margin: 10px;
-    padding: 10px;
-    border: 1px solid #b2b2b2;
-    color: #b2b2b2;
-}
-.container h1 {
-    color: #f2f2b2;
-}
-
-/* links that are in a container */
-li.container {
-    margin: 4px;
-    padding: 4px;
-}
-li.container > :visited, li.container > :link {
-    color: #e2e2b2;
-    font-weight: bold;
-    font-family: sans-serife;
-}
-li.container > :hover {
-    background: #1f1f1f;
-    color: #b2e2e2;
-}
-
-/* designing the navigation bar */
-nav li.container {
-    display: inline;
-    background: #1f1f1f;
-}
-nav ul {
-    margin: 4px 4px;
-}
-
-/* designing the content area */
-.content .main {
-    margin-left: 350px;
-}
-/* the side bar */
-.content aside {
-    float: left;
-    width: 300px;
-}
-.content th {
-    padding: 5px;
-}
-.content td {
-    padding: 5px;
-    color: #f2b2b2;
-    font-family: monospace;
-}
-.content aside td.key {
-    color: #b2c2f2;
-    font-weight: bold;
-    font-family: serif;
-}
-
-/* the footer */
-footer {
-    clear: both;
-}
-
 /* framework specific stuff */
 form.deform {
-    max-width: 270px;
-    background: #2f2f2f;
-    color: #b2b2b2;
-}
-aside form.deform {
-    margin: 2px auto;
+    border-style: none;
 }
 
 /* page specific stuff */
-body {
-    min-width: 1100px;
+.page {
+    width: auto;
 }
-.plot > img {
-    max-width: 100%;
-}
-.content {
-    overflow: visible;
+img {
+    width: 100%;
 }
 /* This is for the "Home" site. */
 #homediag{
