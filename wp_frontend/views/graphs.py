@@ -13,7 +13,7 @@ class PredefinedGraph(forms.FormEvaluatorObserver):
     
     needed_columns = {
         'hzg_ww': ('tsp', 'temp_aussen', 'temp_einsatz', 'temp_Vl',
-                   'temp_RlSoll', 'temp_Rl', 'temp_WW', ),
+                   'temp_RlSoll', 'temp_Rl', 'ww_TempIst', ),
         'erdsonde': ('tsp', 'temp_WQein', 'temp_WQaus', 'deltaWQea', ),
         'vorl_kondens': ('tsp', 'temp_Kondensator', 'temp_Vl',
                          'deltaKondensVl', ),
