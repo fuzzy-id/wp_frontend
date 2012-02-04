@@ -40,7 +40,7 @@ def view_home(request):
     
     if current_data.betrHWwPlusHzg is not None:
         now = datetime.datetime.now()
-        one_year_ago = datetime.datetime(now.year - 1, now.month, now.day, 
+        one_year_ago = datetime.datetime(now.year, now.month-1, now.day, 
                                          now.hour, now.minute)
         tsp_w_res_one_year_ago = TimespanWithResolution(
             start=one_year_ago - datetime.timedelta(minutes=30),

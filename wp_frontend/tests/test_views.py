@@ -38,7 +38,7 @@ class ViewHomeTests(BaseTestWithDB):
 
     def test_view_home_with_data(self):
         now = datetime.datetime.now()
-        one_year_ago = datetime.datetime(now.year-1, now.month, now.day,
+        one_year_ago = datetime.datetime(now.year, now.month-1, now.day,
                                          now.hour, now.minute, now.second)
         data_now = {'tsp': wp_datetime.convert_to_timestamp(now),
                     'version':8L,
