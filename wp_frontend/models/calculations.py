@@ -1,6 +1,12 @@
 # -*- coding: utf-8 -*-
 from wp_frontend.models.get_data import PulledData
 
+class BetrHWwPlusHzg(object):
+    name = 'betrHWwPlusHzg'
+    needed_columns = [PulledData.betr_h_hzg_pu, PulledData.betr_h_ww_pu]
+    @staticmethod
+    def calc(betr_h_hzg, betr_h_ww):
+        return betr_h_hzg + betr_h_ww
 
 class CurrKW(object):
     name = 'currKW'
@@ -42,7 +48,7 @@ class DeltaWQaVerdamp(object):
         return temp_WQaus - temp_Verdamp
 
 available_calculations = [CurrKW, DeltaVlRl, DeltaWQea, DeltaKondensVl,
-                          DeltaWQaVerdamp]
+                          DeltaWQaVerdamp, BetrHWwPlusHzg, ]
 
 def register_all_calculations():
     from wp_frontend.models.column_calculator import ColumnCalculator

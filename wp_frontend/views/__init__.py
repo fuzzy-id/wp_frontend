@@ -8,6 +8,8 @@ from pyramid.view import view_config
 
 from wp_frontend import settings
 from wp_frontend.models import DBSession, get_data
+from wp_frontend.views.wp_datetime import TimespanWithResolution
+import datetime
 
 
 @view_config(route_name='view_logout')
@@ -31,8 +33,30 @@ def view_home(request):
                       'temp_WQaus', 'temp_Verdampfer', 'temp_Kondensator',
                       'temp_Saugleitung', 'druck_Verdampfer',
                       'druck_Kondensator', 'uhrzeit', 'datum',
-                      'betriebsstunden', 'DO_buffer', 'DI_buffer',
-                      'currKW', 'deltaVlRl', 'deltaWQea']
+                      'DO_buffer', 'DI_buffer', 'currKW', 'deltaVlRl', 
+                      'deltaWQea', 'betrHWwPlusHzg', ]
     current_data = get_data.CurrentData(needed_columns, DBSession)
     current_data.fetch_data()
+    
+    if current_data.betrHWwPlusHzg is not None:
+        now = datetime.datetime.now()
+        one_year_ago = datetime.datetime(now.year - 1, now.month, now.day, 
+                                         now.hour, now.minute)
+        tsp_w_res_one_year_ago = TimespanWithResolution(
+            start=one_year_ago - datetime.timedelta(minutes=30),
+            end=one_year_ago + datetime.timedelta(minutes=30),
+            resolution=1)
+        betr_h_ww_plus_hzg_one_year_ago = get_data.PulledData.get_values_in_timespan(
+            DBSession, ['betrHWwPlusHzg', ], tsp_w_res_one_year_ago)
+        if len(betr_h_ww_plus_hzg_one_year_ago) == 1:
+            current_data.betrHWwPlusHzg -= betr_h_ww_plus_hzg_one_year_ago[0][0]
+            setattr(current_data, 'verbrauch', 
+                    current_data.betrHWwPlusHzg * 1.9177)
+        else:
+            setattr(current_data, 'verbrauch', None)
+    else:
+        setattr(current_data, 'verbrauch', None)
+            
+        
+    
     return {'current_data': current_data, }
