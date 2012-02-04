@@ -55,8 +55,10 @@
 	      <span id="black" style="right:5%; top:13.6%;">${current_data.betriebsmodus}</span>
 
 	      <!-- <div id="ovvalue" style="right:49%; top:71.4%;">${current_data.temp_Saugleitung} °C</span> -->
-	      <span id="black" style="right:49%; top:76.1%;">${current_data.betrHWwPlusHzg} h</span>
-	      <span id="black" style="right:49%; top:80%;">${current_data.verbrauch} kW</span>
+	      <div tal:condition="current_data.betrHWwPlusHzg is not None and current_data.verbrauch is not None">
+		<span id="black" style="right:49%; top:76.1%;">${round(current_data.betrHWwPlusHzg, 2)} h</span>
+		<span id="black" style="right:49%; top:80%;">${round(current_data.verbrauch, 2)} kW</span>
+	      </div>
 	    </div>
 	  </div>
 	</div>
