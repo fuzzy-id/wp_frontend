@@ -38,33 +38,50 @@ class ViewHomeTests(BaseTestWithDB):
         self.assertFalse(response['current_data'].data_available)
 
     def test_view_home_with_data(self):
-        data = {'version':8,
-                'datum_version': datetime.date.today(),
-                'betriebsmodus': 'test',
-                'uhrzeit': datetime.time(21, 32, 8),
-                'datum': datetime.date.today(),
-                'DO_buffer': 'foo',
-                'DI_buffer': 'bar' }
+        today = datetime.date.today()
+        one_year_ago = datetime.date(today.year-1, today.month, today.day)
+        data_now = {'version':8,
+                    'datum_version': today,
+                    'betriebsmodus': 'test',
+                    'uhrzeit': datetime.time(21, 32, 8),
+                    'datum': today,
+                    'DO_buffer': 'foo',
+                    'DI_buffer': 'bar' }
+        data_one_year_ago = {'version':8,
+                             'datum_version': one_year_ago,
+                             'betriebsmodus': 'test',
+                             'uhrzeit': datetime.time(21, 32, 8),
+                             'datum': one_year_ago,
+                             'DO_buffer': 'foo',
+                             'DI_buffer': 'bar' }
         float_columns = ['temp_aussen', 'temp_aussen24', 'temp_aussen1',
                          'temp_RlSoll', 'temp_Rl', 'temp_Vl', 'ww_TempSoll',
                          'ww_TempIst', 'temp_raum', 'temp_raum1', 'temp_WQein',
                          'temp_WQaus', 'temp_Verdampfer', 'temp_Kondensator',
                          'temp_Saugleitung', 'druck_Verdampfer',
-                         'druck_Kondensator', 'betriebsstunden' ]
+                         'druck_Kondensator', 'betr_h_hzg_pu', 'betr_h_ww_pu' ]
         for col in float_columns:
-            data[col] = random.randint(-30, 70)
+            data_now[col] = random.randint(-30, 70)
+            data_one_year_ago[col] = random.randint(-30, 70)
 
-        self._add_one(data)
+        self._add_one(data_now)
+        self._add_one(data_one_year_ago)
 
-        data['currKW'] = calculations.CurrKW.calc(data['temp_Vl'])
-        data['deltaVlRl'] = data['temp_Vl'] - data['temp_Rl']
-        data['deltaWQea'] = data['temp_WQein'] - data['temp_WQaus']
+        data_now['currKW'] = calculations.CurrKW.calc(data_now['temp_Vl'])
+        data_now['deltaVlRl'] = data_now['temp_Vl'] - data_now['temp_Rl']
+        data_now['deltaWQea'] = data_now['temp_WQein'] - data_now['temp_WQaus']
+        data_now['betriebsstunden'] = (
+            (data_now['betr_h_ww_pu'] - data_one_year_ago['betr_h_ww_pu'])
+            + (data_now['betr_h_hzg_pu'] - data_one_year_ago['betr_h_hzg_pu']))
+        #data_now['verbrauch'] = data_now['betriebsstunden'] * 1,9177
+        del data_now['betr_h_ww_pu']
+        del data_now['betr_h_hzg_pu']
 
         request = testing.DummyRequest()
         response = views.view_home(request)
         result = dict([ x for x in response['current_data']])
 
-        self.assertEqual(result, data)
+        self.assertEqual(result, data_now)
 
 class ViewSetValTests(BaseTestWithDB):
 
