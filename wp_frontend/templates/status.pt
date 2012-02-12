@@ -38,22 +38,20 @@
 	<div class="inner">
 	  <div class="bd">
 
-	    <div class="mod complex flow">
-	      <b class="top"><b class="tl"></b><b class="tr"></b></b>
-	      <div class="hd info">Uptime</div>
-	      <div class="bd">
+	    <tal:block metal:use-macro="blocks.macros['block-with-header']">
+	      <tal:block metal:fill-slot="header">Uptime</tal:block>
+	      <tal:block metal:fill-slot="body">
 		<ul>
 		  <li>${uptime}</li>
 		</ul>
-	      </div>
-	      <b class="bottom"><b class="bl"></b><b class="br"></b></b>
-	    </div>
+	      </tal:block>
+	    </tal:block>
 
 	    <div class="mod complex flow">
 	      <b class="top"><b class="tl"></b><b class="tr"></b></b>
 	      <div class="hd info">Disk Usage</div>
 	      <div class="bd data spec">
-		<table class="txtC">
+		<table class="txtR">
 		  <tr>
 		    <th tal:repeat="header df[0]">${header}</th>
 		  </tr>
