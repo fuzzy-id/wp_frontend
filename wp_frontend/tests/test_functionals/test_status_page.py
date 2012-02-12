@@ -10,6 +10,10 @@ class AuthenticationTests(BasicFunctionalTestCase):
 
 class ViewTests(BasicFunctionalTestCase):
     
+    def setUp(self):
+        super(ViewTests, self).setUp(self)
+        self.login()
+
     def test_status_page_viewable(self):
         res = self.testapp.get('/status', status=200)
         self.assertLoggedIn(res)
