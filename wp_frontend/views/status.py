@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import os.path
+
 from pyramid.view import view_config
 
 @view_config(route_name="view_status", permission='user',
