@@ -44,6 +44,9 @@
 		<a href="${request.route_path('view_set_val')}"><span>Werte-Setzen</span></a>
 	      </li>
 	      <li>
+		<a href="${request.route_path('view_status')}"><span>Status</span></a>
+	      </li>
+	      <li>
 		<a href="${request.route_path('view_logout')}"><span>Logout</span></a>
 	      </li>
 	    </ul>
