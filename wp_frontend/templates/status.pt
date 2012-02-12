@@ -32,5 +32,44 @@
 	<b class="bottom"><b class="bl"></b><b class="br"></b></b>
       </div>
     </aside>
+    <section class="main">
+      <div class="mod complex flow">
+	<b class="top"><b class="tl"></b><b class="tr"></b></b>
+	<div class="inner">
+	  <div class="bd">
+
+	    <div class="mod complex flow">
+	      <b class="top"><b class="tl"></b><b class="tr"></b></b>
+	      <div class="hd info">Uptime</div>
+	      <div class="bd">
+		<ul>
+		  <li>${uptime}</li>
+		</ul>
+	      </div>
+	      <b class="bottom"><b class="bl"></b><b class="br"></b></b>
+	    </div>
+
+	    <div class="mod complex flow">
+	      <b class="top"><b class="tl"></b><b class="tr"></b></b>
+	      <div class="hd info">Disk Usage</div>
+	      <div class="bd data spec">
+		<table class="txtC">
+		  <tr>
+		    <th tal:repeat="header df[0]">${header}</th>
+		  </tr>
+		  <tr tal:repeat="line df[1:]">
+		    <td tal:repeat="item line">${item}</td>
+		  </tr>
+		</table>
+	      </div>
+	      <b class="bottom"><b class="bl"></b><b class="br"></b></b>
+	    </div>
+
+	  </div>
+	</div>
+	<b class="bottom"><b class="bl"></b><b class="br"></b></b>
+      </div>
+
+    </section>
   </tal:block>
 </html>
