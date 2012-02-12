@@ -3,8 +3,10 @@
 import os.path
 from subprocess import Popen, PIPE
 
-from wp_frontend import settings
 from pyramid.view import view_config
+from pyramid.renderers import get_renderer
+
+from wp_frontend import settings
 
 @view_config(route_name="view_status", permission='user',
              renderer=os.path.join(settings.templates_dir, 'status.pt'))
@@ -12,8 +14,11 @@ def view_status(request):
     uptime = Popen(('uptime', ), stdout=PIPE)
     df = Popen(('df', '-h', ), stdout=PIPE)
 
-    stats = { 'uptime': 'Error while querying uptime!',
-              'df': (('Error while querying free disk space!', ), )
+    stats = { 
+        'uptime': 'Error while querying uptime!',
+        'df': (('Error while querying free disk space!', ), ),
+        'sidebar': get_renderer(
+            '../templates/status_sidebar.pt').implementation(), 
         }
 
     if uptime.wait() == 0:
