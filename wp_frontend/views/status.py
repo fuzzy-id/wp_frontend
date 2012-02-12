@@ -19,7 +19,11 @@ def view_status(request):
     if uptime.wait() == 0:
         stats['uptime'] = ''.join(uptime.stdout)
     if df.wait() == 0:
-        stats['df'] = [ l.split(None, 5) for l in  df.stdout ]
+        stats['df'] = [ l.split(None, 5) for l in  df.stdout 
+                        if (('Filesystem' in l)
+                            or ('ubi0:rootfs' in l)
+                            or ('/dev/mmcblk0p1' in l)
+                            or ('/dev/mmcblk0p2' in l)) ]
     return stats
 
 @view_config(route_name="view_backup", permission='user',
