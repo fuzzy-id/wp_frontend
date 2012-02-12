@@ -8,3 +8,9 @@ class AuthenticationTests(BasicFunctionalTestCase):
         res = self.testapp.get('/status', status=200)
         self.assertNotLoggedIn(res)
 
+class ViewTests(BasicFunctionalTestCase):
+    
+    def test_status_page_viewable(self):
+        res = self.testapp.get('/status', status=200)
+        self.assertLoggedIn(res)
+        self.assertIn(res.body, 'Status')
