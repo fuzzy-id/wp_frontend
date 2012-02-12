@@ -14,3 +14,6 @@ dist/
 # production.ini and passwd.py hold sensitive data
 production.ini
 wp_frontend/passwd.py
+
+# ignore eggs
+*.egg
