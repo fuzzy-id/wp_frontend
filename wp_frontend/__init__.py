@@ -38,6 +38,7 @@ def main(global_config, sql_init_function=initialize_sql, **settings):
     config.add_route('view_choose_graph_attrs', '/user_graph')
     config.add_route('plots', '/plots/{img_name}')
     config.add_route('view_set_val', '/set_val')
+    config.add_route('view_status', '/status')
     config.add_route('view_login', '/login')
     config.add_route('view_logout', '/logout')
 
