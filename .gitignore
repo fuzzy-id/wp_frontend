@@ -1,6 +1,5 @@
-# ignore byte-compiled and emacsens backup files
+# ignore byte-compiled files
 *.pyc
-*~
 
 # nosetest coverage
 .noseids
