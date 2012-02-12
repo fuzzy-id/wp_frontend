@@ -52,5 +52,7 @@ def main(global_config, sql_init_function=initialize_sql, **settings):
 
 
 def add_base_template(event):
-    base = get_renderer('templates/base.pt').implementation()
-    event.update({'base': base})
+    event.update({
+            'base': get_renderer('templates/base.pt').implementation(), 
+            'blocks': get_renderer('templates/blocks.pt').implementation(), 
+            })
