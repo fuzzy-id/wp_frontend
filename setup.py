@@ -1,5 +1,4 @@
 import os
-import sys
 
 from setuptools import setup, find_packages
 
@@ -11,16 +10,14 @@ requires = [
     'pyramid',
     'SQLAlchemy',
     'transaction',
-    'repoze.tm2>=1.0b1', # default_commit_veto
+    'pyramid_tm',
+    'pyramid_debugtoolbar',
     'zope.sqlalchemy',
-    'WebError',
+    'waitress',
     'WebTest',
     'deform',
     'matplotlib'
     ]
-
-if sys.version_info[:3] < (2,5,0):
-    requires.append('pysqlite')
 
 setup(name='wp_frontend',
       version='0.1',
@@ -44,7 +41,8 @@ setup(name='wp_frontend',
       entry_points = """\
       [paste.app_factory]
       main = wp_frontend:main
+      [console_scripts]
+      populate_pyramid_start_alchemy = pyramid_start_alchemy.scripts.populate:main
       """,
-      paster_plugins=['pyramid'],
       )
 
