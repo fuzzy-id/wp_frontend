@@ -2,7 +2,8 @@
 
 import os.path
 
-from pyramid.view import view_config
+from wp_frontend import settings
+from pyramid.view import settings
 
 @view_config(route_name="view_status", permission='user',
              renderer=os.path.join(settings.templates_dir, 'status.pt'))
