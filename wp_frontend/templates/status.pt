@@ -13,25 +13,8 @@
     Status
   </tal:block>
   <tal:block metal:fill-slot="content">
-    <aside class="leftCol">
-      <div class="mod complex flow">
-	<b class="top"><b class="tl"></b><b class="tr"></b></b>
-	<div class="inner">
-	  <div class="hd info">Statusseite</div>
-	  <div class="bd">
-	    <ul>
-	      <li>
-		<a href="${request.route_path('view_status')}">Allgemein</a>
-	      </li>
-	      <li>
-		<a href="${request.route_path('view_backup')}">Backup</a>
-	      </li>
-	    </ul>
-	  </div>
-	</div>
-	<b class="bottom"><b class="bl"></b><b class="br"></b></b>
-      </div>
-    </aside>
+    <tal:block metal:use-macro="sidebar.macros['status-sidebar']">
+    </tal:block>
     <section class="main">
       <div class="mod complex flow">
 	<b class="top"><b class="tl"></b><b class="tr"></b></b>
