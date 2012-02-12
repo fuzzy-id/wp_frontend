@@ -106,6 +106,7 @@ wp_frontend/templates/graph.pt
 wp_frontend/templates/home.pt
 wp_frontend/templates/login.pt
 wp_frontend/templates/set_val.pt
+wp_frontend/templates/status.pt
 wp_frontend/templates/user_graph.pt
 wp_frontend/tests/__init__.py
 wp_frontend/tests/create_entries.py
@@ -117,10 +118,12 @@ wp_frontend/tests/test_views.py
 wp_frontend/tests/test_wp_datetime.py
 wp_frontend/tests/test_functionals/__init__.py
 wp_frontend/tests/test_functionals/test_behaviour_for_user.py
+wp_frontend/tests/test_functionals/test_status_page.py
 wp_frontend/views/__init__.py
 wp_frontend/views/forms.py
 wp_frontend/views/graphs.py
 wp_frontend/views/login.py
 wp_frontend/views/plots.py
 wp_frontend/views/set_val.py
+wp_frontend/views/status.py
 wp_frontend/views/wp_datetime.py
