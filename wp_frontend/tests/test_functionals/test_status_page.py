@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import unittest
+from wp_frontend.tests.test_functionals import BasicFunctionalTestCase
 
-class BasicStatusPageTests(unittest.TestCase):
+class BasicStatusPageTests(BasicFunctionalTestCase):
 
-    def test_view_status_page(self):
-
-        res = self.testapp.get('/status')
+    def test_anonymous_cannot_view_status_page(self):
+        res = self.testapp.get('/status', status=200)
+        self.assertNotLoggedIn(res)
