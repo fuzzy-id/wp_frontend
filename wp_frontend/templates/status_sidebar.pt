@@ -1,0 +1,22 @@
+<html>
+  <tal:block metal:define-macro="status-sidebar"
+	     metal:extend-macro="blocks.macros['sidebar']">
+    <tal:block metal:fill-slot="inner">
+      <tal:block metal:use-macro="blocks.macros['block-with-header']">
+	<tal:block metal:fill-slot="header">
+	  Statusseite
+	</tal:block>
+	<tal:block metal:fill-slot="body">
+	  <ul>
+	    <li>
+	      <a href="${request.route_path('view_status')}">Allgemein</a>
+	    </li>
+	    <li>
+	      <a href="${request.route_path('view_backup')}">Backup</a>
+	    </li>
+	  </ul>
+	</tal:block>
+      </tal:block>
+    </tal:block>
+  </tal:block>
+</html>
