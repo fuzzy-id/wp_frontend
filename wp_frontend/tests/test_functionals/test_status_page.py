@@ -17,4 +17,4 @@ class ViewTests(BasicFunctionalTestCase):
     def test_status_page_viewable(self):
         res = self.testapp.get('/status', status=200)
         self.assertLoggedIn(res)
-        self.assertIn(res.body, 'Status')
+        self.assertIn('Status', res.body)
