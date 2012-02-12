@@ -8,6 +8,10 @@ class AuthenticationTests(BasicFunctionalTestCase):
         res = self.testapp.get('/status', status=200)
         self.assertNotLoggedIn(res)
 
+    def test_anonymous_cannot_view_status_backup_page(self):
+        res = self.testapp.get('/status/backup', status=200)
+        self.assertNotLoggedIn(res)
+
 class ViewTests(BasicFunctionalTestCase):
     
     def setUp(self):
@@ -18,3 +22,12 @@ class ViewTests(BasicFunctionalTestCase):
         res = self.testapp.get('/status', status=200)
         self.assertLoggedIn(res)
         self.assertIn('Status', res.body)
+        self.assertIn('Allgemein', res.body)
+        self.assertIn('Backups', res.body)
+
+    def test_status_backup_page_viewable(self):
+        res = self.testapp.get('/status', status=200)
+        self.assertLoggedIn(res)
+        self.assertIn('Status', res.body)
+        self.assertIn('Allgemein', res.body)
+        self.assertIn('Backups', res.body)
