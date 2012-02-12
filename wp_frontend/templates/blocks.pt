@@ -21,4 +21,12 @@
       </div>
     </tal:block>
   </tal:block>
+
+  <tal:block metal:define-macro="sidebar">
+    <aside class="leftCol">
+      <tal:block metal:define-slot="inner">
+      </tal:block>
+    </aside>
+  </tal:block>
+
 </html>
