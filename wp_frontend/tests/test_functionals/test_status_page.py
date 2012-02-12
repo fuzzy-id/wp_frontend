@@ -26,7 +26,7 @@ class ViewTests(BasicFunctionalTestCase):
         self.assertIn('Backups', res.body)
 
     def test_status_backup_page_viewable(self):
-        res = self.testapp.get('/status', status=200)
+        res = self.testapp.get('/status_backup', status=200)
         self.assertLoggedIn(res)
         self.assertIn('Status', res.body)
         self.assertIn('Allgemein', res.body)
