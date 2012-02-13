@@ -10,6 +10,15 @@
     </div>
   </tal:block>
 
+  <tal:block metal:define-macro="block-wo-header"
+	     metal:extend-macro="macros['base-block']">
+    <tal:block metal:fill-slot="inner">
+      <div class="bd">
+	<tal:block metal:define-slot="body"></tal:block>
+      </div>
+    </tal:block>
+  </tal:block>
+
   <tal:block metal:define-macro="block-with-header"
 	     metal:extend-macro="macros['base-block']">
     <tal:block metal:fill-slot="inner">
