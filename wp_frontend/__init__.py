@@ -11,12 +11,11 @@ from wp_frontend.security import groupfinder
 
 
 def main(global_config, sql_init_function=initialize_sql, **settings):
-    """ This function returns a Pyramid WSGI application.
-    """
+    " This function returns a Pyramid WSGI application. "
     engine = engine_from_config(settings, 'sqlalchemy.')
     sql_init_function(engine)
-    authn_policy = AuthTktAuthenticationPolicy(
-        'foobar', callback=groupfinder)
+    authn_policy = AuthTktAuthenticationPolicy('foobar', 
+                                               callback=groupfinder)
     authz_policy = ACLAuthorizationPolicy()
     config = Configurator(settings=settings,
                           root_factory='wp_frontend.models.RootFactory',
@@ -27,7 +26,6 @@ def main(global_config, sql_init_function=initialize_sql, **settings):
                           'pyramid.events.BeforeRender')
 
     config.add_static_view('static', 'wp_frontend:static')
-
     # cache for three months:
     config.add_static_view('deform_static', 'deform:static',
                            cache_max_age=(3 * 31 * 24 * 60 * 60))
