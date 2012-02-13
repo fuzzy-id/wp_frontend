@@ -9,7 +9,7 @@ from pyramid.renderers import get_renderer
 from wp_frontend import settings
 
 @view_config(route_name="view_status", permission='user',
-             renderer=os.path.join(settings.templates_dir, 'status.pt'))
+             renderer=os.path.join(settings.templates_dir, 'status_main.pt'))
 def view_status(request):
     uptime = Popen(('uptime', ), stdout=PIPE)
     df = Popen(('df', '-h', ), stdout=PIPE)
@@ -18,7 +18,7 @@ def view_status(request):
         'uptime': 'Error while querying uptime!',
         'df': (('Error while querying free disk space!', ), ),
         'sidebar': get_renderer(
-            '../templates/status_sidebar.pt').implementation(), 
+            '../templates/status_sidebar.pt').implementation(),
         }
 
     if uptime.wait() == 0:
@@ -32,6 +32,9 @@ def view_status(request):
     return stats
 
 @view_config(route_name="view_backup", permission='user',
-             renderer=os.path.join(settings.templates_dir, 'status.pt'))
+             renderer=os.path.join(settings.templates_dir, 'status_backup.pt'))
 def view_backup(request):
-    return {}
+    return { 
+        'sidebar': get_renderer(
+            '../templates/status_sidebar.pt').implementation(),
+        }
