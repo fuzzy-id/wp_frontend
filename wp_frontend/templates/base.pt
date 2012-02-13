@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-
 <html lang="de"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:metal="http://xml.zope.org/namespaces/metal">
-
   <head>
     <meta charset="UTF-8"/>
-    <link rel="stylesheet" href="${request.static_path('wp_frontend:static/all.css')}"/>
-    <link rel="stylesheet" href="${request.static_path('wp_frontend:static/wp.css')}"/>
+    <link rel="stylesheet" 
+	  href="${request.static_path('wp_frontend:static/all.css')}"/>
+    <link rel="stylesheet" 
+	  href="${request.static_path('wp_frontend:static/wp.css')}"/>
     <tal:block metal:define-slot="headers">
     </tal:block>
     <title> WP Frontend - 
@@ -23,31 +23,48 @@
 	  <div class="hd topper">
 	    <ul class="tabControl">
 	      <li>
-		<a href="${request.route_path('view_home')}"><span>Home</span></a>
+		<a href="${request.route_path('view_home')}">
+		  <span>Home</span>
+		</a>
 	      </li>
 	      <li>
-		<a href="${request.route_path('view_graph', graph_name='hzg_ww', attrs=[])}"><span>Hzg/WW</span></a>
+		<a href="${request.route_path('view_graph', graph_name='hzg_ww', attrs=[])}">
+		  <span>Hzg/WW</span>
+		</a>
 	      </li>
 	      <li>
-		<a href="${request.route_path('view_graph', graph_name='erdsonde', attrs=[])}"><span>Erdsonde</span></a>
+		<a href="${request.route_path('view_graph', graph_name='erdsonde', attrs=[])}">
+		  <span>Erdsonde</span></a>
 	      </li>
 	      <li>
-		<a href="${request.route_path('view_graph', graph_name='vorl_kondens', attrs=[])}"><span>Vorl-Kondens</span></a>
+		<a href="${request.route_path('view_graph', graph_name='vorl_kondens', attrs=[])}">
+		  <span>Vorl-Kondens</span>
+		</a>
 	      </li>
 	      <li>
-		<a href="${request.route_path('view_graph', graph_name='wqaus_verdamp', attrs=[])}"><span>WQaus-Verdampfer</span></a>
+		<a href="${request.route_path('view_graph', graph_name='wqaus_verdamp', attrs=[])}">
+		  <span>WQaus-Verdampfer</span>
+		</a>
 	      </li>
 	      <li>
-		<a href="${request.route_path('view_choose_graph_attrs')}"><span>Eigener Graph</span></a>
+		<a href="${request.route_path('view_choose_graph_attrs')}">
+		  <span>Eigener Graph</span>
+		</a>
 	      </li>
 	      <li>
-		<a href="${request.route_path('view_set_val')}"><span>Werte-Setzen</span></a>
+		<a href="${request.route_path('view_set_val')}">
+		  <span>Werte-Setzen</span>
+		</a>
 	      </li>
 	      <li>
-		<a href="${request.route_path('view_status')}"><span>Status</span></a>
+		<a href="${request.route_path('view_status')}">
+		  <span>Status</span>
+		</a>
 	      </li>
 	      <li>
-		<a href="${request.route_path('view_logout')}"><span>Logout</span></a>
+		<a href="${request.route_path('view_logout')}">
+		  <span>Logout</span>
+		</a>
 	      </li>
 	    </ul>
 	  </div>
