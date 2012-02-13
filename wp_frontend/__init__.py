@@ -27,10 +27,10 @@ def main(global_config, sql_init_function=initialize_sql, **settings):
                           'pyramid.events.BeforeRender')
 
     config.add_static_view('static', 'wp_frontend:static')
-    #cache_max_age=(3 * 31 * 24 * 60 * 60)) # cache for three months
 
+    # cache for three months:
     config.add_static_view('deform_static', 'deform:static',
-                           cache_max_age=(3 * 31 * 24 * 60 * 60)) # cache for three months
+                           cache_max_age=(3 * 31 * 24 * 60 * 60))
     
     config.add_route('view_wp', '/')
     config.add_route('view_home', '/home')
