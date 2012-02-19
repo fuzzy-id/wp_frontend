@@ -85,8 +85,8 @@ class BehaviourForUserWithDBTests(BasicFunctionalTestCase):
 
     def test_view_home(self):
         res = self.testapp.get('/home')
-        self.assertTrue('2011-10-24' in res.body)
-        self.assertTrue('18:00:00' in res.body)
+        self.assertIn('2011-10-24', res.body)
+        self.assertIn('18:00:00', res.body)
 
     def _get_plot(self, path_to_plot):
         res = self.testapp.post(path_to_plot, self.timespan)
