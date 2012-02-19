@@ -6,6 +6,7 @@ from subprocess import Popen, PIPE
 from pyramid.view import view_config
 from pyramid.renderers import get_renderer
 
+from wp_frontend.models.backup import BackupTemplate
 from wp_frontend import settings
 
 @view_config(route_name="view_status", permission='user',
@@ -34,7 +35,9 @@ def view_status(request):
 @view_config(route_name="view_backup", permission='user',
              renderer=os.path.join(settings.templates_dir, 'status_backup.pt'))
 def view_backup(request):
+    
     return { 
         'sidebar': get_renderer(
-            '../templates/status_sidebar.pt').implementation(),
+            os.path.join(settings.templates_dir, 'status_sidebar.pt')
+            ).implementation(),
         }
