@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="de"
-      xmlns:tal="http://xml.zope.org/namespaces/tal"
-      xmlns:metal="http://xml.zope.org/namespaces/metal">
+      metal:define-macro="base">
   <head>
     <meta charset="UTF-8"/>
     <link rel="stylesheet" 
