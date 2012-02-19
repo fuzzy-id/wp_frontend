@@ -1,0 +1,7 @@
+<!DOCTYPE html>
+<html metal:use-macro="base_sidebar.macros['base']">
+  <tal:block metal:fill-slot="sidebar">
+    <tal:block metal:use-macro="sidebar.macros['status-sidebar']">
+    </tal:block>
+  </tal:block>
+</html>
