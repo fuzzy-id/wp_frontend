@@ -3,6 +3,7 @@
 import datetime
 from wp_frontend.models.get_data import PulledData
 from wp_frontend.models.set_data import DataToSet
+from wp_frontend.models.backup import BackupTemplate
 
 # These get_data_entries start on 14/10/2011 18:00:00 and end on 24/10/2011 18:00:00 with
 # five get_data_entries per day. That makes 50 get_data_entries...
@@ -68,7 +69,18 @@ set_data_entries = [ ('test_user',
                       str(val),
                       datetime.datetime(2011, 10, 24, 13, val), )
                      for val in range(0, 50, 5) ]
-                      
+
+backup_templates = [
+    ('System', '/', '/var\n/home\n', 0),
+    ('Home', '/home', ''),
+    ]
+
+def add_backup_templates(transaction, session):
+    transaction.begin()
+    for entry in backup_templates:
+        session.add(BackupTemplate(*entry))
+    transaction.commit()
+
 def add_get_data_entries_to_db(transaction, session):
     transaction.begin()
     for entry in get_data_entries:
