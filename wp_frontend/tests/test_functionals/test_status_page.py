@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-
+from wp_frontend import tests
+from wp_frontend.tests import create_entries
 from wp_frontend.tests.test_functionals import BasicFunctionalTestCase
 
 class AuthenticationTests(BasicFunctionalTestCase):
@@ -32,3 +33,18 @@ class ViewTests(BasicFunctionalTestCase):
         self.assertIn('Status', res.body)
         self.assertIn('Allgemein', res.body)
         self.assertIn('Backup', res.body)
+
+    
+class PageWithDbEntriesTests(BasicFunctionalTestCase):
+
+    def setUp(self):
+        super(PageWithDbEntriesTests, self).setUp()
+        create_entries.add_backup_templates(tests.getTransaction(),
+                                            tests.getSession())
+        self.login()
+
+    def test_sidebar_gets_updated(self):
+        res = self.testapp.get('/status', status=200)
+        self.assertIn('New Template', res.body)
+        self.assertIn('Home', res.body)
+        self.assertIn('System', res.body)

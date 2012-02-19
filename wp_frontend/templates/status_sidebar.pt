@@ -19,6 +19,13 @@
 		    New Template
 		  </a>
 		</li>
+		<tal:block tal:repeat="tpl templates">
+		  <li>
+		    <a href="${request.route_path('view_backup', template='${tpl}')}">
+		      ${tpl}
+		    </a>
+		  </li>
+		</tal:block>
 	      </ul>
 	    </li>
 	  </ul>

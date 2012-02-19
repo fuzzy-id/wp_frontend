@@ -6,8 +6,9 @@ from subprocess import Popen, PIPE
 from pyramid.view import view_config
 from pyramid.renderers import get_renderer
 
-from wp_frontend.models.backup import BackupTemplate
 from wp_frontend import settings
+from wp_frontend.models import DBSession
+from wp_frontend.models.backup import BackupTemplate
 
 @view_config(route_name="view_status", permission='user',
              renderer=os.path.join(settings.templates_dir, 'status_main.pt'))
@@ -20,6 +21,7 @@ def view_status(request):
         'df': (('Error while querying free disk space!', ), ),
         'sidebar': get_renderer(
             '../templates/status_sidebar.pt').implementation(),
+        'templates': BackupTemplate.get_template_names(DBSession)
         }
 
     if uptime.wait() == 0:
@@ -40,4 +42,5 @@ def view_backup(request):
         'sidebar': get_renderer(
             os.path.join(settings.templates_dir, 'status_sidebar.pt')
             ).implementation(),
+        'templates': BackupTemplate.get_template_names(DBSession)
         }
