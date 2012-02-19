@@ -12,11 +12,11 @@
   </tal:block>
   <tal:block metal:fill-slot="content">
     <section class="main"
-      tal:switch="current_data.data_available">
+	     tal:switch="current_data.data_available">
       <h1 tal:case="False">Couldn't get any data</h1>
-      <div tal:case="True" class="mod complex photo">
-	<b class="top"><b class="tl"></b><b class="tr"></b></b>
-	<div class="inner">
+      <tal:block tal:case="True" 
+		 metal:use-macro="blocks.macros['block-photo']">
+	<tal:block metal:fill-slot="body">
 	  <div class="bd" id="homediag">
 	    <img src="${request.static_path('wp_frontend:static/diagramm.jpg')}"/>
 	    <div class="homeval">
@@ -59,8 +59,8 @@
 		    id="black" style="right:49%; top:80%;">${round(current_data.verbrauch, 2)} kW</span>
 	    </div>
 	  </div>
-	</div>
-	<b class="bottom"><b class="bl"></b><b class="br"></b></b>
+	</tal:block>
+      </tal:block>
     </section>
   </tal:block>
 </html>
