@@ -31,6 +31,16 @@
     </tal:block>
   </tal:block>
 
+  <tal:block metal:define-macro="block-photo">
+    <div class="mod complex photo">
+      <b class="top"><b class="tl"></b><b class="tr"></b></b>
+      <div class="inner">
+	<tal:block metal:define-slot="body"></tal:block>
+      </div>
+      <b class="bottom"><b class="bl"></b><b class="br"></b></b>
+    </div>
+  </tal:block>
+
   <tal:block metal:define-macro="sidebar">
     <aside class="leftCol">
       <tal:block metal:define-slot="inner">
