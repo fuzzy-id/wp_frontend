@@ -171,3 +171,12 @@ def validate_attr(attr, value):
 _set_val_schema = SetValSchema(validator=set_val_validator)
 set_val_form = deform.Form(_set_val_schema, method="POST",
                            buttons=(submit_msg, ))
+
+class BackupSchema(colander.Schema):
+    name = colander.SchemaNode(colander.String())
+    root = colander.SchemaNode(colander.String())
+    excludes = colander.SchemaNode(colander.String())
+
+_backup_schema = BackupSchema()
+backup_form = deform.Form(_backup_schema, method="POST",
+                          buttons=(submit_msg, ))
