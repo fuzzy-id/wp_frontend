@@ -12,7 +12,14 @@
 	      <a href="${request.route_path('view_status')}">Allgemein</a>
 	    </li>
 	    <li>
-	      <a href="${request.route_path('view_backup')}">Backup</a>
+	      Backup
+	      <ul>
+		<li>
+		  <a href="${request.route_path('view_backup', template='new')}">
+		    New Template
+		  </a>
+		</li>
+	      </ul>
 	    </li>
 	  </ul>
 	</tal:block>
