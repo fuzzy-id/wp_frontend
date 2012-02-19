@@ -53,4 +53,5 @@ def new_backup_template(request):
     return {
         'sidebar': get_renderer(
             'wp_frontend:templates/status_sidebar.pt').implementation(),
-}
+        'templates': BackupTemplate.get_template_names(DBSession),
+        }
