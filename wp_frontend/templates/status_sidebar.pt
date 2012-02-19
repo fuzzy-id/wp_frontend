@@ -15,7 +15,7 @@
 	      Backup
 	      <ul>
 		<li>
-		  <a href="${request.route_path('view_backup', template='new')}">
+		  <a href="${request.route_path('new_backup_template')}">
 		    New Template
 		  </a>
 		</li>
