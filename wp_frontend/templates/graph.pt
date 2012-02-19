@@ -3,7 +3,7 @@
 <html lang="de"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:metal="http://xml.zope.org/namespaces/metal"
-      metal:use-macro="base">
+      metal:use-macro="base.macros['base']">
   <tal:block metal:fill-slot="headers">
     <link rel="stylesheet"
 	  href="${request.static_path('deform:static/css/form.css')}"
