@@ -4,4 +4,14 @@
     <tal:block metal:use-macro="sidebar.macros['status-sidebar']">
     </tal:block>
   </tal:block>
+  <tal:block metal:fill-slot="main">
+    <tal:block tal:replace="structure form">
+    </tal:block>
+    <script type="text/javascript">
+      jQuery(function() {
+          deform.load();
+      });
+    </script>
+
+  </tal:block>
 </html>
