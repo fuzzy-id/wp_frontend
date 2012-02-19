@@ -32,4 +32,4 @@ class BackupTemplate(Base):
         query = query.filter(cls.name == name)
         result = query.all()
         assert len(result) == 1
-        return result
+        return result[0]
