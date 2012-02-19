@@ -8,7 +8,7 @@ class BackupTemplate(Base):
 
     __tablename__ = 'backup_template'
     ident = Column(Integer, Sequence('template_id'), primary_key=True)
-    name = Column(String(20))
+    name = Column(String(20), unique=True)
     root = Column(String(40))
     exclude = Column(Text)
 
@@ -24,4 +24,12 @@ class BackupTemplate(Base):
         query = session.query(cls.name)
         query = query.order_by(cls.ident.desc())
         result = query.all()
+        return result
+
+    @classmethod
+    def get_template_by_name(cls, session, name):
+        query = session.query(cls)
+        query = query.filter(cls.name == name)
+        result = query.all()
+        assert len(result) == 1
         return result
