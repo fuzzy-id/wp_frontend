@@ -37,10 +37,12 @@ def view_status(request):
 @view_config(route_name="view_backup", permission='user',
              renderer=os.path.join(settings.templates_dir, 'status_backup.pt'))
 def view_backup(request):
-    
+    template = request.matchdict['template']
+    backup_template = BackupTemplate.get_template_by_name(DBSession, template)
     return { 
         'sidebar': get_renderer(
             os.path.join(settings.templates_dir, 'status_sidebar.pt')
             ).implementation(),
-        'templates': BackupTemplate.get_template_names(DBSession)
+        'templates': BackupTemplate.get_template_names(DBSession),
+        'template': backup_template,
         }
