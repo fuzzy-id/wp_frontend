@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="de"
-      metal:use-macro="base">
+      metal:use-macro="base.macros['base']">
   <tal:block metal:fill-slot="title">
     Status
   </tal:block>
