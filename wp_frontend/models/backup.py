@@ -10,12 +10,12 @@ class BackupTemplate(Base):
     ident = Column(Integer, Sequence('template_id'), primary_key=True)
     name = Column(String(20), unique=True)
     root = Column(String(40))
-    exclude = Column(Text)
+    excludes = Column(Text)
 
-    def __init__(self, name, root, exclude, ident=None):
+    def __init__(self, name, root, excludes, ident=None):
         self.name = name
         self.root = root
-        self.exclude = exclude
+        self.excludes = excludes
         if ident is not None:
             self.ident = ident
 
