@@ -2,7 +2,6 @@
 from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.config import Configurator
-from pyramid.renderers import get_renderer
 from sqlalchemy import engine_from_config
 
 import wp_frontend.views
@@ -21,10 +20,6 @@ def main(global_config, sql_init_function=initialize_sql, **settings):
                           root_factory='wp_frontend.models.RootFactory',
                           authentication_policy=authn_policy,
                           authorization_policy=authz_policy)
-
-    config.add_subscriber('wp_frontend.add_base_template',
-                          'pyramid.events.BeforeRender')
-
     config.add_static_view('static', 'wp_frontend:static')
     # cache for three months:
     config.add_static_view('deform_static', 'deform:static',
@@ -37,7 +32,8 @@ def main(global_config, sql_init_function=initialize_sql, **settings):
     config.add_route('plots', '/plots/{img_name}')
     config.add_route('view_set_val', '/set_val')
     config.add_route('view_status', '/status')
-    config.add_route('view_backup', '/status/backup/{template}')
+    config.add_route('new_backup_template', '/backup/new_template')
+    config.add_route('view_backup', '/backup/{template}')
     config.add_route('view_login', '/login')
     config.add_route('view_logout', '/logout')
 
@@ -45,12 +41,16 @@ def main(global_config, sql_init_function=initialize_sql, **settings):
                     context='pyramid.httpexceptions.HTTPForbidden',
                     renderer='templates/login.pt')
 
-    config.scan(wp_frontend.views)
+    config.scan()
     return config.make_wsgi_app()
 
+from pyramid.events import subscriber, BeforeRender
+from pyramid.renderers import get_renderer
 
+@subscriber(BeforeRender)
 def add_base_template(event):
     event.update({
             'base': get_renderer('templates/base.pt').implementation(), 
+            'base_sidebar': get_renderer('templates/base_sidebar.pt').implementation(), 
             'blocks': get_renderer('templates/blocks.pt').implementation(), 
             })
