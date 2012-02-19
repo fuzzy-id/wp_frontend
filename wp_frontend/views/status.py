@@ -3,10 +3,12 @@
 import os.path
 from subprocess import Popen, PIPE
 
+from pyramid.httpexceptions import HTTPFound
 from pyramid.view import view_config
 from pyramid.renderers import get_renderer
 
 from wp_frontend import settings
+from wp_frontend.views import forms
 from wp_frontend.models import DBSession
 from wp_frontend.models.backup import BackupTemplate
 
@@ -50,8 +52,17 @@ def view_backup(request):
 @view_config(route_name="new_backup_template", permission='user',
              renderer='wp_frontend:templates/backup_edit.pt')
 def new_backup_template(request):
+    if forms.submit_msg in request.params:
+        controls = request.params.items()
+        appstr = forms.backup_form.validate(controls)
+        DBSession.add(BackupTemplate(appstr['name'],
+                                     appstr['root'],
+                                     appstr['excludes']))
+        return HTTPFound(location=request.route_path('view_backup', 
+                                                     template=appstr['name']))
     return {
         'sidebar': get_renderer(
             'wp_frontend:templates/status_sidebar.pt').implementation(),
         'templates': BackupTemplate.get_template_names(DBSession),
+        'form': forms.backup_form.render(),
         }
