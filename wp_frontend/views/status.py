@@ -46,3 +46,11 @@ def view_backup(request):
         'templates': BackupTemplate.get_template_names(DBSession),
         'template': backup_template,
         }
+
+@view_config(route_name="new_backup_template", permission='user',
+             renderer='wp_frontend:templates/backup_edit.pt')
+def new_backup_template(request):
+    return {
+        'sidebar': get_renderer(
+            'wp_frontend:templates/status_sidebar.pt').implementation(),
+}
