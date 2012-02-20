@@ -13,7 +13,7 @@ from wp_frontend.models import DBSession
 from wp_frontend.models.backup import BackupTemplate
 
 @view_config(route_name="view_status", permission='user',
-             renderer=os.path.join(settings.templates_dir, 'status_main.pt'))
+             renderer=os.path.join(settings.templates_dir, 'status.pt'))
 def view_status(request):
     uptime = Popen(('uptime', ), stdout=PIPE)
     df = Popen(('df', '-h', ), stdout=PIPE)
@@ -37,7 +37,7 @@ def view_status(request):
     return stats
 
 @view_config(route_name="view_backup", permission='user',
-             renderer=os.path.join(settings.templates_dir, 'status_backup.pt'))
+             renderer=os.path.join(settings.templates_dir, 'backup.pt'))
 def view_backup(request):
     template = request.matchdict['template']
     backup_template = BackupTemplate.get_template_by_name(DBSession, template)
