@@ -1,5 +1,16 @@
 <!DOCTYPE html>
 <html metal:use-macro="base_sidebar.macros['base']">
+  <tal:block metal:fill-slot="headers">
+    <tal:block tal:repeat="css resources['css']">
+      <link rel="stylesheet"
+	    href="${request.static_path(css)}"
+	    type="text/css" />
+    </tal:block>
+    <tal:block tal:repeat="js resources['js']">
+      <link rel="text/javascript"
+	    src="${request.static_path(js)}" />
+    </tal:block>
+  </tal:block>
   <tal:block metal:fill-slot="sidebar">
     <tal:block metal:use-macro="sidebar.macros['status-sidebar']">
     </tal:block>
