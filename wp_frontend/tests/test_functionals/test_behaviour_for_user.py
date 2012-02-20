@@ -127,3 +127,19 @@ class GraphFormTests(BasicFunctionalTestCase):
         self.assertIn('There was a problem with your submission', resp.body)
         resp = self.testapp.get('/graph/hzg_ww/')
         self.assertNotIn('There was a problem with your submission', resp.body)
+
+class TemplateTests(BasicFunctionalTestCase):
+
+    def setUp(self):
+        BehaviourForUserWithoutDBTests.__base__.setUp(self)
+        self.login()
+
+    def test_resources_are_expanded_on_backup_edit(self):
+        resp = self.testapp.get('/backup/new_template')
+        self.assertIn('deform_static/css/form.css', resp.body)
+        self.assertIn('deform_static/scripts/deform.js', resp.body)
+
+    def test_resources_are_expanded_on_graph_view(self):
+        resp = self.testapp.get('/graph/erdsonde/')
+        self.assertIn('deform_static/css/form.css', resp.body)
+        self.assertIn('deform_static/scripts/deform.js', resp.body)
