@@ -60,19 +60,10 @@ def new_backup_template(request):
                                      appstr['excludes']))
         return HTTPFound(location=request.route_path('view_backup', 
                                                      template=appstr['name']))
-    deform_resources = forms.backup_form.get_widget_resources()
-    resources = {
-        'css': [ 'deform:static/' + deform_css
-                 for deform_css in deform_resources['css']],
-        'js': [ 'deform:static/' + deform_js
-                 for deform_js in deform_resources['js']]
-        }
-    resources['css'].append('deform:static/css/beautify.css')
-
     return {
         'sidebar': get_renderer(
             'wp_frontend:templates/status_sidebar.pt').implementation(),
         'templates': BackupTemplate.get_template_names(DBSession),
         'form': forms.backup_form.render(),
-        'resources': resources,
+        'resources': forms.form_resources(forms.backup_form),
         }
