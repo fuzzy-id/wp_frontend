@@ -24,7 +24,8 @@ class BackupTemplate(Base):
         query = session.query(cls.name)
         query = query.order_by(cls.ident.desc())
         result = query.all()
-        return result
+        result = [ res[0] for res in result ]
+        return tuple(result)
 
     @classmethod
     def get_template_by_name(cls, session, name):
