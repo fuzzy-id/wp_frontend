@@ -1,7 +1,5 @@
 <!DOCTYPE html>
-
-<html lang="de"
-      metal:use-macro="base.macros['base']">
+<html metal:use-macro="base.macros['base']">
   <tal:block metal:fill-slot="headers">
     <link rel="stylesheet"
 	  href="${request.static_path('wp_frontend:static/wp.css')}"
