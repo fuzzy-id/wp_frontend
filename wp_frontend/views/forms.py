@@ -175,7 +175,9 @@ set_val_form = deform.Form(_set_val_schema, method="POST",
 class BackupSchema(colander.Schema):
     name = colander.SchemaNode(colander.String())
     root = colander.SchemaNode(colander.String())
-    excludes = colander.SchemaNode(colander.String())
+    excludes = colander.SchemaNode(colander.String(),
+                                   widget=deform.widget.TextAreaWidget(strip=True),
+                                   description="")
 
 _backup_schema = BackupSchema()
 backup_form = deform.Form(_backup_schema, method="POST",
