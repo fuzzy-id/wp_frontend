@@ -84,7 +84,9 @@ def view_graph(request):
 
     return { 'graph': graph,
              'timespan': tsp_w_res,
-             'form': new_form.form, }
+             'form': new_form.form, 
+             'resources': forms.form_resources(forms.get_user_graph_form()),
+            }
 
 class UserGraphForwarder(forms.FormEvaluatorObserver):
     
@@ -109,4 +111,5 @@ def user_graph(request):
 
     if ug_forw.redirect is not None:
         return HTTPFound(location=ug_forw.redirect)
-    return { 'form': new_form.form, }
+    return {'form': new_form.form,
+            }
