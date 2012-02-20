@@ -182,3 +182,15 @@ class BackupSchema(colander.Schema):
 _backup_schema = BackupSchema()
 backup_form = deform.Form(_backup_schema, method="POST",
                           buttons=(submit_msg, ))
+
+def form_resources(form, beautify=True):
+    deform_resources = form.get_widget_resources()
+    resources = {
+        'css': [ 'deform:static/' + deform_css
+                 for deform_css in deform_resources['css']],
+        'js': [ 'deform:static/' + deform_js
+                 for deform_js in deform_resources['js']]
+        }
+    if beautify:
+        resources['css'].append('deform:static/css/beautify.css')
+    return resources
