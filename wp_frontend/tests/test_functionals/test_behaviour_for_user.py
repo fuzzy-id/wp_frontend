@@ -143,3 +143,8 @@ class TemplateTests(BasicFunctionalTestCase):
         resp = self.testapp.get('/graph/erdsonde/')
         self.assertIn('deform_static/css/form.css', resp.body)
         self.assertIn('deform_static/scripts/deform.js', resp.body)
+
+    def test_resources_are_expanded_on_user_graph(self):
+        resp = self.testapp.get('/graph/erdsonde/')
+        self.assertIn('deform_static/css/form.css', resp.body)
+        self.assertIn('deform_static/scripts/deform.js', resp.body)
