@@ -9,9 +9,8 @@
     </tal:block>
     <script type="text/javascript">
       jQuery(function() {
-          deform.load();
+      deform.load();
       });
     </script>
-
   </tal:block>
 </html>
