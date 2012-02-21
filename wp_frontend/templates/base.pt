@@ -14,8 +14,9 @@
 	      type="text/css" />
       </tal:block>
       <tal:block tal:repeat="js resources['js']">
-	<link rel="text/javascript"
-	      src="${request.static_path(js)}" />
+	<script rel="text/javascript"
+		src="${request.static_path(js)}">
+	</script>
       </tal:block>
     </tal:block>
     <title> WP Frontend - 
