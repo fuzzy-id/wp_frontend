@@ -3,8 +3,7 @@
     <div class="mod complex flow">
       <b class="top"><b class="tl"></b><b class="tr"></b></b>
       <div class="inner">
-	<tal:block metal:define-slot="inner">
-	</tal:block>
+	<tal:block metal:define-slot="body"></tal:block>
       </div>
       <b class="bottom"><b class="bl"></b><b class="br"></b></b>
     </div>
@@ -12,7 +11,7 @@
 
   <tal:block metal:define-macro="block-wo-header"
 	     metal:extend-macro="macros['base-block']">
-    <tal:block metal:fill-slot="inner">
+    <tal:block metal:fill-slot="body">
       <div class="bd">
 	<tal:block metal:define-slot="body"></tal:block>
       </div>
@@ -21,7 +20,7 @@
 
   <tal:block metal:define-macro="block-with-header"
 	     metal:extend-macro="macros['base-block']">
-    <tal:block metal:fill-slot="inner">
+    <tal:block metal:fill-slot="body">
       <div class="hd info">
 	<tal:block metal:define-slot="header"></tal:block>
       </div>
@@ -43,8 +42,7 @@
 
   <tal:block metal:define-macro="sidebar">
     <aside class="leftCol">
-      <tal:block metal:define-slot="inner">
-      </tal:block>
+      <tal:block metal:define-slot="body"></tal:block>
     </aside>
   </tal:block>
 </html>
