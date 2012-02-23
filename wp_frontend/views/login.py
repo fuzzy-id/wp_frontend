@@ -37,10 +37,14 @@ class LoginResponseGenerator(forms.FormEvaluatorObserver):
                                   headers=headers)
 
     def _observe_form_invalid(self, subj):
-        self.response = {'form': subj.exception.render(), }
+        self.response = {'form': subj.exception.render(), 
+                         'resources': forms.form_resources(forms.get_login_form()),
+                         }
 
     def _observe_no_submission(self, subj):
         self.response = { 'url': subj.request.application_url + '/view_login',
                           'form': forms.get_login_form().render(appstruct={'came_from': 
                                                                            self.came_from, }),
+                          'resources': forms.form_resources(forms.get_login_form()),
                           }
+
