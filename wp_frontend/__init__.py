@@ -51,6 +51,5 @@ from pyramid.renderers import get_renderer
 def add_base_template(event):
     event.update({
             'base': get_renderer('templates/base.pt').implementation(), 
-            'base_sidebar': get_renderer('templates/base_sidebar.pt').implementation(), 
             'blocks': get_renderer('templates/blocks.pt').implementation(), 
             })
