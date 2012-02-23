@@ -50,7 +50,9 @@ def view_set_val(request):
 
     return {'current_data': current_data, 
             'form': new_form.form,
-            'log': get_log(), }
+            'log': get_log(), 
+            'resources': forms.form_resources(forms.set_val_form),
+            }
 
 
 def get_log():
