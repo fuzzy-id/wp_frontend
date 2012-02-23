@@ -1,47 +1,36 @@
 <!DOCTYPE html>
-<html lang="de"
-      xmlns:tal="http://xml.zope.org/namespaces/tal"
-      xmlns:metal="http://xml.zope.org/namespaces/metal"
-      metal:use-macro="base.macros['base']">
-  <tal:block metal:fill-slot="title">
-    Backup
-  </tal:block>
-  <tal:block metal:fill-slot="content">
+<html metal:use-macro="base.macros['base']">
+  <tal:block metal:fill-slot="title">Backup</tal:block>
+  <tal:block metal:fill-slot="sidebar">
     <tal:block metal:use-macro="sidebar.macros['status-sidebar']">
     </tal:block>
-    <section class="main">
-      <tal:block metal:use-macro="blocks.macros['block-wo-header']">
-	<tal:block metal:fill-slot="body">
-	  <tal:block metal:use-macro="blocks.macros['block-with-header']">
-	    <tal:block metal:fill-slot="header">
-	      Name
-	    </tal:block>
-	    <tal:block metal:fill-slot="body">
-	      <p>${template.name}</p>
-	    </tal:block>
+  </tal:block>
+  <tal:block metal:fill-slot="main">
+    <tal:block metal:use-macro="blocks.macros['block-wo-header']">
+      <tal:block metal:fill-slot="body">
+	<tal:block metal:use-macro="blocks.macros['block-with-header']">
+	  <tal:block metal:fill-slot="header">Name</tal:block>
+	  <tal:block metal:fill-slot="body">
+	    <p>${template.name}</p>
 	  </tal:block>
-	  <tal:block metal:use-macro="blocks.macros['block-with-header']">
-	    <tal:block metal:fill-slot="header">
-	      Root
-	    </tal:block>
-	    <tal:block metal:fill-slot="body">
-	      <p>${template.root}</p>
-	    </tal:block>
+	</tal:block>
+	<tal:block metal:use-macro="blocks.macros['block-with-header']">
+	  <tal:block metal:fill-slot="header">Root</tal:block>
+	  <tal:block metal:fill-slot="body">
+	    <p>${template.root}</p>
 	  </tal:block>
-	  <tal:block metal:use-macro="blocks.macros['block-with-header']">
-	    <tal:block metal:fill-slot="header">
-	      Excludes
-	    </tal:block>
-	    <tal:block metal:fill-slot="body">
-	      <ul>
-		<tal:block tal:repeat="exclude template.excludes.split(',')">
-		  <li>${exclude}</li>
-		</tal:block>
-	      </ul>
-	    </tal:block>
+	</tal:block>
+	<tal:block metal:use-macro="blocks.macros['block-with-header']">
+	  <tal:block metal:fill-slot="header">Excludes</tal:block>
+	  <tal:block metal:fill-slot="body">
+	    <ul>
+	      <tal:block tal:repeat="exclude template.excludes.split(',')">
+		<li>${exclude}</li>
+	      </tal:block>
+	    </ul>
 	  </tal:block>
 	</tal:block>
       </tal:block>
-    </section>
+    </tal:block>
   </tal:block>
 </html>

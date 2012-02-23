@@ -1,95 +1,58 @@
 <!DOCTYPE html>
-
-<html lang="de"
-      xmlns:tal="http://xml.zope.org/namespaces/tal"
-      xmlns:metal="http://xml.zope.org/namespaces/metal"
-      metal:use-macro="base.macros['base']">
-  <tal:block metal:fill-slot="headers">
-    <link rel="stylesheet"
-	  href="${request.static_path('deform:static/css/form.css')}"
-	  type="text/css" />
-    <link rel="stylesheet"
-	  href="${request.static_path('deform:static/css/ui-lightness/jquery-ui-1.8.11.custom.css')}"
-	  type="text/css" />
-    <link rel="stylesheet"
-	  href="${request.static_path('deform:static/css/jquery-ui-timepicker-addon.css')}"
-	  type="text/css" />
-    <link rel="stylesheet"
-	  href="${request.static_path('deform:static/css/beautify.css')}"
-	  type="text/css" />
-    <script type="text/javascript" 
-	    src="${request.static_path('deform:static/scripts/jquery-1.4.2.min.js')}">
-    </script>
-    <script type="text/javascript" 
-	    src="${request.static_path('deform:static/scripts/jquery.form.js')}">
-    </script>
-    <script type="text/javascript" 
-	    src="${request.static_path('deform:static/scripts/deform.js')}">
-    </script>
-    <script type="text/javascript" 
-	    src="${request.static_path('deform:static/scripts/jquery-ui-1.8.11.custom.min.js')}">
-    </script>
-    <script type="text/javascript" 
-	    src="${request.static_path('deform:static/scripts/jquery-ui-timepicker-addon.js')}">
-    </script>
-    <script type="text/javascript" 
-	    src="${request.static_path('deform:static/scripts/jquery.maskedinput-1.2.2.min.js')}">
-    </script>
-  </tal:block>
-  <tal:block metal:fill-slot="title">
-    Graph
-  </tal:block>
-  <tal:block metal:fill-slot="content">
-    <aside class="leftCol">
-      <div class="mod complex flow">
-	<b class="top"><b class="tl"></b><b class="tr"></b></b>
-	<div class="inner">
-	  <div class="hd info">Plotdaten &auml;ndern</div>
-	  <div class="bd">
+<html metal:use-macro="base.macros['base']">
+  <tal:block metal:fill-slot="title">Graph</tal:block>
+  <tal:block metal:fill-slot="sidebar">
+    <tal:block metal:use-macro="blocks.macros['sidebar']">
+      <tal:block metal:fill-slot="body">
+	<tal:block metal:use-macro="blocks.macros['block-with-header']">
+	  <tal:block metal:fill-slot="header">Plotdaten &auml;ndern</tal:block>
+	  <tal:block metal:fill-slot="body">
 	    <span tal:replace="structure form"/>
-	  </div>
-	</div>
-	<b class="bottom"><b class="bl"></b><b class="br"></b></b>
-      </div>
-      <section tal:switch="graph.plot_url is None"
-	       class="mod complex flow">
-	<b class="top"><b class="tl"></b><b class="tr"></b></b>
-	<div class="inner" tal:case="True">
-	  <div class="bd">
-	    <p>Couldn't fetch any data to plot</p>
-	  </div>
-	</div>
-	<div class="inner" tal:case="False">
-	  <div class="hd info">Plotinformation</div>
-	  <div class="bd data spec">
-	    <table class="txtC">
-	      <tbody>
-		<tr>
-		  <td>Start</td>
-		  <td>${timespan.start}</td></tr>
-		<tr>
-		  <td>End</td>
-		  <td>${timespan.end}</td> 
-		</tr>
-		<tr>
-		  <td>Resolution</td>
-		  <td>${timespan.resolution}</td>
-		</tr>
-	      </tbody>
-	    </table>
-	  </div>
-	</div>
-	<b class="bottom"><b class="bl"></b><b class="br"></b></b>
-      </section>
-    </aside>
-    <div tal:condition="graph.plot_url is not None"
-	 class="main">
-      <div class="mod complex flow">
-	<b class="top"><b class="tl"></b><b class="tr"></b></b>
-	<img src="${graph.plot_url}" />
-	<b class="bottom"><b class="bl"></b><b class="br"></b></b>
-      </div>
-    </div>
+	  </tal:block>
+	</tal:block>
+	<tal:block metal:use-macro="blocks.macros['block-with-header']">
+	  <tal:block metal:fill-slot="header">Plotinformation</tal:block>
+	  <tal:block tal:condition="exists: timespan"
+		     metal:fill-slot="body">
+	    <div class="bd data spec">
+	      <table class="txtC">
+		<tbody>
+		  <tr>
+		    <td>Start</td>
+		    <td>${timespan.start}</td>
+		  <tr>
+		    <td>End</td>
+		    <td>${timespan.end}</td>
+		  </tr>
+		  <tr>
+		    <td>Resolution</td>
+		    <td>${timespan.resolution}</td>
+		  </tr>
+		</tbody>
+	      </table>
+	    </div>
+	  </tal:block>
+	</tal:block>
+      </tal:block>
+    </tal:block>
+  </tal:block>
+  <tal:block>
+    <tal:block metal:fill-slot="main">
+      <tal:block metal:use-macro="blocks.macros['block-wo-header']">
+	<tal:block metal:fill-slot="body">
+	  <tal:block tal:switch="True">
+	    <tal:block tal:case="True">
+	      <h1>Couldn't fetch any data to plot.</h1>
+	    </tal:block>
+	    <tal:block tal:case="False">
+	      <img src="${graph.plot_url}" />
+	    </tal:block>
+	  </tal:block>
+	</tal:block>
+      </tal:block>
+    </tal:block>
+  </tal:block>
+  <tal:block metal:fill-slot="js-script">
     <script type="text/javascript">
       jQuery(function() {
       deform.load();

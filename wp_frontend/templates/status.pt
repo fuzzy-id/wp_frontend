@@ -1,38 +1,29 @@
 <!DOCTYPE html>
-<html lang="de"
-      metal:use-macro="base.macros['base']">
-  <tal:block metal:fill-slot="title">
-    Status
-  </tal:block>
-  <tal:block metal:fill-slot="content">
+<html metal:use-macro="base.macros['base']">
+  <tal:block metal:fill-slot="title">Status</tal:block>
+  <tal:block metal:fill-slot="sidebar">
     <tal:block metal:use-macro="sidebar.macros['status-sidebar']">
     </tal:block>
-    <section class="main">
-      <tal:block metal:use-macro="blocks.macros['block-wo-header']">
-	<tal:block metal:fill-slot="body">
-	  <tal:block metal:use-macro="blocks.macros['block-with-header']">
-	    <tal:block metal:fill-slot="header">Uptime</tal:block>
-	    <tal:block metal:fill-slot="body">
-	      <ul><li>${uptime}</li></ul>
-	    </tal:block>
-	  </tal:block>
-	  <tal:block metal:use-macro="blocks.macros['block-with-header']">
-	    <tal:block metal:fill-slot="header">
-	      Disk Usage
-	    </tal:block>
-	    <tal:block metal:fill-slot="body">
-	      <div class="data spec">
-		<table class="txtR">
-		  <tr><th tal:repeat="header df[0]">${header}</th></tr>
-		  <tr tal:repeat="line df[1:]">
-		    <td tal:repeat="item line">${item}</td>
-		  </tr>
-		</table>
-	      </div>
-	    </tal:block>
-	  </tal:block>
-	</tal:block>
+  </tal:block>
+  <tal:block metal:fill-slot="main">
+    <tal:block metal:use-macro="blocks.macros['block-with-header']">
+      <tal:block metal:fill-slot="header">Uptime</tal:block>
+      <tal:block metal:fill-slot="body">
+	<ul><li>${uptime}</li></ul>
       </tal:block>
-    </section>
+    </tal:block>
+    <tal:block metal:use-macro="blocks.macros['block-with-header']">
+      <tal:block metal:fill-slot="header">Disk Usage</tal:block>
+      <tal:block metal:fill-slot="body">
+	<div class="data spec">
+	  <table class="txtR">
+	    <tr><th tal:repeat="header df[0]">${header}</th></tr>
+	    <tr tal:repeat="line df[1:]">
+	      <td tal:repeat="item line">${item}</td>
+	    </tr>
+	  </table>
+	</div>
+      </tal:block>
+    </tal:block>
   </tal:block>
 </html>

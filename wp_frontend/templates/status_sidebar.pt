@@ -1,7 +1,7 @@
 <html>
   <tal:block metal:define-macro="status-sidebar"
 	     metal:extend-macro="blocks.macros['sidebar']">
-    <tal:block metal:fill-slot="inner">
+    <tal:block metal:fill-slot="body">
       <tal:block metal:use-macro="blocks.macros['block-with-header']">
 	<tal:block metal:fill-slot="header">
 	  Statusseite

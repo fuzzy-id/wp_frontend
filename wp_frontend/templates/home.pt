@@ -1,17 +1,11 @@
 <!DOCTYPE html>
 <html metal:use-macro="base.macros['base']">
-  <tal:block metal:fill-slot="headers">
-    <link rel="stylesheet"
-	  href="${request.static_path('wp_frontend:static/wp.css')}"
-	  type="text/css" />
-  </tal:block>
-  <tal:block metal:fill-slot="title">
-    Home
-  </tal:block>
-  <tal:block metal:fill-slot="content">
-    <section class="main"
-	     tal:switch="current_data.data_available">
-      <h1 tal:case="False">Couldn't get any data</h1>
+  <tal:block metal:fill-slot="title">Home</tal:block>
+  <tal:block metal:fill-slot="main">
+    <tal:block tal:switch="current_data.data_available">
+      <tal:block tal:case="False">
+	<h1>Couldn't get any data</h1>
+      </tal:block>
       <tal:block tal:case="True" 
 		 metal:use-macro="blocks.macros['block-photo']">
 	<tal:block metal:fill-slot="body">
@@ -59,6 +53,6 @@
 	  </div>
 	</tal:block>
       </tal:block>
-    </section>
+    </tal:block>
   </tal:block>
 </html>

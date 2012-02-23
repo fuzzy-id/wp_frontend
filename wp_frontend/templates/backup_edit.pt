@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html metal:use-macro="base_sidebar.macros['base']">
+<html metal:use-macro="base.macros['base']">
+  <tal:block metal:fill-slot="title">Edit Backup Template</tal:block>
   <tal:block metal:fill-slot="sidebar">
-    <tal:block metal:use-macro="sidebar.macros['status-sidebar']">
-    </tal:block>
+    <tal:block metal:use-macro="sidebar.macros['status-sidebar']"></tal:block>
   </tal:block>
   <tal:block metal:fill-slot="main">
     <tal:block tal:replace="structure form">
     </tal:block>
+  </tal:block>
+  <tal:block metal:fill-slot="js-script">
     <script type="text/javascript">
       jQuery(function() {
       deform.load();
