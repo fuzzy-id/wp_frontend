@@ -40,7 +40,7 @@
     <tal:block metal:fill-slot="main">
       <tal:block metal:use-macro="blocks.macros['block-wo-header']">
 	<tal:block metal:fill-slot="body">
-	  <tal:block tal:switch="True">
+	  <tal:block tal:switch="graph.plot_url is None">
 	    <tal:block tal:case="True">
 	      <h1>Couldn't fetch any data to plot.</h1>
 	    </tal:block>
