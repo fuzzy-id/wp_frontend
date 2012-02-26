@@ -81,24 +81,23 @@ class AuthenticationTests(unittest.TestCase):
     def test_login_and_logout(self):
         self.testapp.put('/login', valid_credentials, status=302)
         res = self.testapp.get('/home')
-        self.assertTrue('input type="password"' not in res.body)
+        self.assertNotIn('input type="password"', res.body)
         self.testapp.get('/logout')
         res = self.testapp.get('/home')
-        self.assertTrue('input type="password"' in res.body)
+        self.assertIn('input type="password"', res.body)
         
     def test_failed_log_in(self):
         invalid_credentials = { 'user': 'invalid_user',
                                 'password': 'invalid_password',
                                 'came_from': '/',
                                 'submit': '', }
-        res = self.testapp.put('/login', invalid_credentials,
-                               status=200)
+        res = self.testapp.put('/login', invalid_credentials, status=200)
         res = self.testapp.get('/home')
-        self.assertTrue('input type="password"' in res.body)
+        self.assertIn('input type="password"', res.body)
 
     def test_garbage_log_in(self):
         garbage_credentials = {'foo': 'baz', 'submit': ''}
         res = self.testapp.put('/login', garbage_credentials,
                                status=200)
-        self.assertTrue('input type="password"' in res.body)
-        self.assertTrue('There was a problem with your submission' in res.body)
+        self.assertIn('input type="password"', res.body)
+        self.assertIn('There was a problem with your submission', res.body)
