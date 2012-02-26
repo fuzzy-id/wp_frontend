@@ -16,9 +16,10 @@ valid_credentials = { 'user': 'test_user',
 class BasicFunctionalTestCase(unittest.TestCase):
     
     def setUp(self):
-        app = wp_frontend.main({}, 
-                               sql_init_function=tests.init_testing_db, 
-                               **tests.settings)
+        app = wp_frontend.main(
+            {}, 
+            sql_init_function=tests.init_and_recreate_db, 
+            **tests.settings)
         self.testapp = TestApp(app)
 
     def tearDown(self):
@@ -38,23 +39,32 @@ class BasicFunctionalTestCase(unittest.TestCase):
         self.assertTrue('input type="password"' in res.body)
         
 
-class BehaviourForAnonymousTests(BasicFunctionalTestCase):
+class BehaviourForAnonymousTests(unittest.TestCase):
+
+    def setUp(self):
+        app = wp_frontend.main({}, 
+                               sql_init_function=tests.init_db, 
+                               **tests.settings)
+        self.testapp = TestApp(app)
+
+    def tearDown(self):
+        del self.testapp
+        tests.getSession().remove()
 
     def test_root_forwards_to_home(self):
         res = self.testapp.get('/', status=302)
-        self.assertEqual(res.location,
-                         'http://localhost/home')
+        self.assertEqual(res.location, 'http://localhost/home')
 
     def test_unexisting_page_gives_404(self):
         res = self.testapp.get('/InexistentPage', status=404)
         
     def test_anonymous_cannot_view(self):
         res = self.testapp.get('/home', status=200)
-        self.assertNotLoggedIn(res)
+        self.assertTrue('input type="password"' in res.body)
         res = self.testapp.get('/graph/hzg_ww/', status=200)
-        self.assertNotLoggedIn(res)
+        self.assertTrue('input type="password"' in res.body)
         res = self.testapp.get('/set_val', status=200)
-        self.assertNotLoggedIn(res)
+        self.assertTrue('input type="password"' in res.body)
 
 class AuthenticationTests(BasicFunctionalTestCase):
 
