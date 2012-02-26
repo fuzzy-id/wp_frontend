@@ -5,13 +5,8 @@ import re
 import wp_frontend
 from webtest import TestApp
 from wp_frontend import tests
-from wp_frontend.tests import create_entries
+from wp_frontend.tests import create_entries, valid_credentials
 
-
-valid_credentials = { 'user': 'test_user',
-                      'password': 'password',
-                      'came_from': '/',
-                      'submit': '', }
 
 class BasicFunctionalTestCase(unittest.TestCase):
     
