@@ -109,35 +109,21 @@ class PulledDataTest(unittest.TestCase):
             self.assertEquals(entry[2], expected[res_tsp][1])
 
     def test_get_calculated_entries(self):
-        pass
-        
-    def _test_calculated_entries(self, entry, test_column, expected):
-        self._add_one(entry)
-        result = get_data.PulledData.get_latest(self.session, [test_column])
-        self.assertEquals(result[0], expected)
-
-    def test_get_calculated_currKW(self):
-        entry = {'temp_Vl': 18.0}
+        entry = {'temp_Vl': 18.0,
+                 'temp_Vl': 18.0,
+                 'temp_Rl': 14.4,
+                 'temp_WQein': 12.5,
+                 'temp_WQaus': 10.0,
+                 }
         self._add_one(entry)
 
         expected = 18.0 * 0.06 + 0.5
         result = get_data.PulledData.get_latest(self.session, ['currKW', ])
         self.assertEquals(result[0], expected)
 
-
-    def test_get_deltaVlRl(self):
-        entry = {'temp_Vl': 18.0,
-                 'temp_Rl': 14.4}
-        self._add_one(entry)
-
         expected = 18.0 - 14.4
         result = get_data.PulledData.get_latest(self.session, ['deltaVlRl', ])
         self.assertEquals(result[0], expected)
-
-    def test_get_deltaWQea(self):
-        entry = {'temp_WQein': 12.5,
-                 'temp_WQaus': 10.0}
-        self._add_one(entry)
 
         expected = 12.5 - 10.0
         result = get_data.PulledData.get_latest(self.session, ['deltaWQea', ])
