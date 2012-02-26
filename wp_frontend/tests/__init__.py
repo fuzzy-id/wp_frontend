@@ -15,6 +15,11 @@ sql_url = 'mysql://test_user:D3v3L0p3R@localhost/testing'
 
 settings = {'sqlalchemy.url': sql_url, }
 
+valid_credentials = { 'user': 'test_user',
+                      'password': 'password',
+                      'came_from': '/',
+                      'submit': '', }
+
 class BaseTestWithDB(unittest.TestCase):
 
     def setUp(self):
