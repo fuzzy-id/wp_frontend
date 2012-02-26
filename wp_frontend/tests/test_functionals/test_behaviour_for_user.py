@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import pprint
 import re
 from wp_frontend import tests
 from wp_frontend.tests import create_entries
