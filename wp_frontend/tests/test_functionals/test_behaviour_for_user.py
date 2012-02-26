@@ -8,8 +8,25 @@ from wp_frontend.tests.test_functionals import BasicFunctionalTestCase
 class BehaviourForUserWithoutDBTests(BasicFunctionalTestCase):
 
     def setUp(self):
-        BehaviourForUserWithoutDBTests.__base__.setUp(self)
-        self.login()
+        app = wp_frontend.main(
+            {}, 
+            sql_init_function=tests.init_and_recreate_db, 
+            **tests.settings)
+        self.testapp = TestApp(app)
+        self.testapp.put('/login', valid_credentials, status=302)
+
+    def tearDown(self):
+        del self.testapp
+        tests.getSession().remove()
+
+    def logout(self):
+        return self.testapp.get('/logout')
+
+    def assertLoggedIn(self, res):
+        self.assertNotIn('input type="password"', res.body)
+
+    def assertNotLoggedIn(self, res):
+        self.assertIn('input type="password"', res.body)
 
     def test_view_home(self):
         res = self.testapp.get('/home')
