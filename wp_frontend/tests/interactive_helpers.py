@@ -8,9 +8,10 @@ import wp_frontend
 tests.createEngineAndInitDB()
 
 def make_testapp():
-    app = wp_frontend.main({}, 
-                           sql_init_function=tests.init_testing_db, 
-                           **tests.settings)
+    app = wp_frontend.main(
+        {}, 
+        sql_init_function=tests.init_and_recreate_db, 
+        **tests.settings)
     return TestApp(app)
 
 def create_all_entries():
