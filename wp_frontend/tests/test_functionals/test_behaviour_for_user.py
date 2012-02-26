@@ -28,15 +28,6 @@ class BehaviourForUserWithoutDBTests(unittest.TestCase):
         del self.testapp
         tests.getSession().remove()
 
-    def logout(self):
-        return self.testapp.get('/logout')
-
-    def assertLoggedIn(self, res):
-        self.assertNotIn('input type="password"', res.body)
-
-    def assertNotLoggedIn(self, res):
-        self.assertIn('input type="password"', res.body)
-
     def test_view_home(self):
         res = self.testapp.get('/home')
         self.assertIn("Couldn't get any data", res.body)
@@ -46,7 +37,7 @@ class BehaviourForUserWithoutDBTests(unittest.TestCase):
         self.assertIn("Couldn't fetch logs", res.body)
         self.assertIn("Couldn't fetch current values", res.body)
 
-    def test_view_graphs(self):
+    def test_view_graphs_wo_db_data(self):
         res = self.testapp.get('/graph/hzg_ww/')
         self.assertIn("Couldn't fetch any data to plot", res.body)
 
@@ -92,6 +83,19 @@ class BehaviourForUserWithoutDBTests(unittest.TestCase):
         resp = self.testapp.get('/graph/user/foo', status=400)
         self.assertIn("Attribute '%s' is not plotable.", resp.body)
 
+    def test_resources_are_expanded(self):
+        resp = self.testapp.get('/backup/new_template')
+        self.assertIn('deform_static/css/form.css', resp.body)
+        self.assertIn('deform_static/scripts/deform.js', resp.body)
+
+        resp = self.testapp.get('/graph/erdsonde/')
+        self.assertIn('deform_static/css/form.css', resp.body)
+        self.assertIn('deform_static/scripts/deform.js', resp.body)
+
+        resp = self.testapp.get('/graph/erdsonde/')
+        self.assertIn('deform_static/css/form.css', resp.body)
+        self.assertIn('deform_static/scripts/deform.js', resp.body)
+
 class BehaviourForUserWithDBTests(BasicFunctionalTestCase):
 
     timespan = {'start': "2011-10-14 18:00:00",
@@ -99,11 +103,23 @@ class BehaviourForUserWithDBTests(BasicFunctionalTestCase):
                 'resolution': '10',
                 'submit': 'submit'}
 
-    def setUp(self):
-        super(BehaviourForUserWithDBTests, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        tmp_session = tests.createEngineAndInitDB()
         create_entries.add_get_data_entries_to_db(tests.getTransaction(), 
-                                                  tests.getSession())
-        self.login()
+                                                  tmp_session)
+
+        tmp_session.remove()
+
+    def setUp(self):
+        app = wp_frontend.main(
+            {}, sql_init_function=tests.init_db, **tests.settings)
+        self.testapp = webtest.TestApp(app)
+        self.testapp.put('/login', tests.valid_credentials, status=302)
+
+    def tearDown(self):
+        del self.testapp
+        tests.getSession().remove()
 
     def test_view_home(self):
         res = self.testapp.get('/home')
@@ -149,24 +165,3 @@ class GraphFormTests(BasicFunctionalTestCase):
         self.assertIn('There was a problem with your submission', resp.body)
         resp = self.testapp.get('/graph/hzg_ww/')
         self.assertNotIn('There was a problem with your submission', resp.body)
-
-class TemplateTests(BasicFunctionalTestCase):
-
-    def setUp(self):
-        super(TemplateTests, self).setUp()
-        self.login()
-
-    def test_resources_are_expanded_on_backup_edit(self):
-        resp = self.testapp.get('/backup/new_template')
-        self.assertIn('deform_static/css/form.css', resp.body)
-        self.assertIn('deform_static/scripts/deform.js', resp.body)
-
-    def test_resources_are_expanded_on_graph_view(self):
-        resp = self.testapp.get('/graph/erdsonde/')
-        self.assertIn('deform_static/css/form.css', resp.body)
-        self.assertIn('deform_static/scripts/deform.js', resp.body)
-
-    def test_resources_are_expanded_on_user_graph(self):
-        resp = self.testapp.get('/graph/erdsonde/')
-        self.assertIn('deform_static/css/form.css', resp.body)
-        self.assertIn('deform_static/scripts/deform.js', resp.body)
