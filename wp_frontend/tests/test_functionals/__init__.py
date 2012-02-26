@@ -60,15 +60,15 @@ class BehaviourForAnonymousTests(unittest.TestCase):
         
     def test_anonymous_cannot_view(self):
         res = self.testapp.get('/home', status=200)
-        self.assertTrue('input type="password"' in res.body)
+        self.assertIn('input type="password"', res.body)
         res = self.testapp.get('/graph/hzg_ww/', status=200)
-        self.assertTrue('input type="password"' in res.body)
+        self.assertIn('input type="password"', res.body)
         res = self.testapp.get('/set_val', status=200)
-        self.assertTrue('input type="password"' in res.body)
+        self.assertIn('input type="password"', res.body)
         res = self.testapp.get('/status', status=200)
-        self.assertTrue('input type="password"' in res.body)
+        self.assertIn('input type="password"', res.body)
         res = self.testapp.get('/backup/new_template', status=200)
-        self.assertTrue('input type="password"' in res.body)
+        self.assertIn('input type="password"', res.body)
 
 
 class AuthenticationTests(unittest.TestCase):
