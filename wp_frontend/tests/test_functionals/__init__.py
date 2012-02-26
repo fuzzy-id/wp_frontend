@@ -32,10 +32,10 @@ class BasicFunctionalTestCase(unittest.TestCase):
         return self.testapp.get('/logout')
 
     def assertLoggedIn(self, res):
-        self.assertTrue('input type="password"' not in res.body)
+        self.assertNotIn('input type="password"', res.body)
 
     def assertNotLoggedIn(self, res):
-        self.assertTrue('input type="password"' in res.body)
+        self.assertIn('input type="password"', res.body)
         
 
 class BehaviourForAnonymousTests(unittest.TestCase):
