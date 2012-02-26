@@ -13,12 +13,16 @@ from wp_frontend.tests import BaseTestWithDB
 from wp_frontend.tests import create_entries
 from wp_frontend.views import wp_datetime
 
-
 class PulledDataTest(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        tmp_session = tests.create_engine_and_init_db(db_reset=True)
+        tmp_session.remove()
 
     def setUp(self):
         self.transaction = tests.getTransaction()
-        self.session = tests.createEngineAndInitDB()
+        self.session = tests.create_engine_and_init_db()
         self.config = testing.setUp()
 
     def tearDown(self):
@@ -83,7 +87,8 @@ class PulledDataTest(unittest.TestCase):
             self.assertTrue(res_tsp in expected)
             self.assertEquals(entry[1], expected[res_tsp][0])
             self.assertEquals(entry[2], expected[res_tsp][1])
-        
+
+    @tests.reset_db
     def test_get_values_in_timespan_wo_avg(self):
         create_entries.add_get_data_entries_to_db(self.transaction, self.session)
 
