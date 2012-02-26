@@ -19,9 +19,6 @@ class TimeSpanWithResolutionTests(unittest.TestCase):
         actual = span_with_resolution.end
         self.assertEqual(actual, expected)
 
-    def test_iteration_with_end_before_start(self):
-        pass
-
     def test_avg_timespan_iterator(self):
         span_with_resolution = wp_datetime.TimespanWithResolution()
         span_with_resolution.start = datetime.datetime(2011, 10, 02, 19, 36, 55)
