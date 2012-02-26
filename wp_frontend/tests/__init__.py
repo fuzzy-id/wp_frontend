@@ -35,9 +35,13 @@ class BaseTestWithDB(unittest.TestCase):
 def createEngineAndInitDB(sql_url=sql_url,
                           sql_echo=False):
     engine = create_engine(sql_url, echo=sql_echo)
-    return init_testing_db(engine)
+    return init_and_recreate_db(engine)
 
-def init_testing_db(engine):
+def init_db(engine):
+    initialize_sql(engine)
+    return DBSession
+
+def init_and_recreate_db(engine):
     initialize_sql(engine)
     Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
