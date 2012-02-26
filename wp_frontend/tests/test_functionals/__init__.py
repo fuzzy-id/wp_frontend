@@ -78,12 +78,7 @@ class AuthenticationTests(unittest.TestCase):
         del self.testapp
         tests.getSession().remove()
 
-    def test_succesfull_login(self):
-        return self.testapp.put('/login', valid_credentials, status=302)
-        res = self.testapp.get('/home')
-        self.assertTrue('input type="password"' not in res.body)
-        
-    def test_login(self):
+    def test_login_and_logout(self):
         self.testapp.put('/login', valid_credentials, status=302)
         res = self.testapp.get('/home')
         self.assertTrue('input type="password"' not in res.body)
