@@ -27,8 +27,8 @@ class BasicFunctionalTestCase(unittest.TestCase):
         tests.getSession().remove()
 
     def login(self):
-        return self.testapp.put('/login', valid_credentials,
-                                status=302)
+        return self.testapp.put('/login', valid_credentials, status=302)
+
     def logout(self):
         return self.testapp.get('/logout')
 
@@ -66,20 +66,30 @@ class BehaviourForAnonymousTests(unittest.TestCase):
         res = self.testapp.get('/set_val', status=200)
         self.assertTrue('input type="password"' in res.body)
 
-class AuthenticationTests(BasicFunctionalTestCase):
+class AuthenticationTests(unittest.TestCase):
+
+    def setUp(self):
+        app = wp_frontend.main({}, 
+                               sql_init_function=tests.init_db, 
+                               **tests.settings)
+        self.testapp = TestApp(app)
+
+    def tearDown(self):
+        del self.testapp
+        tests.getSession().remove()
 
     def test_succesfull_login(self):
-        self.login()
+        return self.testapp.put('/login', valid_credentials, status=302)
         res = self.testapp.get('/home')
-        self.assertLoggedIn(res)
+        self.assertTrue('input type="password"' not in res.body)
         
     def test_login(self):
-        self.login()
+        self.testapp.put('/login', valid_credentials, status=302)
         res = self.testapp.get('/home')
-        self.assertLoggedIn(res)
-        self.logout()
+        self.assertTrue('input type="password"' not in res.body)
+        self.testapp.get('/logout')
         res = self.testapp.get('/home')
-        self.assertNotLoggedIn(res)
+        self.assertTrue('input type="password"' in res.body)
         
     def test_failed_log_in(self):
         invalid_credentials = { 'user': 'invalid_user',
@@ -89,11 +99,11 @@ class AuthenticationTests(BasicFunctionalTestCase):
         res = self.testapp.put('/login', invalid_credentials,
                                status=200)
         res = self.testapp.get('/home')
-        self.assertNotLoggedIn(res)
+        self.assertTrue('input type="password"' in res.body)
 
     def test_garbage_log_in(self):
         garbage_credentials = {'foo': 'baz', 'submit': ''}
         res = self.testapp.put('/login', garbage_credentials,
                                status=200)
-        self.assertNotLoggedIn(res)
+        self.assertTrue('input type="password"' in res.body)
         self.assertTrue('There was a problem with your submission' in res.body)
