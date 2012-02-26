@@ -8,32 +8,6 @@ from wp_frontend import tests
 from wp_frontend.tests import create_entries
 from wp_frontend.tests import valid_credentials
 
-class BasicFunctionalTestCase(unittest.TestCase):
-    
-    def setUp(self):
-        app = wp_frontend.main(
-            {}, 
-            sql_init_function=tests.init_and_recreate_db, 
-            **tests.settings)
-        self.testapp = TestApp(app)
-
-    def tearDown(self):
-        del self.testapp
-        tests.getSession().remove()
-
-    def login(self):
-        return self.testapp.put('/login', valid_credentials, status=302)
-
-    def logout(self):
-        return self.testapp.get('/logout')
-
-    def assertLoggedIn(self, res):
-        self.assertNotIn('input type="password"', res.body)
-
-    def assertNotLoggedIn(self, res):
-        self.assertIn('input type="password"', res.body)
-        
-
 class BehaviourForAnonymousTests(unittest.TestCase):
 
     @classmethod

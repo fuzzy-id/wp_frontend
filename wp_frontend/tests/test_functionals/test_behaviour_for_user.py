@@ -7,7 +7,6 @@ import webtest
 import wp_frontend
 from wp_frontend import tests
 from wp_frontend.tests import create_entries
-from wp_frontend.tests.test_functionals import BasicFunctionalTestCase
 
 class BehaviourForUserWithoutDBTests(unittest.TestCase):
 
@@ -96,7 +95,7 @@ class BehaviourForUserWithoutDBTests(unittest.TestCase):
         self.assertIn('deform_static/css/form.css', resp.body)
         self.assertIn('deform_static/scripts/deform.js', resp.body)
 
-class BehaviourForUserWithDBTests(BasicFunctionalTestCase):
+class BehaviourForUserWithDBTests(unittest.TestCase):
 
     timespan = {'start': "2011-10-14 18:00:00",
                 'end': "2011-10-24 18:00:00",
@@ -140,7 +139,7 @@ class BehaviourForUserWithDBTests(BasicFunctionalTestCase):
         match = re.search(r'<img src="(.*\.svgz)" />', res.body)
         self.assertIsNot(match.groups()[0], None)
 
-class GraphFormTests(BasicFunctionalTestCase):
+class GraphFormTests(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):

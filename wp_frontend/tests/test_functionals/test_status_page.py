@@ -5,7 +5,6 @@ import webtest
 import wp_frontend
 from wp_frontend import tests
 from wp_frontend.tests import create_entries
-from wp_frontend.tests.test_functionals import BasicFunctionalTestCase
 
 class ViewTests(unittest.TestCase):
 
@@ -19,7 +18,7 @@ class ViewTests(unittest.TestCase):
                                sql_init_function=tests.init_db, 
                                **tests.settings)
         self.testapp = webtest.TestApp(app)
-        self.testapp.put('/login', valid_credentials, status=302)
+        self.testapp.put('/login', tests.valid_credentials, status=302)
 
     def tearDown(self):
         del self.testapp
@@ -38,7 +37,7 @@ class ViewTests(unittest.TestCase):
         self.assertIn('Allgemein', res.body)
         self.assertIn('Backup', res.body)
     
-class PageWithDbEntriesTests(BasicFunctionalTestCase):
+class PageWithDbEntriesTests(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -52,6 +51,7 @@ class PageWithDbEntriesTests(BasicFunctionalTestCase):
                                sql_init_function=tests.init_db, 
                                **tests.settings)
         self.testapp = webtest.TestApp(app)
+        self.testapp.put('/login', tests.valid_credentials, status=302)
 
     def tearDown(self):
         del self.testapp
