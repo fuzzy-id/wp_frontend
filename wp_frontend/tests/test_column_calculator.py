@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import unittest
 
 from wp_frontend.models.calculations import register_all_calculations
