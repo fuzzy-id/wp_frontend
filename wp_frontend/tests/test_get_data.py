@@ -50,15 +50,6 @@ class PulledDataTest(unittest.TestCase):
         self.assertTrue(entry_date >= dt_before)
         self.assertTrue(dt_after >= entry_date)
 
-    def test_add_one_and_get_latest_work(self):
-        columns_and_values = {'temp_aussen': 24,
-                              'temp_WW': 80.34 }
-        self._add_one(columns_and_values)
-        entry = get_data.PulledData.get_latest(self.session,
-                                               columns_and_values.keys())
-        self.assertEqual(entry[0], 24)
-        self.assertEqual(entry[1], 80.34)
-
     def test_get_values_in_timespan_with_avg(self):
         create_entries.add_get_data_entries_to_db(self.transaction, self.session)
 
