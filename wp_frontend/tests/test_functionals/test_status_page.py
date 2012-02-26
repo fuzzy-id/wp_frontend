@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import unittest
+import webtest
 
 import wp_frontend
 from wp_frontend import tests
@@ -17,7 +18,7 @@ class ViewTests(unittest.TestCase):
         app = wp_frontend.main({}, 
                                sql_init_function=tests.init_db, 
                                **tests.settings)
-        self.testapp = TestApp(app)
+        self.testapp = webtest.TestApp(app)
         self.testapp.put('/login', valid_credentials, status=302)
 
     def tearDown(self):
@@ -50,7 +51,7 @@ class PageWithDbEntriesTests(BasicFunctionalTestCase):
         app = wp_frontend.main({}, 
                                sql_init_function=tests.init_db, 
                                **tests.settings)
-        self.testapp = TestApp(app)
+        self.testapp = webtest.TestApp(app)
 
     def tearDown(self):
         del self.testapp
