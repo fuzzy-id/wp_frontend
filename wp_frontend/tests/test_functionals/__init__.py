@@ -36,6 +36,11 @@ class BasicFunctionalTestCase(unittest.TestCase):
 
 class BehaviourForAnonymousTests(unittest.TestCase):
 
+    @classmethod
+    def setUpClass(cls):
+        tmp_session = tests.createEngineAndInitDB()
+        tmp_session.remove()
+
     def setUp(self):
         app = wp_frontend.main({}, 
                                sql_init_function=tests.init_db, 
