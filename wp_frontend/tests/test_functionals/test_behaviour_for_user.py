@@ -126,31 +126,38 @@ class BehaviourForUserWithDBTests(BasicFunctionalTestCase):
         self.assertIn('2011-10-24', res.body)
         self.assertIn('18:00:00', res.body)
 
-    def _get_plot(self, path_to_plot):
+    def test_plot_hzg_ww(self):
+        self._verify_plot('/graph/hzg_ww/')
+        self._verify_plot('/graph/erdsonde/')
+        self._verify_plot('/graph/vorl_kondens/')
+        self._verify_plot('/graph/wqaus_verdamp/')
+
+    def _verify_plot(self, path_to_plot):
         res = self.testapp.post(path_to_plot, self.timespan)
         self.assertIn("2011-10-14 18:00:00", res.body)
         self.assertIn("2011-10-24 18:00:00", res.body)
         self.assertIn("10", res.body)
         match = re.search(r'<img src="(.*\.svgz)" />', res.body)
-        return match.groups()[0]
-
-    def test_plot_hzg_ww(self):
-        self._get_plot('/graph/hzg_ww/')
-
-    def test_plot_erdsonde(self):
-        self._get_plot('/graph/erdsonde/')
-
-    def test_plot_vorl_kondens(self):
-        self._get_plot('/graph/vorl_kondens/')
-
-    def test_plot_wqaus_verdamp(self):
-        self._get_plot('/graph/wqaus_verdamp/')
+        self.assertIsNot(match.groups()[0], None)
 
 class GraphFormTests(BasicFunctionalTestCase):
 
+    @classmethod
+    def setUpClass(cls):
+        tmp_session = tests.createEngineAndInitDB()
+        create_entries.add_get_data_entries_to_db(tests.getTransaction(), 
+                                                  tmp_session)
+        tmp_session.remove()
+
     def setUp(self):
-        super(GraphFormTests, self).setUp()
-        self.login()
+        app = wp_frontend.main(
+            {}, sql_init_function=tests.init_db, **tests.settings)
+        self.testapp = webtest.TestApp(app)
+        self.testapp.put('/login', tests.valid_credentials, status=302)
+
+    def tearDown(self):
+        del self.testapp
+        tests.getSession().remove()
 
     def test_field_defaults_are_setted(self):
         resp = self.testapp.get('/graph/erdsonde/')
