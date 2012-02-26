@@ -1,17 +1,35 @@
 # -*- coding: utf-8 -*-
 import datetime
 import random
+import unittest
+
+from pyramid import testing
+
+import wp_frontend
 from wp_frontend.models import get_data
 from wp_frontend.models.calculations import CurrKW
+from wp_frontend import tests
 from wp_frontend.tests import BaseTestWithDB
 from wp_frontend.tests import create_entries
 from wp_frontend.views import wp_datetime
 
 
-class PulledDataTest(BaseTestWithDB):
+class PulledDataTest(unittest.TestCase):
 
-    def _make_the_class(self, *args):
-        return get_data.PulledData(*args)
+    def setUp(self):
+        self.transaction = tests.getTransaction()
+        self.session = tests.createEngineAndInitDB()
+        self.config = testing.setUp()
+
+    def tearDown(self):
+        self.session.remove()
+        testing.tearDown()
+
+    def _add_one(self, *args):
+        self.transaction.begin()
+        entry = get_data.PulledData(*args)
+        self.session.add(entry)
+        self.transaction.commit()
 
     def test_default_values_are_setted(self):
         self._add_one({})
