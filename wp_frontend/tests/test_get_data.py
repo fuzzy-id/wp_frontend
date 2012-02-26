@@ -36,14 +36,19 @@ class PulledDataTest(unittest.TestCase):
         self.transaction.commit()
 
     def test_default_values_are_setted(self):
+        dt_before = wp_datetime.strip_ms(datetime.datetime.now())
         self._add_one({})
+        dt_after = wp_datetime.strip_ms(datetime.datetime.now())
         cols = ['version', 'datum_version', 'betriebsmodus',
-                'temp_aussen']
+                'temp_aussen', 'tsp', ]
         entry = get_data.PulledData.get_latest(self.session, cols)
         self.assertEqual(entry[0], 0)
         self.assertEqual(entry[1], datetime.date.min)
         self.assertEqual(entry[2], '')
         self.assertEqual(entry[3], 0.0)
+        entry_date = datetime.datetime.fromtimestamp(entry[4])
+        self.assertTrue(entry_date >= dt_before)
+        self.assertTrue(dt_after >= entry_date)
 
     def test_add_one_and_get_latest_work(self):
         columns_and_values = {'temp_aussen': 24,
@@ -53,15 +58,6 @@ class PulledDataTest(unittest.TestCase):
                                                columns_and_values.keys())
         self.assertEqual(entry[0], 24)
         self.assertEqual(entry[1], 80.34)
-
-    def test_datetime_of_entry(self):
-        dt_before = wp_datetime.strip_ms(datetime.datetime.now())
-        self._add_one({})
-        dt_after = wp_datetime.strip_ms(datetime.datetime.now())
-        entry = get_data.PulledData.get_latest(self.session, ['tsp'])
-        entry_date = datetime.datetime.fromtimestamp(entry[0])
-        self.assertTrue(entry_date >= dt_before)
-        self.assertTrue(dt_after >= entry_date)
 
     def test_get_values_in_timespan_with_avg(self):
         create_entries.add_get_data_entries_to_db(self.transaction, self.session)
