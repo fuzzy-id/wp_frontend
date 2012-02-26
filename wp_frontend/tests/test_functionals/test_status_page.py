@@ -1,17 +1,31 @@
 # -*- coding: utf-8 -*-
+import unittest
+
+import wp_frontend
 from wp_frontend import tests
 from wp_frontend.tests import create_entries
 from wp_frontend.tests.test_functionals import BasicFunctionalTestCase
 
-class ViewTests(BasicFunctionalTestCase):
-    
+class ViewTests(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        tmp_session = tests.createEngineAndInitDB()
+        tmp_session.remove()
+
     def setUp(self):
-        super(ViewTests, self).setUp()
-        self.login()
+        app = wp_frontend.main({}, 
+                               sql_init_function=tests.init_db, 
+                               **tests.settings)
+        self.testapp = TestApp(app)
+        self.testapp.put('/login', valid_credentials, status=302)
+
+    def tearDown(self):
+        del self.testapp
+        tests.getSession().remove()
 
     def test_status_page_viewable(self):
         res = self.testapp.get('/status', status=200)
-        self.assertLoggedIn(res)
         self.assertIn('Status', res.body)
         self.assertIn('Allgemein', res.body)
         self.assertIn('Backup', res.body)
@@ -19,19 +33,28 @@ class ViewTests(BasicFunctionalTestCase):
 
     def test_status_backup_page_viewable(self):
         res = self.testapp.get('/backup/new_template', status=200)
-        self.assertLoggedIn(res)
         self.assertIn('Status', res.body)
         self.assertIn('Allgemein', res.body)
         self.assertIn('Backup', res.body)
-
     
 class PageWithDbEntriesTests(BasicFunctionalTestCase):
 
-    def setUp(self):
-        super(PageWithDbEntriesTests, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        tmp_session = tests.createEngineAndInitDB()
         create_entries.add_backup_templates(tests.getTransaction(),
-                                            tests.getSession())
-        self.login()
+                                            tmp_session)
+        tmp_session.remove()
+
+    def setUp(self):
+        app = wp_frontend.main({}, 
+                               sql_init_function=tests.init_db, 
+                               **tests.settings)
+        self.testapp = TestApp(app)
+
+    def tearDown(self):
+        del self.testapp
+        tests.getSession().remove()
 
     def test_sidebar_gets_updated(self):
         res = self.testapp.get('/status', status=200)
