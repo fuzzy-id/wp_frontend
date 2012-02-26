@@ -1,19 +1,28 @@
 # -*- coding: utf-8 -*-
 import re
+import unittest
+
+import webtest
+
+import wp_frontend
 from wp_frontend import tests
 from wp_frontend.tests import create_entries
 from wp_frontend.tests.test_functionals import BasicFunctionalTestCase
 
+class BehaviourForUserWithoutDBTests(unittest.TestCase):
 
-class BehaviourForUserWithoutDBTests(BasicFunctionalTestCase):
+    @classmethod
+    def setUpClass(cls):
+        tmp_session = tests.createEngineAndInitDB()
+        tmp_session.remove()
 
     def setUp(self):
         app = wp_frontend.main(
             {}, 
-            sql_init_function=tests.init_and_recreate_db, 
+            sql_init_function=tests.init_db, 
             **tests.settings)
-        self.testapp = TestApp(app)
-        self.testapp.put('/login', valid_credentials, status=302)
+        self.testapp = webtest.TestApp(app)
+        self.testapp.put('/login', tests.valid_credentials, status=302)
 
     def tearDown(self):
         del self.testapp
@@ -37,24 +46,21 @@ class BehaviourForUserWithoutDBTests(BasicFunctionalTestCase):
         self.assertIn("Couldn't fetch logs", res.body)
         self.assertIn("Couldn't fetch current values", res.body)
 
-    def _test_view_graph(self, path_to_graph):
-        res = self.testapp.get(path_to_graph)
+    def test_view_graphs(self):
+        res = self.testapp.get('/graph/hzg_ww/')
         self.assertIn("Couldn't fetch any data to plot", res.body)
 
-    def test_view_graph_hzg_ww(self):
-        self._test_view_graph('/graph/hzg_ww/')
+        res = self.testapp.get('/graph/erdsonde/')
+        self.assertIn("Couldn't fetch any data to plot", res.body)
 
-    def test_view_graph_erdsonde(self):
-        self._test_view_graph('/graph/erdsonde/')
+        res = self.testapp.get('/graph/vorl_kondens/')
+        self.assertIn("Couldn't fetch any data to plot", res.body)
 
-    def test_view_graph_vorl_kondens(self):
-        self._test_view_graph('/graph/vorl_kondens/')
+        res = self.testapp.get('/graph/wqaus_verdamp/')
+        self.assertIn("Couldn't fetch any data to plot", res.body)
 
-    def test_view_graph_wqaus_verdamp(self):
-        self._test_view_graph('/graph/wqaus_verdamp/')
-
-    def test_view_user_graph(self):
-        self._test_view_graph('/graph/user/temp_Vl/temp_Rl')
+        res = self.testapp.get('/graph/user/temp_Vl/temp_Rl')
+        self.assertIn("Couldn't fetch any data to plot", res.body)
         
     def test_form_on_user_graph_page_exists(self):
         res = self.testapp.get('/user_graph')
@@ -94,7 +100,7 @@ class BehaviourForUserWithDBTests(BasicFunctionalTestCase):
                 'submit': 'submit'}
 
     def setUp(self):
-        BehaviourForUserWithDBTests.__base__.setUp(self)
+        super(BehaviourForUserWithDBTests, self).setUp()
         create_entries.add_get_data_entries_to_db(tests.getTransaction(), 
                                                   tests.getSession())
         self.login()
@@ -127,7 +133,7 @@ class BehaviourForUserWithDBTests(BasicFunctionalTestCase):
 class GraphFormTests(BasicFunctionalTestCase):
 
     def setUp(self):
-        BehaviourForUserWithoutDBTests.__base__.setUp(self)
+        super(GraphFormTests, self).setUp()
         self.login()
 
     def test_field_defaults_are_setted(self):
@@ -147,7 +153,7 @@ class GraphFormTests(BasicFunctionalTestCase):
 class TemplateTests(BasicFunctionalTestCase):
 
     def setUp(self):
-        BehaviourForUserWithoutDBTests.__base__.setUp(self)
+        super(TemplateTests, self).setUp()
         self.login()
 
     def test_resources_are_expanded_on_backup_edit(self):
