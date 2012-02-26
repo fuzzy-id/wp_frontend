@@ -7,7 +7,6 @@ from webtest import TestApp
 from wp_frontend import tests
 from wp_frontend.tests import create_entries
 
-
 valid_credentials = { 'user': 'test_user',
                       'password': 'password',
                       'came_from': '/',
@@ -97,7 +96,6 @@ class AuthenticationTests(unittest.TestCase):
 
     def test_garbage_log_in(self):
         garbage_credentials = {'foo': 'baz', 'submit': ''}
-        res = self.testapp.put('/login', garbage_credentials,
-                               status=200)
+        res = self.testapp.put('/login', garbage_credentials, status=200)
         self.assertIn('input type="password"', res.body)
         self.assertIn('There was a problem with your submission', res.body)
