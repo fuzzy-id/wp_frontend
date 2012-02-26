@@ -20,6 +20,15 @@ valid_credentials = { 'user': 'test_user',
                       'came_from': '/',
                       'submit': '', }
 
+import functools
+
+def reset_db(f):
+    @functools.wraps(f)
+    def db_resetter(inst):
+        Base.metadata.drop_all(engine)
+        Base.metadata.create_all(engine)
+        return f()
+        
 class BaseTestWithDB(unittest.TestCase):
 
     def setUp(self):
