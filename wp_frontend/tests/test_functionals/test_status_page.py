@@ -3,16 +3,6 @@ from wp_frontend import tests
 from wp_frontend.tests import create_entries
 from wp_frontend.tests.test_functionals import BasicFunctionalTestCase
 
-class AuthenticationTests(BasicFunctionalTestCase):
-
-    def test_anonymous_cannot_view_status_page(self):
-        res = self.testapp.get('/status', status=200)
-        self.assertNotLoggedIn(res)
-
-    def test_anonymous_cannot_view_status_backup_page(self):
-        res = self.testapp.get('/backup/new_template', status=200)
-        self.assertNotLoggedIn(res)
-
 class ViewTests(BasicFunctionalTestCase):
     
     def setUp(self):

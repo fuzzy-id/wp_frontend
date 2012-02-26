@@ -65,6 +65,11 @@ class BehaviourForAnonymousTests(unittest.TestCase):
         self.assertTrue('input type="password"' in res.body)
         res = self.testapp.get('/set_val', status=200)
         self.assertTrue('input type="password"' in res.body)
+        res = self.testapp.get('/status', status=200)
+        self.assertTrue('input type="password"' in res.body)
+        res = self.testapp.get('/backup/new_template', status=200)
+        self.assertTrue('input type="password"' in res.body)
+
 
 class AuthenticationTests(unittest.TestCase):
 
