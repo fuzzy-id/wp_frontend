@@ -1,14 +1,33 @@
 # -*- coding: utf-8 -*-
 import datetime
+import unittest
+
 from wp_frontend.models import set_data
-from wp_frontend.tests import BaseTestWithDB
+from wp_frontend import tests
 from wp_frontend.views.wp_datetime import strip_ms
 
 
-class DataToSetTest(BaseTestWithDB):
+class DataToSetTest(unittest.TestCase):
 
-    def _make_the_class(self, *args):
-        return set_data.DataToSet(*args)
+    @classmethod
+    def setUpClass(cls):
+        tmp_session = tests.create_engine_and_init_db(db_reset=True)
+        tmp_session.remove()
+
+    def setUp(self):
+        self.transaction = tests.getTransaction()
+        self.session = tests.create_engine_and_init_db()
+        self.config = testing.setUp()
+
+    def tearDown(self):
+        self.session.remove()
+        testing.tearDown()
+
+    def _add_one(self, *args):
+        self.transaction.begin()
+        entry = set_data.DataToSet(*args)
+        self.session.add(entry)
+        self.transaction.commit()
     
     def _get_last_entry(self):
         query = self.session.query(set_data.DataToSet)
