@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import datetime
 import unittest
+from pyramid import testing
 
 from wp_frontend.models import set_data
 from wp_frontend import tests
@@ -33,11 +34,6 @@ class DataToSetTest(unittest.TestCase):
         query = self.session.query(set_data.DataToSet)
         query = query.order_by(set_data.DataToSet.id.desc())
         return query.first()
-
-    def test_db_empty_on_startup(self):
-        query = self.session.query(set_data.DataToSet)
-        entries = query.all()
-        self.assertRaises(IndexError, entries.pop)
 
     def test_get_last_entry_works(self):
         self._add_one('test_user', 'Hzg:TempEinsatz', '23', '80')

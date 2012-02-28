@@ -7,9 +7,10 @@ import unittest
 import wp_frontend.views.graphs
 from pyramid import testing
 from wp_frontend import views
+from wp_frontend import tests
+from wp_frontend.tests import create_entries
 from wp_frontend.models import calculations
 from wp_frontend.models import get_data, helpers
-from wp_frontend.tests import BaseTestWithDB, create_entries
 from wp_frontend.views import wp_datetime, set_val
 
 class RootViewTest(unittest.TestCase):
@@ -26,11 +27,29 @@ class RootViewTest(unittest.TestCase):
         response = views.view_wp(request)
         self.assertEqual(response.location, '/home')
 
-class ViewHomeTests(BaseTestWithDB):
+class ViewHomeTests(unittest.TestCase):
 
-    def _make_the_class(self, *args):
-        return get_data.PulledData(*args)
+    @classmethod
+    def setUpClass(cls):
+        tmp_session = tests.create_engine_and_init_db(db_reset=True)
+        tmp_session.remove()
 
+    def setUp(self):
+        self.transaction = tests.getTransaction()
+        self.session = tests.create_engine_and_init_db()
+        self.config = testing.setUp()
+
+    def tearDown(self):
+        self.session.remove()
+        testing.tearDown()
+
+    def _add_one(self, *args):
+        self.transaction.begin()
+        entry = get_data.PulledData(*args)
+        self.session.add(entry)
+        self.transaction.commit()
+
+    @tests.reset_db
     def test_view_home_without_data(self):
         request = testing.DummyRequest()
         response = views.view_home(request)
@@ -81,8 +100,23 @@ class ViewHomeTests(BaseTestWithDB):
         self.maxDiff = None
         self.assertDictEqual(result, data_now)
 
-class ViewSetValTests(BaseTestWithDB):
+class ViewSetValTests(unittest.TestCase):
 
+    @classmethod
+    def setUpClass(cls):
+        tmp_session = tests.create_engine_and_init_db(db_reset=True)
+        tmp_session.remove()
+
+    def setUp(self):
+        self.transaction = tests.getTransaction()
+        self.session = tests.create_engine_and_init_db()
+        self.config = testing.setUp()
+
+    def tearDown(self):
+        self.session.remove()
+        testing.tearDown()
+
+    @tests.reset_db
     def test_view_without_data_present(self):
 
         request = testing.DummyRequest()

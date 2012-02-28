@@ -9,7 +9,6 @@ import wp_frontend
 from wp_frontend.models import get_data
 from wp_frontend.models.calculations import CurrKW
 from wp_frontend import tests
-from wp_frontend.tests import BaseTestWithDB
 from wp_frontend.tests import create_entries
 from wp_frontend.views import wp_datetime
 

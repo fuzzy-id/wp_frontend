@@ -30,23 +30,6 @@ def reset_db(f):
         return f(inst)
     return db_resetter
         
-class BaseTestWithDB(unittest.TestCase):
-
-    def setUp(self):
-        self.transaction = getTransaction()
-        self.session = createEngineAndInitDB()
-        self.config = testing.setUp()
-
-    def tearDown(self):
-        self.session.remove()
-        testing.tearDown()
-
-    def _add_one(self, *args):
-        self.transaction.begin()
-        entry = self._make_the_class(*args)            
-        self.session.add(entry)
-        self.transaction.commit()
-
 def createEngineAndInitDB(sql_url=sql_url,
                           sql_echo=False):
     engine = create_engine(sql_url, echo=sql_echo)
