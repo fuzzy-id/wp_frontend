@@ -3,8 +3,11 @@ import os
 from setuptools import setup, find_packages
 
 here = os.path.abspath(os.path.dirname(__file__))
-README = open(os.path.join(here, 'README.org')).read()
-CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
+try:
+    README = open(os.path.join(here, 'README.org')).read()
+    CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
+except IOError:
+    README = CHANGES = ''
 
 requires = [
     'pyramid',
@@ -20,7 +23,7 @@ requires = [
     ]
 
 setup(name='wp_frontend',
-      version='0.1',
+      version='0.2a1',
       description='wp_frontend',
       long_description=README + '\n\n' +  CHANGES,
       classifiers=[
@@ -36,7 +39,7 @@ setup(name='wp_frontend',
       packages=find_packages(),
       include_package_data=True,
       zip_safe=False,
-      test_suite='wp_frontend',
+      test_suite='wp_frontend.tests',
       install_requires = requires,
       entry_points = """\
       [paste.app_factory]
