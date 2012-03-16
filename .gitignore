@@ -1,7 +1,8 @@
 # ignore byte-compiled files
 *.pyc
 
-# nosetest coverage
+# test related
+.tox/
 .noseids
 .coverage
 
