@@ -6,15 +6,17 @@ from sqlalchemy import engine_from_config
 
 import wp_frontend.views
 from wp_frontend.models import initialize_sql
-from wp_frontend.security import groupfinder
+from wp_frontend.security import make_groupfinder
 
 
 def main(global_config, sql_init_function=initialize_sql, **settings):
     " This function returns a Pyramid WSGI application. "
     engine = engine_from_config(settings, 'sqlalchemy.')
     sql_init_function(engine)
-    authn_policy = AuthTktAuthenticationPolicy('foobar', 
-                                               callback=groupfinder)
+    authn_policy = AuthTktAuthenticationPolicy(
+        'D89neb7:men:rabp_glc84', callback=make_groupfinder(
+            settings['credentials']
+            ))
     authz_policy = ACLAuthorizationPolicy()
     config = Configurator(settings=settings,
                           root_factory='wp_frontend.models.RootFactory',

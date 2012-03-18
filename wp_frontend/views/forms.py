@@ -2,7 +2,7 @@
 import colander
 import deform
 from wp_frontend.models import helpers, set_data
-from wp_frontend.security import PASSWD
+from wp_frontend import security
 
 
 class FormEvaluatorSubject(object):
@@ -101,8 +101,8 @@ class LoginSchema(colander.Schema):
 
 def credential_validator(form, value):
     user = value['user']
-    if (user not in PASSWD.keys()
-        or value['password'] != PASSWD.get(value['user'])):
+    if (user not in security.PASSWD.keys()
+        or value['password'] != security.PASSWD.get(value['user'])):
         exc = colander.Invalid(form, "Username or password invalid!")
         exc['password'] = "Username or password invalid!"
         raise exc

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os.path
 import tempfile
 import unittest
 
@@ -13,7 +14,11 @@ settings.plots_dir = tempfile.mkdtemp()
 
 sql_url = 'mysql://test_user:D3v3L0p3R@localhost/testing'
 
-settings = {'sqlalchemy.url': sql_url, }
+here = os.path.abspath(os.path.dirname(__file__))
+
+settings = {'sqlalchemy.url': sql_url, 
+            'credentials': os.path.join(here, 'passwd.py'),
+            }
 
 valid_credentials = { 'user': 'test_user',
                       'password': 'password',

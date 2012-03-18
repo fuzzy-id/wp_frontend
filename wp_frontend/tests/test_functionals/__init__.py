@@ -79,3 +79,5 @@ class AuthenticationTests(unittest.TestCase):
         res = self.testapp.put('/login', garbage_credentials, status=200)
         self.assertIn('input type="password"', res.body)
         self.assertIn('There was a problem with your submission', res.body)
+
+if __name__ == '__main__': unittest.main()
