@@ -34,15 +34,15 @@ class BehaviourForAnonymousTests(unittest.TestCase):
         
     def test_anonymous_cannot_view(self):
         res = self.testapp.get('/home', status=200)
-        self.assertIn('input type="password"', res.body)
+        self.assertTrue('input type="password"' in res.body)
         res = self.testapp.get('/graph/hzg_ww/', status=200)
-        self.assertIn('input type="password"', res.body)
+        self.assertTrue('input type="password"' in res.body)
         res = self.testapp.get('/set_val', status=200)
-        self.assertIn('input type="password"', res.body)
+        self.assertTrue('input type="password"' in res.body)
         res = self.testapp.get('/status', status=200)
-        self.assertIn('input type="password"', res.body)
+        self.assertTrue('input type="password"' in res.body)
         res = self.testapp.get('/backup/new_template', status=200)
-        self.assertIn('input type="password"', res.body)
+        self.assertTrue('input type="password"' in res.body)
 
 
 class AuthenticationTests(unittest.TestCase):
@@ -60,10 +60,10 @@ class AuthenticationTests(unittest.TestCase):
     def test_login_and_logout(self):
         self.testapp.put('/login', valid_credentials, status=302)
         res = self.testapp.get('/home')
-        self.assertNotIn('input type="password"', res.body)
+        self.assertFalse('input type="password"' in res.body)
         self.testapp.get('/logout')
         res = self.testapp.get('/home')
-        self.assertIn('input type="password"', res.body)
+        self.assertTrue('input type="password"' in res.body)
         
     def test_failed_log_in(self):
         invalid_credentials = { 'user': 'invalid_user',
@@ -72,12 +72,12 @@ class AuthenticationTests(unittest.TestCase):
                                 'submit': '', }
         res = self.testapp.put('/login', invalid_credentials, status=200)
         res = self.testapp.get('/home')
-        self.assertIn('input type="password"', res.body)
+        self.assertTrue('input type="password"' in res.body)
 
     def test_garbage_log_in(self):
         garbage_credentials = {'foo': 'baz', 'submit': ''}
         res = self.testapp.put('/login', garbage_credentials, status=200)
-        self.assertIn('input type="password"', res.body)
-        self.assertIn('There was a problem with your submission', res.body)
+        self.assertTrue('input type="password"' in res.body)
+        self.assertTrue('There was a problem with your submission' in res.body)
 
 if __name__ == '__main__': unittest.main()
