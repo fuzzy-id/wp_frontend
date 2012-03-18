@@ -12,6 +12,7 @@ except IOError:
 requires = [
     'pyramid',
     'SQLAlchemy',
+    'mysql-python',
     'transaction',
     'pyramid_tm',
     'pyramid_debugtoolbar',
