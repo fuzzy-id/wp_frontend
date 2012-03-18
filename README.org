@@ -14,6 +14,98 @@ I had to deal with some design decisions made by the author of the
 back end that I myself would have made surely different. Anyway, we
 have almost 99% test coverage, the look is OK and all the plots work.
 
+* Installation 
+
+/wp_frontend/ is a web application and thus has a number of
+dependencies that you must fulfil. Hera are the three big packages
+that /wp_frontend/ relies on:
++ Pyramid as the web framework used;
++ SQLAlchemy with a MySQL back end to grab the data from the database;
++ Matplotlib (to plot the graphs).
+
+Installation of Pyramid is painless, as it is pure Python. SQLAlchemy
+and Matplotlib have further dependencies depending on the way you
+choose to install these packages. My recommendation is to use virtual
+environments where possible to provide an easy way to install Python
+packages that you don't want to install system wide (Pyramid is
+probably on that list). 
+
+So, I will treat two (extreme) installation scenarios here:
+1) System wide installation of the problematic parts of the
+   dependencies (Matplotlib and mysql-python) and installing the rest
+   of the dependencies into a virtual environment. /This scenario
+   should be used for production environments./
+2) System wide installation of the development packages to install all
+   (Python) dependencies in a virtual environment. /This scenario
+   should be used when developing./ Especially when you want to test
+   the work-ability with different Python version you probably /have
+   to/ go this way.
+
++ NOTE :: This guide is tested with /Debian Squeeze/ and /Wheezy/.
+
+Here are the steps that both scenarios do have in common:
+
+As =root= install all necessary dependencies:
+#+BEGIN_EXAMPLE
+# aptitude -R install git virtualenvwrapper mysql-server 
+#+END_EXAMPLE
+
+As the user fetch the sources from github:
+#+BEGIN_EXAMPLE 
+$ mkdir ~/src
+$ cd ~/src
+$ git clone git@github.com:fuzzy-id/wp_frontend.git
+#+END_EXAMPLE
+
+** Production Environment
+
+And here are the special steps to install /wp_frontend/ in a
+production environment:
+
+As root install further dependencies:
+#+BEGIN_EXAMPLE
+# aptitude -R install python-mysqldb python-matplotlib python-tk
+#+END_EXAMPLE
+
+Create a virtual environment for the front-end:
+#+BEGIN_EXAMPLE
+$ source /etc/bash_completion.d/virtualenvwrapper
+$ mkdir .virtualenvs           # only necessary if not yet existent
+$ mkvirtualenv --system-site-packages wp
+# On older virtualenv versions `--system-site-packages' is the
+# default and the above flag does not exist. So use:
+$ mkvirtualenv wp
+#+END_EXAMPLE
+
+Start with this virtual environment and install further dependencies
+of /wp_frontend/:
+#+BEGIN_EXAMPLE
+$ cd ~/src/wp_frontend
+$ workon wp
+$ python setup.py develop
+#+END_EXAMPLE
+
+The last command will install all further dependencies in your virtual
+environment.
+
+*** Optional run the tests
+
+#+BEGIN_EXAMPLE
+$ mysql -u root -p < testing.sql 
+Enter password:
+$ python setup.py test
+#+END_EXAMPLE
+
+* Dependency hell
+
+** Matplotlib
+*** numpy
+*** tk-dev
+
+** sqlalchemy
+*** mysql-python
+**** mysqld-dev
+
 * Footnotes
 
 [fn:2] The scripts can be found under:
