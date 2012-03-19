@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import unittest
+from wp_frontend.compat import unittest
 
 from wp_frontend.models.calculations import register_all_calculations
 from wp_frontend.models.column_calculator import _flatten_list, ColumnCalculator

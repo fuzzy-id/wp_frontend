@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import datetime
 import random
-import unittest
+from wp_frontend.compat import unittest
 
 from pyramid import testing
 
@@ -119,3 +119,5 @@ class PulledDataTest(unittest.TestCase):
         expected = 12.5 - 10.0
         result = get_data.PulledData.get_latest(self.session, ['deltaWQea', ])
         self.assertEquals(result[0], expected)
+
+if __name__ == '__main__': unittest.main()

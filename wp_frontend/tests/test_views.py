@@ -2,7 +2,7 @@
 import datetime
 import os.path
 import random
-import unittest
+from wp_frontend.compat import unittest
 
 import wp_frontend.views.graphs
 from pyramid import testing

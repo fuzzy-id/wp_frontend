@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import unittest
+from wp_frontend.compat import unittest
 import re
 
 import wp_frontend

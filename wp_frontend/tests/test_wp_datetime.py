@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-import unittest
-from wp_frontend.views import wp_datetime
 import datetime
+
+from wp_frontend.compat import unittest
+from wp_frontend.views import wp_datetime
 
 class TimeSpanWithResolutionTests(unittest.TestCase):
 

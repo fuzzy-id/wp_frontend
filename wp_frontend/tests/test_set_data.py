@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import datetime
-import unittest
+from wp_frontend.compat import unittest
 from pyramid import testing
 
 from wp_frontend.models import set_data

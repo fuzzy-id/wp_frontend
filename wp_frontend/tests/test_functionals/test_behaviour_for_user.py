@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import re
-import unittest
+from wp_frontend.compat import unittest
 
 import webtest
 
