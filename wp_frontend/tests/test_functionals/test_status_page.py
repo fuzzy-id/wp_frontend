@@ -26,16 +26,16 @@ class ViewTests(unittest.TestCase):
 
     def test_status_page_viewable(self):
         res = self.testapp.get('/status', status=200)
-        self.assertTrue('Status' in res.body)
-        self.assertTrue('Allgemein' in res.body)
-        self.assertTrue('Backup' in res.body)
-        self.assertTrue('Uptime' in res.body)
+        self.assertIn('Status', res.body)
+        self.assertIn('Allgemein', res.body)
+        self.assertIn('Backup', res.body)
+        self.assertIn('Uptime', res.body)
 
     def test_status_backup_page_viewable(self):
         res = self.testapp.get('/backup/new_template', status=200)
-        self.assertTrue('Status' in res.body)
-        self.assertTrue('Allgemein' in res.body)
-        self.assertTrue('Backup' in res.body)
+        self.assertIn('Status', res.body)
+        self.assertIn('Allgemein', res.body)
+        self.assertIn('Backup', res.body)
     
 class PageWithDbEntriesTests(unittest.TestCase):
 
@@ -59,11 +59,11 @@ class PageWithDbEntriesTests(unittest.TestCase):
 
     def test_sidebar_gets_updated(self):
         res = self.testapp.get('/status', status=200)
-        self.assertTrue('New Template' in res.body)
-        self.assertTrue('Home' in res.body)
-        self.assertTrue('System' in res.body)
+        self.assertIn('New Template', res.body)
+        self.assertIn('Home', res.body)
+        self.assertIn('System', res.body)
     
     def test_home_backup_page(self):
         res = self.testapp.get('/backup/home', status=200)
-        self.assertTrue('home' in res.body)
-        self.assertTrue('/home' in res.body)
+        self.assertIn('home', res.body)
+        self.assertIn('/home', res.body)

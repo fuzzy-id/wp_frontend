@@ -98,7 +98,7 @@ class ViewHomeTests(unittest.TestCase):
         result = dict([ (field, getattr(response['current_data'], field)) 
                         for field in data_now ])
         self.maxDiff = None
-        self.assertEqual(result, data_now)
+        self.assertDictEqual(result, data_now)
 
 class ViewSetValTests(unittest.TestCase):
 
