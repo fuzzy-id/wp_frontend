@@ -1,4 +1,5 @@
 import os
+import sys
 
 from setuptools import setup, find_packages
 
@@ -22,6 +23,9 @@ requires = [
     'deform',
     'matplotlib'
     ]
+
+if sys.version_info < (2, 7):
+    requires.append('unittest2')
 
 setup(name='wp_frontend',
       version='0.2a1',

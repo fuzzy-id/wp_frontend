@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
+import sys
 
-try:
+if sys.version_info < (2, 7):
     import unittest2 as unittest
-except ImportError:
+else:
     import unittest
