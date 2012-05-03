@@ -36,6 +36,7 @@ def main(global_config, sql_init_function=initialize_sql, **settings):
     config.add_route('view_status', '/status')
     config.add_route('new_backup_template', '/backup/new_template')
     config.add_route('view_backup', '/backup/{template}')
+    config.add_route('edit_backup', '/backup/{template}/edit')
     config.add_route('view_login', '/login')
     config.add_route('view_logout', '/logout')
 

@@ -6,31 +6,51 @@
     </tal:block>
   </tal:block>
   <tal:block metal:fill-slot="main">
-    <tal:block metal:use-macro="blocks.macros['block-wo-header']">
+    <tal:block metal:use-macro="blocks.macros['block-with-header']">
+      <tal:block metal:fill-slot="header">Name</tal:block>
       <tal:block metal:fill-slot="body">
-	<tal:block metal:use-macro="blocks.macros['block-with-header']">
-	  <tal:block metal:fill-slot="header">Name</tal:block>
-	  <tal:block metal:fill-slot="body">
-	    <p>${template.name}</p>
-	  </tal:block>
-	</tal:block>
-	<tal:block metal:use-macro="blocks.macros['block-with-header']">
-	  <tal:block metal:fill-slot="header">Root</tal:block>
-	  <tal:block metal:fill-slot="body">
-	    <p>${template.root}</p>
-	  </tal:block>
-	</tal:block>
-	<tal:block metal:use-macro="blocks.macros['block-with-header']">
-	  <tal:block metal:fill-slot="header">Excludes</tal:block>
-	  <tal:block metal:fill-slot="body">
-	    <ul>
-	      <tal:block tal:repeat="exclude template.excludes.split(',')">
-		<li>${exclude}</li>
-	      </tal:block>
-	    </ul>
-	  </tal:block>
-	</tal:block>
+	<p>${template.name}</p>
       </tal:block>
     </tal:block>
+    <tal:block metal:use-macro="blocks.macros['block-with-header']">
+      <tal:block metal:fill-slot="header">Root</tal:block>
+      <tal:block metal:fill-slot="body">
+	<p>${template.root}</p>
+      </tal:block>
+    </tal:block>
+    <tal:block metal:use-macro="blocks.macros['block-with-header']">
+      <tal:block metal:fill-slot="header">Excludes</tal:block>
+      <tal:block metal:fill-slot="body">
+	<ul>
+	  <tal:block tal:repeat="exclude template.excludes.split(',')">
+	    <li>${exclude}</li>
+	  </tal:block>
+	</ul>
+      </tal:block>
+    </tal:block>
+    <div class="line">
+      <div class="unity size1of2">
+	<tal:block metal:use-macro="blocks.macros['block-wo-header']">
+	  <tal:block metal:fill-slot="body">
+	    <p>
+	      <a href="${request.route_path('edit_backup', template=template.name)}">
+		Edit this Template
+	      </a>
+	    </p>
+	  </tal:block>
+	</tal:block>
+      </div>
+      <div class="unity size1of2 lastUnit">
+	<tal:block metal:use-macro="blocks.macros['block-wo-header']">
+	  <tal:block metal:fill-slot="body">
+	    <p>
+	      <a href="${request.route_path('edit_backup', template=template.name)}">
+		Make and Download Backup
+	      </a>
+	    </p>
+	  </tal:block>
+	</tal:block>
+      </div>
+    </div>
   </tal:block>
 </html>

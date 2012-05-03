@@ -3,7 +3,7 @@
   <tal:block metal:fill-slot="title">Login</tal:block>
   <tal:block metal:fill-slot="main">
       <div class="line">
-	<div class="unity size1of5">
+	<div class="unity size2of5">
 	  <tal:block metal:use-macro="blocks.macros['block-with-header']">
 	    <tal:block metal:fill-slot="header">Login</tal:block>
 	    <tal:block metal:fill-slot="body">

@@ -67,3 +67,8 @@ def new_backup_template(request):
         'form': forms.backup_form.render(),
         'resources': forms.form_resources(forms.backup_form),
         }
+
+@view_config(route_name="edit_backup", permission='user',
+             renderer='wp_frontend:templates/backup_edit.pt')
+def edit_backup_template(request):
+    pass
