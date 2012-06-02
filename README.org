@@ -17,7 +17,7 @@ have almost 99% test coverage, the look is OK and all the plots work.
 * Installation 
 
 /wp_frontend/ is a web application and thus has a number of
-dependencies that you must fulfil. Hera are the three big packages
+dependencies that you must fulfill. Hera are the three big packages
 that /wp_frontend/ relies on:
 + Pyramid as the web framework used;
 + SQLAlchemy with a MySQL back end to grab the data from the database;
