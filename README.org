@@ -45,9 +45,10 @@ So, I will treat two (extreme) installation scenarios here:
 
 Here are the steps that both scenarios do have in common:
 
-As =root= install all necessary dependencies:
 #+BEGIN_EXAMPLE
-# aptitude -R install git virtualenvwrapper mysql-server 
+$ sudo aptitude -R install git virtualenvwrapper mysql-server \
+ python-tk 
+$ source /etc/bash_completion.d/virtualenvwrapper
 #+END_EXAMPLE
 
 As the user fetch the sources from github:
@@ -64,17 +65,12 @@ production environment:
 
 As root install further dependencies:
 #+BEGIN_EXAMPLE
-# aptitude -R install python-mysqldb python-matplotlib python-tk
+$ sudo aptitude -R install python-mysqldb python-matplotlib
 #+END_EXAMPLE
 
 Create a virtual environment for the front-end:
 #+BEGIN_EXAMPLE
-$ source /etc/bash_completion.d/virtualenvwrapper
-$ mkdir .virtualenvs           # only necessary if not yet existent
 $ mkvirtualenv --system-site-packages wp
-# On older virtualenv versions `--system-site-packages' is the
-# default and the above flag does not exist. So use:
-$ mkvirtualenv wp
 #+END_EXAMPLE
 
 Start with this virtual environment and install further dependencies
@@ -88,23 +84,26 @@ $ python setup.py develop
 The last command will install all further dependencies in your virtual
 environment.
 
-*** Optional run the tests
+** Development Environment
+
+#+BEGIN_EXAMPLE
+$ sudo aptitude -R install libpng12-dev libmysqlclient-dev
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+$ workon wp
+$ pip install numpy
+$ cd ~/src/wp_frontend
+$ python setup.py develop
+#+END_EXAMPLE
+
+** Optional run the tests
 
 #+BEGIN_EXAMPLE
 $ mysql -u root -p < testing.sql 
 Enter password:
 $ python setup.py test
 #+END_EXAMPLE
-
-* Dependency hell
-
-** Matplotlib
-*** numpy
-*** tk-dev
-
-** sqlalchemy
-*** mysql-python
-**** mysqld-dev
 
 * Footnotes
 
