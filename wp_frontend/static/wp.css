@@ -5,7 +5,9 @@ form.deform {
 #ui-datepicker-div {
     z-index: 9999 !important;
 }
-
+.deform label {
+    font-size: 1.0em;
+}
 /* page specific stuff */
 .page {
     width: auto;
