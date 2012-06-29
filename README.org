@@ -87,7 +87,8 @@ environment.
 ** Development Environment
 
 #+BEGIN_EXAMPLE
-$ sudo aptitude -R install libpng12-dev libmysqlclient-dev
+$ sudo aptitude -R install libpng12-dev libmysqlclient-dev \
+ mysql-client tk-dex
 #+END_EXAMPLE
 
 #+BEGIN_EXAMPLE
