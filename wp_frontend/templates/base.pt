@@ -3,8 +3,6 @@
   <head>
     <link rel="stylesheet" 
 	  href="${request.static_path('wp_frontend:static/all.css')}"/>
-    <link rel="stylesheet" 
-	  href="${request.static_path('wp_frontend:static/wp.css')}"/>
     <tal:block tal:condition="exists: resources">
       <tal:block tal:repeat="css resources['css']">
 	<link rel="stylesheet"
@@ -17,6 +15,8 @@
 	</script>
       </tal:block>
     </tal:block>
+    <link rel="stylesheet" 
+	  href="${request.static_path('wp_frontend:static/wp.css')}"/>
     <title> WP Frontend - <tal:block metal:define-slot="title"></tal:block></title>
   </head>
   <body>
