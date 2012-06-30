@@ -9,6 +9,10 @@ form.deform {
     font-size: 1.0em;
 }
 /* page specific stuff */
+body {
+    width: 1200px;
+    margin: auto;
+}
 .page {
     width: auto;
 }
