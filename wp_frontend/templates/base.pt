@@ -79,11 +79,7 @@
       <div class="body">
 	<tal:block metal:define-slot="sidebar"></tal:block>
 	<section class="main">
-	  <tal:block metal:use-macro="blocks.macros['block-wo-header']">
-	    <tal:block metal:fill-slot="body">
-	      <tal:block metal:define-slot="main">
-	      </tal:block>
-	    </tal:block>
+	  <tal:block metal:define-slot="main">
 	  </tal:block>
 	</section>
       </div>
