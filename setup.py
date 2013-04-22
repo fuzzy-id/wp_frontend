@@ -1,16 +1,17 @@
+# -*- coding: utf-8 -*-
 import os
 import sys
 
 from setuptools import setup, find_packages
 
-here = os.path.abspath(os.path.dirname(__file__))
+_here = os.path.abspath(os.path.dirname(__file__))
 try:
-    README = open(os.path.join(here, 'README.org')).read()
-    CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
+    README = open(os.path.join(_here, 'README.org')).read()
+    CHANGES = open(os.path.join(_here, 'CHANGES.txt')).read()
 except IOError:
     README = CHANGES = ''
 
-requires = [
+INSTALL_REQUIRES = [
     'pyramid',
     'SQLAlchemy',
     'mysql-python',
@@ -24,8 +25,9 @@ requires = [
     'matplotlib'
     ]
 
+TESTS_REQUIRE = []
 if sys.version_info < (2, 7):
-    requires.append('unittest2')
+    TESTS_REQUIRE.append('unittest2')
 
 setup(name='wp_frontend',
       version='0.2a1',
@@ -45,12 +47,13 @@ setup(name='wp_frontend',
       include_package_data=True,
       zip_safe=False,
       test_suite='wp_frontend.tests',
-      install_requires = requires,
+      install_requires = INSTALL_REQUIRES,
+      tests_require=TESTS_REQUIRE,
       entry_points = """\
       [paste.app_factory]
       main = wp_frontend:main
       [console_scripts]
-      populate_pyramid_start_alchemy = pyramid_start_alchemy.scripts.populate:main
+      initialize_wp_frontend_db = wp_frontend.scripts.initializedb:main
       """,
       )
 
