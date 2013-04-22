@@ -12,7 +12,7 @@ import wp_frontend
 
 settings.plots_dir = tempfile.mkdtemp()
 
-sql_url = 'mysql://test_user:D3v3L0p3R@localhost/testing'
+sql_url = 'sqlite://'
 
 here = os.path.abspath(os.path.dirname(__file__))
 
